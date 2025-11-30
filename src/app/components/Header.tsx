@@ -88,7 +88,7 @@ export default function Header() {
                 </div>
                 <h2 className="text-white text-lg font-bold leading-tight tracking-[-0.015em]">JSON PowerHouse</h2>
             </Link>
-            <div className="flex flex-1 justify-end gap-6">
+            {/* <div className="flex flex-1 justify-end gap-6">
                 <NavigationMenu>
                     <NavigationMenuList className="flex-wrap">
                         <NavigationMenuItem>
@@ -144,7 +144,7 @@ export default function Header() {
 
                     </NavigationMenuList>
                 </NavigationMenu>
-                {/* <div className="flex items-center gap-6">
+                <div className="flex items-center gap-6">
                     <a className="text-white/80 hover:text-white text-sm font-medium leading-normal" href="#">API</a>
                     <a className="text-white/80 hover:text-white text-sm font-medium leading-normal" href="#">Docs</a>
                     <a className="text-white/80 hover:text-white text-sm font-medium leading-normal" href="#">Pricing</a>
@@ -154,8 +154,8 @@ export default function Header() {
                         theme == 'dark' || theme == 'system' ? setTheme('light') : setTheme('dark')
                     }}>
                     <span className="material-symbols-outlined text-xl">dark_mode</span>
-                </button> */}
-            </div>
+                </button>
+            </div> */}
         </header>
     )
 }
