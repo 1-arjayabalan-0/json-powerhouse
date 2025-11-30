@@ -141,7 +141,7 @@ export function prettifyJson(jsonString: any, config: JSONFormatterConfig) {
         // Handle array formatting for single-line arrays
         if (config.arrayFormatting === 'single-line' && config.pretty) {
             // Convert multi-line arrays to single-line
-            result = result.replace(/\[\s*\n\s*(.*?)\n\s*\]/gs, (match, content) => {
+            result = result.replace(/\[\s*\n\s*(.*?)\n\s*\]/g, (match, content) => {
                 const items = content.split(',').map((item: string) => item.trim()).filter((item: string) => item);
                 return `[${items.join(', ')}]`;
             });
