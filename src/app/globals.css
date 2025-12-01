@@ -48,20 +48,27 @@ body {
 }
 
 ::-webkit-scrollbar {
-  width: 0.7rem;
-  background-color: var(--background-dark);
-  cursor: pointer;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background-color: var(--background-dark);
-  cursor: auto;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
+  background-color: var(--muted-foreground);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
   background-color: var(--foreground);
-  border-radius: 3rem;
-  cursor: auto;
+}
+
+/* Fix for select options visibility */
+select option {
+  background-color: var(--background-dark);
+  color: white;
 }
 
 @theme inline {
@@ -140,6 +147,7 @@ body {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }

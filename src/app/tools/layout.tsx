@@ -22,6 +22,9 @@ function ToolsLayoutContent({ children }: { children: React.ReactNode }) {
                     <main className="flex flex-1 flex-col overflow-hidden">
                         {children}
                     </main>
+
+                    <SettingsSidenav config={config} onConfigChange={setConfig} />
+                   
                 </div>
 
                 <Footer />
