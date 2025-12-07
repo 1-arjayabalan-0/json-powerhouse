@@ -86,7 +86,18 @@ export default function SettingsSidenav({ config, onConfigChange }: SettingsSide
                             <button onClick={() => updateConfig('typeKind', 'type')} className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${tsConfig.typeKind === 'type' ? 'bg-blue-600 text-white' : 'bg-white/10 text-white/60'}`}>Type Alias</button>
                         </div>
                     </div>
-                    <Toggle label="Runtime Typecheck" checked={tsConfig.runtimeTypecheck} onChange={(v) => updateConfig('runtimeTypecheck', v)} />
+                    <div className="space-y-2">
+                        <label className="text-white text-sm font-medium">Runtime Typecheck</label>
+                        <select
+                            value={tsConfig.runtimeTypecheck}
+                            onChange={(e) => updateConfig('runtimeTypecheck', e.target.value)}
+                            className="w-full px-3 py-2 rounded-lg bg-white/10 text-white text-sm border border-white/20 focus:outline-none focus:border-blue-500"
+                        >
+                            <option value="none">None</option>
+                            <option value="io-ts">IO-TS</option>
+                            <option value="zod">Zod</option>
+                        </select>
+                    </div>
                     <Toggle label="Readonly Properties" checked={tsConfig.readonlyProperties} onChange={(v) => updateConfig('readonlyProperties', v)} />
                     <Toggle label="Explicit Any" checked={tsConfig.explicitAny} onChange={(v) => updateConfig('explicitAny', v)} />
                     <Toggle label="Nice Property Names" checked={tsConfig.nicePropertyNames} onChange={(v) => updateConfig('nicePropertyNames', v)} />
