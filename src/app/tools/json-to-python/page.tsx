@@ -3,8 +3,8 @@
 import { useState, useCallback } from 'react';
 import { useConfig } from "@/app/context/ConfigContext";
 import CodeGeneratorBase from "@/app/components/CodeGeneratorBase";
-import { generatePythonCode } from "./generator";
-import { PythonConfig } from "@/app/types/code-generator-config";
+import { generatePythonCode } from "@/core/generators/json-to-python";
+import { PythonConfig } from "@/core/types/code-generator-config";
 
 export default function PythonGeneratorPage() {
     const { config } = useConfig();

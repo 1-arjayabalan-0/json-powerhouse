@@ -3,8 +3,8 @@
 import { useState, useCallback } from 'react';
 import { useConfig } from "@/app/context/ConfigContext";
 import CodeGeneratorBase from "@/app/components/CodeGeneratorBase";
-import { generateSwiftCode } from "./generator";
-import { SwiftConfig } from "@/app/types/code-generator-config";
+import { generateSwiftCode } from "@/core/generators/json-to-swift";
+import { SwiftConfig } from "@/core/types/code-generator-config";
 
 export default function SwiftGeneratorPage() {
     const { config } = useConfig();

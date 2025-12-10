@@ -1,4 +1,4 @@
-import { JSONFormatterConfig } from '@/app/types/json-formatter-config';
+import { JSONFormatterConfig } from '@/core/types/json-formatter-config';
 
 // Preset configurations for different JSON tools
 export const toolPresets: Record<string, Partial<JSONFormatterConfig>> = {

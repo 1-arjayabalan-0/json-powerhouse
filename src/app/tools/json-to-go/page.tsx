@@ -3,8 +3,8 @@
 import { useState, useCallback } from 'react';
 import { useConfig } from "@/app/context/ConfigContext";
 import CodeGeneratorBase from "@/app/components/CodeGeneratorBase";
-import { generateGoCode } from "./generator";
-import { GoConfig } from "@/app/types/code-generator-config";
+import { generateGoCode } from "@/core/generators/json-to-go";
+import { GoConfig } from "@/core/types/code-generator-config";
 
 export default function GoGeneratorPage() {
     const { config } = useConfig();

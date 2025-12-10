@@ -1,4 +1,4 @@
-import { useAlertStore } from "@/app/lib/utils/alert-store";
+import { useAlertStore } from "@/core/lib/utils/alert-store";
 
 export function useAlert() {
     const show = useAlertStore((s) => s.show);

@@ -3,8 +3,8 @@
 import { useState, useCallback } from 'react';
 import { useConfig } from "@/app/context/ConfigContext";
 import CodeGeneratorBase from "@/app/components/CodeGeneratorBase";
-import { generateDartCode } from "./generator";
-import { DartConfig } from "@/app/types/code-generator-config";
+import { generateDartCode } from "@/core/generators/json-to-dart";
+import { DartConfig } from "@/core/types/code-generator-config";
 
 export default function DartGeneratorPage() {
     const { config } = useConfig();

@@ -3,8 +3,8 @@
 import { useState, useCallback } from 'react';
 import { useConfig } from "@/app/context/ConfigContext";
 import CodeGeneratorBase from "@/app/components/CodeGeneratorBase";
-import { generateJavaCode } from "./generator";
-import { JavaConfig } from "@/app/types/code-generator-config";
+import { generateJavaCode } from "@/core/generators/json-to-java";
+import { JavaConfig } from "@/core/types/code-generator-config";
 
 export default function JavaGeneratorPage() {
     const { config } = useConfig();

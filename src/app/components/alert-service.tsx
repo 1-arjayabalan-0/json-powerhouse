@@ -1,7 +1,7 @@
 "use client";
 
 import { Alert, AlertTitle, AlertDescription } from "@/app/components/ui/alert";
-import { useAlertStore } from "@/app/lib/utils/alert-store";
+import { useAlertStore } from "@/core/lib/utils/alert-store";
 import { useEffect } from "react";
 
 export default function AlertService() {

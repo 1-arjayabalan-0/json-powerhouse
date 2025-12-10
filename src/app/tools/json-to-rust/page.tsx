@@ -3,8 +3,8 @@
 import { useState, useCallback } from 'react';
 import { useConfig } from "@/app/context/ConfigContext";
 import CodeGeneratorBase from "@/app/components/CodeGeneratorBase";
-import { generateRustCode } from "./generator";
-import { RustConfig } from "@/app/types/code-generator-config";
+import { generateRustCode } from "@/core/generators/json-to-rust";
+import { RustConfig } from "@/core/types/code-generator-config";
 
 export default function RustGeneratorPage() {
     const { config } = useConfig();

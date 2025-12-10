@@ -1,8 +1,8 @@
 "use client"
 
-import { prettifyJson } from "@/app/lib/converters/prettifyJson";
+import { prettifyJson } from "@/core/lib/converters/prettifyJson";
 import { useEffect, useCallback } from "react";
-import { JSONFormatterConfig } from "@/app/types/json-formatter-config";
+import { JSONFormatterConfig } from "@/core/types/json-formatter-config";
 
 interface JSONFormatterProps {
     config: JSONFormatterConfig;

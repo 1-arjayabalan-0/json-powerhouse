@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react";
-import { JsonTreeViewerConfig } from "@/app/types/json-viewer-config";
+import { JsonTreeViewerConfig } from "@/core/types/json-viewer-config";
 
 interface JsonTreeNodeProps {
     name?: string;

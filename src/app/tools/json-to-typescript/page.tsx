@@ -3,8 +3,8 @@
 import { useState, useCallback } from 'react';
 import { useConfig } from "@/app/context/ConfigContext";
 import CodeGeneratorBase from "@/app/components/CodeGeneratorBase";
-import { generateTypeScriptCode } from "./generator";
-import { TypeScriptConfig } from "@/app/types/code-generator-config";
+import { generateTypeScriptCode } from "@/core/generators/json-to-typescript";
+import { TypeScriptConfig } from "@/core/types/code-generator-config";
 
 export default function TypeScriptGeneratorPage() {
     const { config } = useConfig();

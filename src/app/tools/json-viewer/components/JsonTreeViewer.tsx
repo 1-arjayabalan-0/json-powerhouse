@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react";
-import { JsonTreeViewerConfig, defaultViewerConfig } from "@/app/types/json-viewer-config";
+import { JsonTreeViewerConfig, defaultViewerConfig } from "@/core/types/json-viewer-config";
 import { useConfig } from "@/app/context/ConfigContext";
 import { toast } from "sonner";
 import JsonTreeNode from "./JsonTreeNode";

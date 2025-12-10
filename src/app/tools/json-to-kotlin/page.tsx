@@ -3,8 +3,8 @@
 import { useState, useCallback } from 'react';
 import { useConfig } from "@/app/context/ConfigContext";
 import CodeGeneratorBase from "@/app/components/CodeGeneratorBase";
-import { generateKotlinCode } from "./generator";
-import { KotlinConfig } from "@/app/types/code-generator-config";
+import { generateKotlinCode } from "@/core/generators/json-to-kotlin";
+import { KotlinConfig } from "@/core/types/code-generator-config";
 
 export default function KotlinGeneratorPage() {
     const { config } = useConfig();

@@ -2,9 +2,9 @@
 
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
-import { defaultConfig as defaultFormatterConfig } from '@/app/types/json-formatter-config';
-import { defaultViewerConfig } from '@/app/types/json-viewer-config';
-import { defaultJSON5Config } from '@/app/types/json5-converter-config';
+import { defaultConfig as defaultFormatterConfig } from '@/core/types/json-formatter-config';
+import { defaultViewerConfig } from '@/core/types/json-viewer-config';
+import { defaultJSON5Config } from '@/core/types/json5-converter-config';
 import {
     defaultTypeScriptConfig,
     defaultJavaConfig,
@@ -16,7 +16,7 @@ import {
     defaultPythonConfig,
     defaultRustConfig,
     defaultPHPConfig,
-} from '@/app/types/code-generator-config';
+} from '@/core/types/code-generator-config';
 
 interface ConfigContextType {
     config: any;

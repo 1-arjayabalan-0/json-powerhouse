@@ -3,8 +3,8 @@
 import { useState, useCallback } from 'react';
 import { useConfig } from "@/app/context/ConfigContext";
 import CodeGeneratorBase from "@/app/components/CodeGeneratorBase";
-import { generateCSharpCode } from "./generator";
-import { CSharpConfig } from "@/app/types/code-generator-config";
+import { generateCSharpCode } from "@/core/generators/json-to-csharp";
+import { CSharpConfig } from "@/core/types/code-generator-config";
 
 export default function CSharpGeneratorPage() {
     const { config } = useConfig();

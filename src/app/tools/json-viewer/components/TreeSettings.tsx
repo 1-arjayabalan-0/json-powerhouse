@@ -1,6 +1,6 @@
 "use client"
 
-import { JsonTreeViewerConfig, IndentationType } from "@/app/types/json-viewer-config";
+import { JsonTreeViewerConfig, IndentationType } from "@/core/types/json-viewer-config";
 
 interface TreeSettingsProps {
     config: JsonTreeViewerConfig;

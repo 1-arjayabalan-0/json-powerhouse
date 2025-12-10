@@ -2,15 +2,15 @@
 
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { JSONFormatterConfig, IndentationType, QuoteStyle, KeyCase, ArrayFormatting, KeySorting } from "@/app/types/json-formatter-config";
-import { JsonTreeViewerConfig } from "@/app/types/json-viewer-config";
-import { JSON5ConverterConfig } from "@/app/types/json5-converter-config";
+import { JSONFormatterConfig, IndentationType, QuoteStyle, KeyCase, ArrayFormatting, KeySorting } from "@/core/types/json-formatter-config";
+import { JsonTreeViewerConfig } from "@/core/types/json-viewer-config";
+import { JSON5ConverterConfig } from "@/core/types/json5-converter-config";
 import {
     TypeScriptConfig, JavaConfig, KotlinConfig, DartConfig, SwiftConfig,
     GoConfig, CSharpConfig, PythonConfig, RustConfig, PHPConfig,
     defaultTypeScriptConfig, defaultJavaConfig, defaultKotlinConfig, defaultDartConfig, defaultSwiftConfig,
     defaultGoConfig, defaultCSharpConfig, defaultPythonConfig, defaultRustConfig, defaultPHPConfig
-} from "@/app/types/code-generator-config";
+} from "@/core/types/code-generator-config";
 import { toast } from "sonner";
 
 interface SettingsSidenavProps {
@@ -342,7 +342,7 @@ export default function SettingsSidenav({ config, onConfigChange }: SettingsSide
 
         return (
             <SettingsContainer title="JSON5 Settings" onReset={() => {
-                const { defaultJSON5Config } = require('@/app/types/json5-converter-config');
+                const { defaultJSON5Config } = require('@/core/types/json5-converter-config');
                 onConfigChange(defaultJSON5Config);
             }}>
                 {/* Indentation */}
@@ -418,7 +418,7 @@ export default function SettingsSidenav({ config, onConfigChange }: SettingsSide
 
         return (
             <SettingsContainer title="Tree Settings" onReset={() => {
-                const { defaultViewerConfig } = require('@/app/types/json-viewer-config');
+                const { defaultViewerConfig } = require('@/core/types/json-viewer-config');
                 onConfigChange(defaultViewerConfig);
             }}>
                 {/* Indentation */}
@@ -469,7 +469,7 @@ export default function SettingsSidenav({ config, onConfigChange }: SettingsSide
 
     return (
         <SettingsContainer title="Settings" onReset={() => {
-            const { defaultConfig } = require('@/app/types/json-formatter-config');
+            const { defaultConfig } = require('@/core/types/json-formatter-config');
             onConfigChange(defaultConfig);
         }}>
             {/* Phase 1: Core Settings */}
