@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
+import CodeEditor from './CodeEditor';
 
 interface CodeGeneratorBaseProps {
     language: string;
@@ -103,12 +104,11 @@ export default function CodeGeneratorBase({
                         Load Sample
                     </button>
                 </div>
-                <textarea
+                <CodeEditor
                     value={input}
-                    onChange={(e) => setInput(e.target.value)}
+                    language="json"
+                    onChange={(value) => setInput(value || '')}
                     placeholder="Paste your JSON here..."
-                    className="flex-1 rounded-lg bg-[#1a1a1a] p-4 text-white font-mono text-sm border border-white/10 focus:border-blue-500 focus:outline-none resize-none"
-                    spellCheck={false}
                 />
             </div>
 
@@ -136,12 +136,11 @@ export default function CodeGeneratorBase({
                         </button>
                     </div>
                 </div>
-                <textarea
+                <CodeEditor
                     value={output}
-                    readOnly
+                    language={language}
+                    readOnly={true}
                     placeholder={`Generated ${languageDisplayName} code will appear here...`}
-                    className="flex-1 rounded-lg bg-[#1a1a1a] p-4 text-white font-mono text-sm border border-white/10 resize-none"
-                    spellCheck={false}
                 />
             </div>
         </div>

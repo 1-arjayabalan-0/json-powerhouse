@@ -41,7 +41,7 @@ export async function generateCodeFromJSON(
             {} as { [key: string]: string | boolean }
         );
 
-        console.log(safeRendererOptions);
+        console.log("safeRendererOptions", safeRendererOptions);
         const result = await quicktype({
             inputData,
             lang: targetLanguage as any,
@@ -50,6 +50,8 @@ export async function generateCodeFromJSON(
 
         return result.lines.join("\n");
     } catch (error: any) {
+        console.log(error);
+
         throw new Error(`Failed to generate code: ${error.message}`);
     }
 }
