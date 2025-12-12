@@ -14,7 +14,7 @@ export async function generateJavaCode(
             "use-getters-setters": config.useGettersSetters ? "true" : "false",
             "use-optional": config.useOptional ? "true" : "false",
             "use-big-decimal": config.useBigDecimal ? "true" : "false",
-            "array-type": config.arrayType,
+            "array-type": config.arrayType === "list" ? "list" : "array",
             "acronym-style": config.acronymStyle,
         }
     );

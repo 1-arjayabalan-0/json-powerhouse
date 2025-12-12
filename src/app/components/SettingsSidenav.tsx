@@ -121,8 +121,8 @@ export default function SettingsSidenav({ config, onConfigChange }: SettingsSide
                     <div className="space-y-2">
                         <label className="text-white text-sm font-medium">Array Type</label>
                         <select value={javaConfig.arrayType} onChange={(e) => updateConfig('arrayType', e.target.value)} className="w-full px-3 py-2 rounded-lg bg-white/10 text-white text-sm border border-white/20 focus:outline-none focus:border-blue-500">
-                            <option value="List">List</option>
-                            <option value="Array">Array</option>
+                            <option value="list">List</option>
+                            <option value="array">Array</option>
                         </select>
                     </div>
                     <Toggle label="Getters & Setters" checked={javaConfig.useGettersSetters} onChange={(v) => updateConfig('useGettersSetters', v)} />
@@ -254,8 +254,8 @@ export default function SettingsSidenav({ config, onConfigChange }: SettingsSide
                     <div className="space-y-2">
                         <label className="text-white text-sm font-medium">Array Type</label>
                         <select value={csharpConfig.arrayType} onChange={(e) => updateConfig('arrayType', e.target.value)} className="w-full px-3 py-2 rounded-lg bg-white/10 text-white text-sm border border-white/20 focus:outline-none focus:border-blue-500">
-                            <option value="List">List</option>
-                            <option value="Array">Array</option>
+                            <option value="list">List</option>
+                            <option value="array">Array</option>
                         </select>
                     </div>
                     <Toggle label="Use Properties" checked={csharpConfig.useProperties} onChange={(v) => updateConfig('useProperties', v)} />

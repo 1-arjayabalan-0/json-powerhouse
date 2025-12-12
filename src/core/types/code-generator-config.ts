@@ -90,7 +90,7 @@ export const defaultDartConfig: DartConfig = {
 // Swift Configuration
 // ============================================================================
 export type SwiftTypeKind = 'struct' | 'class';
-export type SwiftAccessLevel = 'public' | 'internal' | 'private';
+export type SwiftAccessLevel = 'public' | 'internal' | 'private' | 'open';
 
 export interface SwiftConfig {
     typeKind: SwiftTypeKind;

@@ -7,13 +7,17 @@ export async function generateCSharpCode(jsonString: string, config: CSharpConfi
         "csharp",
         "Root",
         {
-            "namespace": config.namespace,
-            "framework": config.framework,
-            "use-properties": config.useProperties ? "true" : "false",
-            "number-type": config.numberType,
-            "array-type": config.arrayType,
+            "csharp-namespace": config.namespace,
+            ...(config.framework !== "none" && {
+                "framework": config.framework === "SystemTextJson"
+                    ? "system-text-json"
+                    : "json-net"
+            }),
+            "csharp-use-properties": config.useProperties,
+            "csharp-number-type": config.numberType,
+            "csharp-array-type": config.arrayType === "list" ? " list" : "array",
             "density": config.density,
-            "acronym-style": config.acronymStyle,
+            "csharp-acronym-style": config.acronymStyle,
         }
     );
 }
