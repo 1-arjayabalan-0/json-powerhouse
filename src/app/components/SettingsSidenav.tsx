@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { JSONFormatterConfig, IndentationType, QuoteStyle, KeyCase, ArrayFormatting, KeySorting } from "@/core/types/json-formatter-config";
-import { JsonTreeViewerConfig } from "@/core/types/json-viewer-config";
-import { JSON5ConverterConfig } from "@/core/types/json5-converter-config";
+import { JSONFormatterConfig, IndentationType, QuoteStyle, KeyCase, ArrayFormatting, KeySorting, defaultConfig as defaultFormatterConfig } from "@/core/types/json-formatter-config";
+import { JsonTreeViewerConfig, defaultViewerConfig } from "@/core/types/json-viewer-config";
+import { JSON5ConverterConfig, defaultJSON5Config } from "@/core/types/json5-converter-config";
 import {
     TypeScriptConfig, JavaConfig, KotlinConfig, DartConfig, SwiftConfig,
     GoConfig, CSharpConfig, PythonConfig, RustConfig, PHPConfig,
@@ -12,6 +12,11 @@ import {
     defaultGoConfig, defaultCSharpConfig, defaultPythonConfig, defaultRustConfig, defaultPHPConfig
 } from "@/core/types/code-generator-config";
 import { toast } from "sonner";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/app/components/ui/select";
+import { Switch } from "@/app/components/ui/switch";
+import { Input } from "@/app/components/ui/input";
+import { Label } from "@/app/components/ui/label";
+import { Button } from "@/app/components/ui/button";
 
 interface SettingsSidenavProps {
     config: any;
@@ -59,12 +64,13 @@ export default function SettingsSidenav({ config, onConfigChange }: SettingsSide
                 <div className="overflow-y-auto flex-1 p-4 space-y-6">
                     {children}
                     <div className="pt-4 border-t border-white/10">
-                        <button
+                        <Button
                             onClick={onReset}
-                            className="w-full px-4 py-2 rounded-lg bg-white/10 text-white text-sm font-medium hover:bg-white/20 transition-colors"
+                            variant="secondary"
+                            className="w-full bg-white/10 text-white hover:bg-white/20"
                         >
                             Reset to Defaults
-                        </button>
+                        </Button>
                     </div>
                 </div>
             )}
@@ -80,23 +86,26 @@ export default function SettingsSidenav({ config, onConfigChange }: SettingsSide
             <SettingsContainer title="TypeScript Settings" onReset={() => onConfigChange(defaultTypeScriptConfig)}>
                 <div className="space-y-4">
                     <div className="space-y-2">
-                        <label className="text-white text-sm font-medium">Type Kind</label>
-                        <div className="grid grid-cols-2 gap-2">
-                            <button onClick={() => updateConfig('typeKind', 'interface')} className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${tsConfig.typeKind === 'interface' ? 'bg-blue-600 text-white' : 'bg-white/10 text-white/60'}`}>Interface</button>
-                            <button onClick={() => updateConfig('typeKind', 'type')} className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${tsConfig.typeKind === 'type' ? 'bg-blue-600 text-white' : 'bg-white/10 text-white/60'}`}>Type Alias</button>
+                        <div className="space-y-2">
+                            <Label className="text-white text-sm font-medium">Type Kind</Label>
+                            <div className="grid grid-cols-2 gap-2">
+                                <Button onClick={() => updateConfig('typeKind', 'interface')} variant={tsConfig.typeKind === 'interface' ? 'secondary' : 'ghost'} className="w-full">Interface</Button>
+                                <Button onClick={() => updateConfig('typeKind', 'type')} variant={tsConfig.typeKind === 'type' ? 'secondary' : 'ghost'} className="w-full">Type Alias</Button>
+                            </div>
                         </div>
                     </div>
                     <div className="space-y-2">
-                        <label className="text-white text-sm font-medium">Runtime Typecheck</label>
-                        <select
-                            value={tsConfig.runtimeTypecheck}
-                            onChange={(e) => updateConfig('runtimeTypecheck', e.target.value)}
-                            className="w-full px-3 py-2 rounded-lg bg-white/10 text-white text-sm border border-white/20 focus:outline-none focus:border-blue-500"
-                        >
-                            <option value="none">None</option>
-                            <option value="io-ts">IO-TS</option>
-                            <option value="zod">Zod</option>
-                        </select>
+                        <Label className="text-white text-sm font-medium">Runtime Typecheck</Label>
+                        <Select value={tsConfig.runtimeTypecheck} onValueChange={(value) => updateConfig('runtimeTypecheck', value)}>
+                            <SelectTrigger className="w-full bg-white/10 text-white border-white/20 focus:border-blue-500">
+                                <SelectValue placeholder="Select runtime typecheck" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="none">None</SelectItem>
+                                <SelectItem value="io-ts">IO-TS</SelectItem>
+                                <SelectItem value="zod">Zod</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
                     <Toggle label="Readonly Properties" checked={tsConfig.readonlyProperties} onChange={(v) => updateConfig('readonlyProperties', v)} />
                     <Toggle label="Explicit Any" checked={tsConfig.explicitAny} onChange={(v) => updateConfig('explicitAny', v)} />
@@ -115,15 +124,25 @@ export default function SettingsSidenav({ config, onConfigChange }: SettingsSide
             <SettingsContainer title="Java Settings" onReset={() => onConfigChange(defaultJavaConfig)}>
                 <div className="space-y-4">
                     <div className="space-y-2">
-                        <label className="text-white text-sm font-medium">Package Name</label>
-                        <input type="text" value={javaConfig.packageName} onChange={(e) => updateConfig('packageName', e.target.value)} className="w-full px-3 py-2 rounded-lg bg-white/10 text-white text-sm border border-white/20 focus:outline-none focus:border-blue-500" />
+                        <Label className="text-white text-sm font-medium">Package Name</Label>
+                        <Input
+                            type="text"
+                            value={javaConfig.packageName}
+                            onChange={(e) => updateConfig('packageName', e.target.value)}
+                            className="bg-white/10 text-white border-white/20 focus:border-blue-500"
+                        />
                     </div>
                     <div className="space-y-2">
-                        <label className="text-white text-sm font-medium">Array Type</label>
-                        <select value={javaConfig.arrayType} onChange={(e) => updateConfig('arrayType', e.target.value)} className="w-full px-3 py-2 rounded-lg bg-white/10 text-white text-sm border border-white/20 focus:outline-none focus:border-blue-500">
-                            <option value="list">List</option>
-                            <option value="array">Array</option>
-                        </select>
+                        <Label className="text-white text-sm font-medium">Array Type</Label>
+                        <Select value={javaConfig.arrayType} onValueChange={(value) => updateConfig('arrayType', value)}>
+                            <SelectTrigger className="w-full bg-white/10 text-white border-white/20 focus:border-blue-500">
+                                <SelectValue placeholder="Select array type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="list">List</SelectItem>
+                                <SelectItem value="array">Array</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
                     <Toggle label="Getters & Setters" checked={javaConfig.useGettersSetters} onChange={(v) => updateConfig('useGettersSetters', v)} />
                     <Toggle label="Use Optional" checked={javaConfig.useOptional} onChange={(v) => updateConfig('useOptional', v)} />
@@ -142,16 +161,26 @@ export default function SettingsSidenav({ config, onConfigChange }: SettingsSide
             <SettingsContainer title="Kotlin Settings" onReset={() => onConfigChange(defaultKotlinConfig)}>
                 <div className="space-y-4">
                     <div className="space-y-2">
-                        <label className="text-white text-sm font-medium">Package Name</label>
-                        <input type="text" value={kotlinConfig.packageName} onChange={(e) => updateConfig('packageName', e.target.value)} className="w-full px-3 py-2 rounded-lg bg-white/10 text-white text-sm border border-white/20 focus:outline-none focus:border-blue-500" />
+                        <Label className="text-white text-sm font-medium">Package Name</Label>
+                        <Input
+                            type="text"
+                            value={kotlinConfig.packageName}
+                            onChange={(e) => updateConfig('packageName', e.target.value)}
+                            className="bg-white/10 text-white border-white/20 focus:border-blue-500"
+                        />
                     </div>
                     <div className="space-y-2">
-                        <label className="text-white text-sm font-medium">Framework</label>
-                        <select value={kotlinConfig.framework} onChange={(e) => updateConfig('framework', e.target.value)} className="w-full px-3 py-2 rounded-lg bg-white/10 text-white text-sm border border-white/20 focus:outline-none focus:border-blue-500">
-                            <option value="just-types">Just Types</option>
-                            <option value="jackson">Jackson</option>
-                            <option value="kotlinx">Kotlinx</option>
-                        </select>
+                        <Label className="text-white text-sm font-medium">Framework</Label>
+                        <Select value={kotlinConfig.framework} onValueChange={(value) => updateConfig('framework', value)}>
+                            <SelectTrigger className="w-full bg-white/10 text-white border-white/20 focus:border-blue-500">
+                                <SelectValue placeholder="Select framework" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="just-types">Just Types</SelectItem>
+                                <SelectItem value="jackson">Jackson</SelectItem>
+                                <SelectItem value="kotlinx">Kotlinx</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
                     <Toggle label="Use Data Classes" checked={kotlinConfig.useDataClasses} onChange={(v) => updateConfig('useDataClasses', v)} />
                     <Toggle label="Use Arrays" checked={kotlinConfig.useArrays} onChange={(v) => updateConfig('useArrays', v)} />
@@ -186,19 +215,26 @@ export default function SettingsSidenav({ config, onConfigChange }: SettingsSide
             <SettingsContainer title="Swift Settings" onReset={() => onConfigChange(defaultSwiftConfig)}>
                 <div className="space-y-4">
                     <div className="space-y-2">
-                        <label className="text-white text-sm font-medium">Type Kind</label>
-                        <div className="grid grid-cols-2 gap-2">
-                            <button onClick={() => updateConfig('typeKind', 'struct')} className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${swiftConfig.typeKind === 'struct' ? 'bg-blue-600 text-white' : 'bg-white/10 text-white/60'}`}>Struct</button>
-                            <button onClick={() => updateConfig('typeKind', 'class')} className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${swiftConfig.typeKind === 'class' ? 'bg-blue-600 text-white' : 'bg-white/10 text-white/60'}`}>Class</button>
+                        <div className="space-y-2">
+                            <Label className="text-white text-sm font-medium">Type Kind</Label>
+                            <div className="grid grid-cols-2 gap-2">
+                                <Button onClick={() => updateConfig('typeKind', 'struct')} variant={swiftConfig.typeKind === 'struct' ? 'secondary' : 'ghost'} className="w-full">Struct</Button>
+                                <Button onClick={() => updateConfig('typeKind', 'class')} variant={swiftConfig.typeKind === 'class' ? 'secondary' : 'ghost'} className="w-full">Class</Button>
+                            </div>
                         </div>
                     </div>
                     <div className="space-y-2">
-                        <label className="text-white text-sm font-medium">Access Level</label>
-                        <select value={swiftConfig.accessLevel} onChange={(e) => updateConfig('accessLevel', e.target.value)} className="w-full px-3 py-2 rounded-lg bg-white/10 text-white text-sm border border-white/20 focus:outline-none focus:border-blue-500">
-                            <option value="internal">Internal</option>
-                            <option value="public">Public</option>
-                            <option value="open">Open</option>
-                        </select>
+                        <Label className="text-white text-sm font-medium">Access Level</Label>
+                        <Select value={swiftConfig.accessLevel} onValueChange={(value) => updateConfig('accessLevel', value)}>
+                            <SelectTrigger className="w-full bg-white/10 text-white border-white/20 focus:border-blue-500">
+                                <SelectValue placeholder="Select access level" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="internal">Internal</SelectItem>
+                                <SelectItem value="public">Public</SelectItem>
+                                <SelectItem value="open">Open</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
                     <Toggle label="Use Codable" checked={swiftConfig.useCodable} onChange={(v) => updateConfig('useCodable', v)} />
                     <Toggle label="Mutable Classes" checked={swiftConfig.useClassesForMutable} onChange={(v) => updateConfig('useClassesForMutable', v)} />
@@ -216,15 +252,25 @@ export default function SettingsSidenav({ config, onConfigChange }: SettingsSide
             <SettingsContainer title="Go Settings" onReset={() => onConfigChange(defaultGoConfig)}>
                 <div className="space-y-4">
                     <div className="space-y-2">
-                        <label className="text-white text-sm font-medium">Package Name</label>
-                        <input type="text" value={goConfig.packageName} onChange={(e) => updateConfig('packageName', e.target.value)} className="w-full px-3 py-2 rounded-lg bg-white/10 text-white text-sm border border-white/20 focus:outline-none focus:border-blue-500" />
+                        <Label className="text-white text-sm font-medium">Package Name</Label>
+                        <Input
+                            type="text"
+                            value={goConfig.packageName}
+                            onChange={(e) => updateConfig('packageName', e.target.value)}
+                            className="bg-white/10 text-white border-white/20 focus:border-blue-500"
+                        />
                     </div>
                     <div className="space-y-2">
-                        <label className="text-white text-sm font-medium">Field Naming</label>
-                        <select value={goConfig.fieldNaming} onChange={(e) => updateConfig('fieldNaming', e.target.value)} className="w-full px-3 py-2 rounded-lg bg-white/10 text-white text-sm border border-white/20 focus:outline-none focus:border-blue-500">
-                            <option value="json">JSON Tags</option>
-                            <option value="none">None</option>
-                        </select>
+                        <Label className="text-white text-sm font-medium">Field Naming</Label>
+                        <Select value={goConfig.fieldNaming} onValueChange={(value) => updateConfig('fieldNaming', value)}>
+                            <SelectTrigger className="w-full bg-white/10 text-white border-white/20 focus:border-blue-500">
+                                <SelectValue placeholder="Select field naming" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="json">JSON Tags</SelectItem>
+                                <SelectItem value="none">None</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
                     <Toggle label="Omit Empty" checked={goConfig.useOmitEmpty} onChange={(v) => updateConfig('useOmitEmpty', v)} />
                 </div>
@@ -241,22 +287,37 @@ export default function SettingsSidenav({ config, onConfigChange }: SettingsSide
             <SettingsContainer title="C# Settings" onReset={() => onConfigChange(defaultCSharpConfig)}>
                 <div className="space-y-4">
                     <div className="space-y-2">
-                        <label className="text-white text-sm font-medium">Namespace</label>
-                        <input type="text" value={csharpConfig.namespace} onChange={(e) => updateConfig('namespace', e.target.value)} className="w-full px-3 py-2 rounded-lg bg-white/10 text-white text-sm border border-white/20 focus:outline-none focus:border-blue-500" />
+                        <Label className="text-white text-sm font-medium">Namespace</Label>
+                        <Input
+                            type="text"
+                            value={csharpConfig.namespace}
+                            onChange={(e) => updateConfig('namespace', e.target.value)}
+                            className="bg-white/10 text-white border-white/20 focus:border-blue-500"
+                        />
                     </div>
                     <div className="space-y-2">
-                        <label className="text-white text-sm font-medium">Framework</label>
-                        <select value={csharpConfig.framework} onChange={(e) => updateConfig('framework', e.target.value)} className="w-full px-3 py-2 rounded-lg bg-white/10 text-white text-sm border border-white/20 focus:outline-none focus:border-blue-500">
-                            <option value="Newtonsoft.Json">Newtonsoft.Json</option>
-                            <option value="System.Text.Json">System.Text.Json</option>
-                        </select>
+                        <Label className="text-white text-sm font-medium">Framework</Label>
+                        <Select value={csharpConfig.framework} onValueChange={(value) => updateConfig('framework', value)}>
+                            <SelectTrigger className="w-full bg-white/10 text-white border-white/20 focus:border-blue-500">
+                                <SelectValue placeholder="Select framework" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="Newtonsoft.Json">Newtonsoft.Json</SelectItem>
+                                <SelectItem value="System.Text.Json">System.Text.Json</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
                     <div className="space-y-2">
-                        <label className="text-white text-sm font-medium">Array Type</label>
-                        <select value={csharpConfig.arrayType} onChange={(e) => updateConfig('arrayType', e.target.value)} className="w-full px-3 py-2 rounded-lg bg-white/10 text-white text-sm border border-white/20 focus:outline-none focus:border-blue-500">
-                            <option value="list">List</option>
-                            <option value="array">Array</option>
-                        </select>
+                        <Label className="text-white text-sm font-medium">Array Type</Label>
+                        <Select value={csharpConfig.arrayType} onValueChange={(value) => updateConfig('arrayType', value)}>
+                            <SelectTrigger className="w-full bg-white/10 text-white border-white/20 focus:border-blue-500">
+                                <SelectValue placeholder="Select array type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="list">List</SelectItem>
+                                <SelectItem value="array">Array</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
                     <Toggle label="Use Properties" checked={csharpConfig.useProperties} onChange={(v) => updateConfig('useProperties', v)} />
                 </div>
@@ -273,11 +334,16 @@ export default function SettingsSidenav({ config, onConfigChange }: SettingsSide
             <SettingsContainer title="Python Settings" onReset={() => onConfigChange(defaultPythonConfig)}>
                 <div className="space-y-4">
                     <div className="space-y-2">
-                        <label className="text-white text-sm font-medium">Python Version</label>
-                        <select value={pythonConfig.pythonVersion} onChange={(e) => updateConfig('pythonVersion', e.target.value)} className="w-full px-3 py-2 rounded-lg bg-white/10 text-white text-sm border border-white/20 focus:outline-none focus:border-blue-500">
-                            <option value="3.7">3.7</option>
-                            <option value="3.6">3.6</option>
-                        </select>
+                        <Label className="text-white text-sm font-medium">Python Version</Label>
+                        <Select value={pythonConfig.pythonVersion} onValueChange={(value) => updateConfig('pythonVersion', value)}>
+                            <SelectTrigger className="w-full bg-white/10 text-white border-white/20 focus:border-blue-500">
+                                <SelectValue placeholder="Select Python version" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="3.7">3.7</SelectItem>
+                                <SelectItem value="3.6">3.6</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
                     <Toggle label="Type Hints" checked={pythonConfig.useTypeHints} onChange={(v) => updateConfig('useTypeHints', v)} />
                     <Toggle label="Nice Property Names" checked={pythonConfig.nicePropertyNames} onChange={(v) => updateConfig('nicePropertyNames', v)} />
@@ -295,19 +361,29 @@ export default function SettingsSidenav({ config, onConfigChange }: SettingsSide
             <SettingsContainer title="Rust Settings" onReset={() => onConfigChange(defaultRustConfig)}>
                 <div className="space-y-4">
                     <div className="space-y-2">
-                        <label className="text-white text-sm font-medium">Visibility</label>
-                        <select value={rustConfig.visibility} onChange={(e) => updateConfig('visibility', e.target.value)} className="w-full px-3 py-2 rounded-lg bg-white/10 text-white text-sm border border-white/20 focus:outline-none focus:border-blue-500">
-                            <option value="public">Public</option>
-                            <option value="crate">Crate</option>
-                            <option value="private">Private</option>
-                        </select>
+                        <Label className="text-white text-sm font-medium">Visibility</Label>
+                        <Select value={rustConfig.visibility} onValueChange={(value) => updateConfig('visibility', value)}>
+                            <SelectTrigger className="w-full bg-white/10 text-white border-white/20 focus:border-blue-500">
+                                <SelectValue placeholder="Select visibility" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="public">Public</SelectItem>
+                                <SelectItem value="crate">Crate</SelectItem>
+                                <SelectItem value="private">Private</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
                     <div className="space-y-2">
-                        <label className="text-white text-sm font-medium">Density</label>
-                        <select value={rustConfig.density} onChange={(e) => updateConfig('density', e.target.value)} className="w-full px-3 py-2 rounded-lg bg-white/10 text-white text-sm border border-white/20 focus:outline-none focus:border-blue-500">
-                            <option value="normal">Normal</option>
-                            <option value="dense">Dense</option>
-                        </select>
+                        <Label className="text-white text-sm font-medium">Density</Label>
+                        <Select value={rustConfig.density} onValueChange={(value) => updateConfig('density', value)}>
+                            <SelectTrigger className="w-full bg-white/10 text-white border-white/20 focus:border-blue-500">
+                                <SelectValue placeholder="Select density" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="normal">Normal</SelectItem>
+                                <SelectItem value="dense">Dense</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
                     <Toggle label="Derive Debug" checked={rustConfig.deriveDebug} onChange={(v) => updateConfig('deriveDebug', v)} />
                     <Toggle label="Derive Clone" checked={rustConfig.deriveClone} onChange={(v) => updateConfig('deriveClone', v)} />
@@ -325,8 +401,13 @@ export default function SettingsSidenav({ config, onConfigChange }: SettingsSide
             <SettingsContainer title="PHP Settings" onReset={() => onConfigChange(defaultPHPConfig)}>
                 <div className="space-y-4">
                     <div className="space-y-2">
-                        <label className="text-white text-sm font-medium">Namespace</label>
-                        <input type="text" value={phpConfig.namespace} onChange={(e) => updateConfig('namespace', e.target.value)} className="w-full px-3 py-2 rounded-lg bg-white/10 text-white text-sm border border-white/20 focus:outline-none focus:border-blue-500" />
+                        <Label className="text-white text-sm font-medium">Namespace</Label>
+                        <Input
+                            type="text"
+                            value={phpConfig.namespace}
+                            onChange={(e) => updateConfig('namespace', e.target.value)}
+                            className="bg-white/10 text-white border-white/20 focus:border-blue-500"
+                        />
                     </div>
                     <Toggle label="Strict Types" checked={phpConfig.strictTypes} onChange={(v) => updateConfig('strictTypes', v)} />
                 </div>
@@ -342,43 +423,38 @@ export default function SettingsSidenav({ config, onConfigChange }: SettingsSide
 
         return (
             <SettingsContainer title="JSON5 Settings" onReset={() => {
-                const { defaultJSON5Config } = require('@/core/types/json5-converter-config');
                 onConfigChange(defaultJSON5Config);
             }}>
                 {/* Indentation */}
                 <div className="space-y-2">
-                    <label className="text-white text-sm font-medium">Indentation</label>
+                    <Label className="text-white text-sm font-medium">Indentation</Label>
                     <div className="grid grid-cols-3 gap-2">
                         {(['2', '4', 'tab'] as const).map((indent) => (
-                            <button
+                            <Button
                                 key={indent}
                                 onClick={() => updateConfig('indentation', indent)}
-                                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${json5Config.indentation === indent
-                                    ? 'bg-blue-600 text-white shadow-md'
-                                    : 'bg-white/10 text-white/60 hover:bg-white/20 hover:text-white'
-                                    }`}
+                                variant={json5Config.indentation === indent ? 'secondary' : 'ghost'}
+                                className="w-full"
                             >
                                 {indent === 'tab' ? 'Tab' : `${indent} Spaces`}
-                            </button>
+                            </Button>
                         ))}
                     </div>
                 </div>
 
                 {/* Quote Style */}
                 <div className="space-y-2">
-                    <label className="text-white text-sm font-medium">Quote Style</label>
+                    <Label className="text-white text-sm font-medium">Quote Style</Label>
                     <div className="grid grid-cols-2 gap-2">
                         {(['double', 'single'] as const).map((style) => (
-                            <button
+                            <Button
                                 key={style}
                                 onClick={() => updateConfig('quoteStyle', style)}
-                                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${json5Config.quoteStyle === style
-                                    ? 'bg-blue-600 text-white shadow-md'
-                                    : 'bg-white/10 text-white/60 hover:bg-white/20 hover:text-white'
-                                    }`}
+                                variant={json5Config.quoteStyle === style ? 'secondary' : 'ghost'}
+                                className="w-full"
                             >
                                 {style === 'double' ? 'Double " "' : "Single ' '"}
-                            </button>
+                            </Button>
                         ))}
                     </div>
                 </div>
@@ -418,24 +494,21 @@ export default function SettingsSidenav({ config, onConfigChange }: SettingsSide
 
         return (
             <SettingsContainer title="Tree Settings" onReset={() => {
-                const { defaultViewerConfig } = require('@/core/types/json-viewer-config');
                 onConfigChange(defaultViewerConfig);
             }}>
                 {/* Indentation */}
                 <div className="space-y-2">
-                    <label className="text-white text-sm font-medium">Indentation</label>
+                    <Label className="text-white text-sm font-medium">Indentation</Label>
                     <div className="grid grid-cols-3 gap-2">
                         {(['2', '4', 'tab'] as const).map((indent) => (
-                            <button
+                            <Button
                                 key={indent}
                                 onClick={() => updateConfig('indentation', indent)}
-                                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${treeConfig.indentation === indent
-                                    ? 'bg-blue-600 text-white'
-                                    : 'bg-white/10 text-white/60 hover:bg-white/20 hover:text-white'
-                                    }`}
+                                variant={treeConfig.indentation === indent ? 'secondary' : 'ghost'}
+                                className="w-full"
                             >
                                 {indent === 'tab' ? 'Tab' : `${indent} Spaces`}
-                            </button>
+                            </Button>
                         ))}
                     </div>
                 </div>
@@ -469,8 +542,7 @@ export default function SettingsSidenav({ config, onConfigChange }: SettingsSide
 
     return (
         <SettingsContainer title="Settings" onReset={() => {
-            const { defaultConfig } = require('@/core/types/json-formatter-config');
-            onConfigChange(defaultConfig);
+            onConfigChange(defaultFormatterConfig);
         }}>
             {/* Phase 1: Core Settings */}
             <div className="space-y-4">
@@ -478,45 +550,39 @@ export default function SettingsSidenav({ config, onConfigChange }: SettingsSide
 
                 {/* Indentation */}
                 <div className="space-y-2">
-                    <label className="text-white text-sm font-medium">Indentation</label>
+                    <Label className="text-white text-sm font-medium">Indentation</Label>
                     <div className="grid grid-cols-4 gap-2">
                         {(['2', '4', 'tab', '0'] as IndentationType[]).map((indent) => (
-                            <button
+                            <Button
                                 key={indent}
                                 onClick={() => updateConfig('indentation', indent)}
-                                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${formatterConfig.indentation === indent
-                                    ? 'bg-blue-600 text-white'
-                                    : 'bg-white/10 text-white/60 hover:bg-white/20 hover:text-white'
-                                    }`}
+                                variant={formatterConfig.indentation === indent ? 'secondary' : 'ghost'}
+                                className="w-full"
                             >
                                 {indent === 'tab' ? 'Tab' : indent === '0' ? 'None' : `${indent} sp`}
-                            </button>
+                            </Button>
                         ))}
                     </div>
                 </div>
 
                 {/* Pretty / Minify */}
                 <div className="space-y-2">
-                    <label className="text-white text-sm font-medium">Format Mode</label>
+                    <Label className="text-white text-sm font-medium">Format Mode</Label>
                     <div className="grid grid-cols-2 gap-2">
-                        <button
+                        <Button
                             onClick={() => updateConfig('pretty', true)}
-                            className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${formatterConfig.pretty
-                                ? 'bg-blue-600 text-white'
-                                : 'bg-white/10 text-white/60 hover:bg-white/20 hover:text-white'
-                                }`}
+                            variant={formatterConfig.pretty ? 'secondary' : 'ghost'}
+                            className="w-full"
                         >
                             Pretty Print
-                        </button>
-                        <button
+                        </Button>
+                        <Button
                             onClick={() => updateConfig('pretty', false)}
-                            className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${!formatterConfig.pretty
-                                ? 'bg-blue-600 text-white'
-                                : 'bg-white/10 text-white/60 hover:bg-white/20 hover:text-white'
-                                }`}
+                            variant={!formatterConfig.pretty ? 'secondary' : 'ghost'}
+                            className="w-full"
                         >
                             Minify
-                        </button>
+                        </Button>
                     </div>
                 </div>
             </div>
@@ -527,38 +593,34 @@ export default function SettingsSidenav({ config, onConfigChange }: SettingsSide
 
                 {/* Key Sorting */}
                 <div className="space-y-2">
-                    <label className="text-white text-sm font-medium">Key Sorting</label>
+                    <Label className="text-white text-sm font-medium">Key Sorting</Label>
                     <div className="grid grid-cols-3 gap-2">
                         {(['none', 'asc', 'desc'] as KeySorting[]).map((sort) => (
-                            <button
+                            <Button
                                 key={sort}
                                 onClick={() => updateConfig('keySorting', sort)}
-                                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${formatterConfig.keySorting === sort
-                                    ? 'bg-blue-600 text-white'
-                                    : 'bg-white/10 text-white/60 hover:bg-white/20 hover:text-white'
-                                    }`}
+                                variant={formatterConfig.keySorting === sort ? 'secondary' : 'ghost'}
+                                className="w-full"
                             >
                                 {sort === 'none' ? 'None' : sort === 'asc' ? 'A → Z' : 'Z → A'}
-                            </button>
+                            </Button>
                         ))}
                     </div>
                 </div>
 
                 {/* Array Formatting */}
                 <div className="space-y-2">
-                    <label className="text-white text-sm font-medium">Array Formatting</label>
+                    <Label className="text-white text-sm font-medium">Array Formatting</Label>
                     <div className="grid grid-cols-2 gap-2">
                         {(['multi-line', 'single-line'] as ArrayFormatting[]).map((format) => (
-                            <button
+                            <Button
                                 key={format}
                                 onClick={() => updateConfig('arrayFormatting', format)}
-                                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${formatterConfig.arrayFormatting === format
-                                    ? 'bg-blue-600 text-white'
-                                    : 'bg-white/10 text-white/60 hover:bg-white/20 hover:text-white'
-                                    }`}
+                                variant={formatterConfig.arrayFormatting === format ? 'secondary' : 'ghost'}
+                                className="w-full"
                             >
                                 {format === 'multi-line' ? 'Multi-line' : 'Single-line'}
-                            </button>
+                            </Button>
                         ))}
                     </div>
                 </div>
@@ -584,19 +646,17 @@ export default function SettingsSidenav({ config, onConfigChange }: SettingsSide
 
                 {/* Quote Style */}
                 <div className="space-y-2">
-                    <label className="text-white text-sm font-medium">Quote Style</label>
+                    <Label className="text-white text-sm font-medium">Quote Style</Label>
                     <div className="grid grid-cols-2 gap-2">
                         {(['double', 'single'] as QuoteStyle[]).map((style) => (
-                            <button
+                            <Button
                                 key={style}
                                 onClick={() => updateConfig('quoteStyle', style)}
-                                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${formatterConfig.quoteStyle === style
-                                    ? 'bg-blue-600 text-white'
-                                    : 'bg-white/10 text-white/60 hover:bg-white/20 hover:text-white'
-                                    }`}
+                                variant={formatterConfig.quoteStyle === style ? 'secondary' : 'ghost'}
+                                className="w-full"
                             >
                                 {style === 'double' ? 'Double " "' : "Single ' '"}
-                            </button>
+                            </Button>
                         ))}
                     </div>
                 </div>
@@ -650,18 +710,19 @@ export default function SettingsSidenav({ config, onConfigChange }: SettingsSide
 
                 {/* Key Case Transformation */}
                 <div className="space-y-2">
-                    <label className="text-white text-sm font-medium">Key Case Transform</label>
-                    <select
-                        value={formatterConfig.keyCase}
-                        onChange={(e) => updateConfig('keyCase', e.target.value as KeyCase)}
-                        className="w-full px-3 py-2 rounded-lg bg-white/10 text-white text-sm border border-white/20 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                    >
-                        <option value="none">No Transformation</option>
-                        <option value="camelCase">camelCase</option>
-                        <option value="snake_case">snake_case</option>
-                        <option value="PascalCase">PascalCase</option>
-                        <option value="kebab-case">kebab-case</option>
-                    </select>
+                    <Label className="text-white text-sm font-medium">Key Case Transform</Label>
+                    <Select value={formatterConfig.keyCase} onValueChange={(value) => updateConfig('keyCase', value as KeyCase)}>
+                        <SelectTrigger className="w-full bg-white/10 text-white border-white/20 focus:border-blue-500">
+                            <SelectValue placeholder="Select key case" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="none">No Transformation</SelectItem>
+                            <SelectItem value="camelCase">camelCase</SelectItem>
+                            <SelectItem value="snake_case">snake_case</SelectItem>
+                            <SelectItem value="PascalCase">PascalCase</SelectItem>
+                            <SelectItem value="kebab-case">kebab-case</SelectItem>
+                        </SelectContent>
+                    </Select>
                 </div>
             </div>
         </SettingsContainer>
@@ -671,13 +732,12 @@ export default function SettingsSidenav({ config, onConfigChange }: SettingsSide
 function Toggle({ label, checked, onChange }: { label: string, checked: boolean, onChange: (v: boolean) => void }) {
     return (
         <div className="flex items-center justify-between">
-            <label className="text-white text-sm font-medium">{label}</label>
-            <button
-                onClick={() => onChange(!checked)}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${checked ? 'bg-blue-600' : 'bg-white/20'}`}
-            >
-                <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${checked ? 'translate-x-6' : 'translate-x-1'}`} />
-            </button>
+            <Label htmlFor={label.replace(/\s+/g, '-').toLowerCase()} className="text-white text-sm font-medium">{label}</Label>
+            <Switch
+                id={label.replace(/\s+/g, '-').toLowerCase()}
+                checked={checked}
+                onCheckedChange={onChange}
+            />
         </div>
     );
 }

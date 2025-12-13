@@ -6,6 +6,8 @@ import { useConfig } from "@/app/context/ConfigContext";
 import { toast } from "sonner";
 import JsonTreeNode from "./JsonTreeNode";
 import TreeControls from "./TreeControls";
+import { Button } from "@/app/components/ui/button";
+import CodeEditor from "../../../components/CodeEditor";
 
 export default function JsonTreeViewer() {
     const [input, setInput] = useState("");
@@ -70,19 +72,21 @@ export default function JsonTreeViewer() {
             <div className="flex-1 flex flex-col gap-2 min-w-[300px]">
                 <div className="flex items-center justify-between">
                     <h2 className="text-white text-lg font-bold">Input JSON</h2>
-                    <button
+                    <Button
                         onClick={handlePaste}
-                        className="text-xs bg-white/10 hover:bg-white/20 text-white px-2 py-1 rounded transition-colors"
+                        variant="secondary"
+                        size="sm"
+                        className="h-6 px-2 text-xs bg-white/10 hover:bg-white/20 text-white"
                     >
                         Paste
-                    </button>
+                    </Button>
                 </div>
-                <textarea
+                <CodeEditor
                     value={input}
-                    onChange={(e) => setInput(e.target.value)}
+                    language="json"
+                    onChange={(val) => setInput(val || '')}
                     placeholder="Paste JSON here..."
-                    className="flex-1 bg-black/20 border border-white/10 rounded-lg p-4 text-sm font-mono text-white/80 resize-none focus:outline-none focus:border-primary/50"
-                    spellCheck={false}
+                    className="flex-1 bg-black/20 border-white/10 rounded-lg"
                 />
                 {error && (
                     <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3 text-red-400 text-xs font-mono break-all">

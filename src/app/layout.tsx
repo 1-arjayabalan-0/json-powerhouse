@@ -53,7 +53,9 @@ export default function RootLayout({
         </link>
         {/* Google Fonts  */}
       </head>
-      <body className="flex bg-gray-950 text-gray-100">
+      <body className="flex text-gray-100" style={{
+        backgroundColor: "#060f1e"
+      }}>
         <div className="flex-1">
 
           <ThemeProvider attribute="class" defaultTheme="system">

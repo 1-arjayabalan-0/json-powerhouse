@@ -5,6 +5,8 @@ import { useConfig } from "@/app/context/ConfigContext";
 import { JSON5ConverterConfig, defaultJSON5Config } from "@/app/types/json5-converter-config";
 import JSON5 from "json5";
 import { toast } from "sonner";
+import { Button } from "@/app/components/ui/button";
+import CodeEditor from "../../components/CodeEditor";
 
 type ConversionDirection = 'json-to-json5' | 'json5-to-json';
 
@@ -97,23 +99,22 @@ export default function JSON5ConverterPage() {
                     <h2 className="text-white text-lg font-bold">
                         {direction === 'json-to-json5' ? 'JSON Input' : 'JSON5 Input'}
                     </h2>
-                    <button
+                    <Button
                         onClick={toggleDirection}
-                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-600/90 transition-colors"
-                        title="Swap conversion direction"
+                        className="bg-blue-600 hover:bg-blue-600/90 h-8 px-3"
                     >
-                        <span className="material-symbols-outlined text-base">swap_horiz</span>
+                        <span className="material-symbols-outlined text-base mr-2">swap_horiz</span>
                         Swap
-                    </button>
+                    </Button>
                 </div>
-                <textarea
+                <CodeEditor
                     value={input}
-                    onChange={(e) => setInput(e.target.value)}
+                    language={direction === 'json-to-json5' ? 'json' : 'json'}
+                    onChange={(val) => setInput(val || '')}
                     placeholder={direction === 'json-to-json5'
                         ? 'Paste your JSON here...'
                         : 'Paste your JSON5 here...'
                     }
-                    className="flex-1 p-4 rounded-lg bg-white/5 text-white font-mono text-sm border border-white/10 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary resize-none"
                 />
             </div>
 
@@ -124,22 +125,24 @@ export default function JSON5ConverterPage() {
                         {direction === 'json-to-json5' ? 'JSON5 Output' : 'JSON Output'}
                     </h2>
                     <div className="flex gap-2">
-                        <button
+                        <Button
                             onClick={handleCopy}
                             disabled={!output}
-                            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 text-white text-sm font-medium hover:bg-white/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            variant="secondary"
+                            className="bg-white/10 text-white hover:bg-white/20 h-8 px-3"
                         >
-                            <span className="material-symbols-outlined text-base">content_copy</span>
+                            <span className="material-symbols-outlined text-base mr-2">content_copy</span>
                             Copy
-                        </button>
-                        <button
+                        </Button>
+                        <Button
                             onClick={handleDownload}
                             disabled={!output}
-                            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 text-white text-sm font-medium hover:bg-white/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            variant="secondary"
+                            className="bg-white/10 text-white hover:bg-white/20 h-8 px-3"
                         >
-                            <span className="material-symbols-outlined text-base">download</span>
+                            <span className="material-symbols-outlined text-base mr-2">download</span>
                             Download
-                        </button>
+                        </Button>
                     </div>
                 </div>
                 {error ? (
@@ -153,11 +156,11 @@ export default function JSON5ConverterPage() {
                         </div>
                     </div>
                 ) : (
-                    <textarea
+                    <CodeEditor
                         value={output}
-                        readOnly
+                        language={direction === 'json-to-json5' ? 'javascript' : 'json'}
+                        readOnly={true}
                         placeholder="Converted output will appear here..."
-                        className="flex-1 p-4 rounded-lg bg-white/5 text-white font-mono text-sm border border-white/10 resize-none"
                     />
                 )}
             </div>

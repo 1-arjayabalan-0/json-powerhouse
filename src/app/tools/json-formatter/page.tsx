@@ -3,6 +3,7 @@
 import JSONFormatter from "./JSONFormatter";
 import { useConfig } from "@/app/context/ConfigContext";
 import { useState } from "react";
+import { Button } from "@/app/components/ui/button";
 
 export default function JSONFormatterPage() {
     const { config } = useConfig();
@@ -36,23 +37,24 @@ export default function JSONFormatterPage() {
             {/* <!-- Bottom Action Bar --> */}
             <div className="flex shrink-0 items-center justify-between gap-4 border-t border-white/10 bg-background-dark/80 p-3 backdrop-blur-sm">
                 <div className="flex items-center gap-2">
-                    <button
+                    <Button
                         onClick={handleClear}
-                        className="flex min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-10 px-4 bg-white/10 text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-white/20"
+                        variant="secondary"
+                        className="h-10 px-4 bg-white/10 text-white hover:bg-white/20"
                     >
-                        <span className="material-symbols-outlined text-xl">delete</span>
+                        <span className="material-symbols-outlined text-xl mr-2">delete</span>
                         <span className="truncate">Clear</span>
-                    </button>
+                    </Button>
                 </div>
                 <div className="flex items-center gap-2">
-                    <button className="flex min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-10 px-4 bg-white/10 text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-white/20">
-                        <span className="material-symbols-outlined text-xl">content_copy</span>
+                    <Button variant="secondary" className="h-10 px-4 bg-white/10 text-white hover:bg-white/20">
+                        <span className="material-symbols-outlined text-xl mr-2">content_copy</span>
                         <span className="truncate">Copy</span>
-                    </button>
-                    <button className="flex min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-10 px-4 bg-white/10 text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-white/20">
-                        <span className="material-symbols-outlined text-xl">download</span>
+                    </Button>
+                    <Button variant="secondary" className="h-10 px-4 bg-white/10 text-white hover:bg-white/20">
+                        <span className="material-symbols-outlined text-xl mr-2">download</span>
                         <span className="truncate">Download</span>
-                    </button>
+                    </Button>
                 </div>
             </div>
         </>

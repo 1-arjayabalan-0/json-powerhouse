@@ -2,6 +2,7 @@
 
 import { Editor } from '@monaco-editor/react';
 import { useTheme } from 'next-themes';
+import { cn } from "@/app/lib/utils";
 
 interface CodeEditorProps {
     value: string;
@@ -10,6 +11,7 @@ interface CodeEditorProps {
     onChange?: (value: string | undefined) => void;
     placeholder?: string;
     height?: string;
+    className?: string;
 }
 
 export default function CodeEditor({
@@ -18,7 +20,8 @@ export default function CodeEditor({
     readOnly = false,
     onChange,
     placeholder,
-    height = '100%'
+    height = '100%',
+    className,
 }: CodeEditorProps) {
     const { theme } = useTheme();
 
@@ -29,7 +32,7 @@ export default function CodeEditor({
     };
 
     return (
-        <div className="flex-1 rounded-lg overflow-hidden border border-white/10 bg-[#1e1e1e]">
+        <div className={cn("flex-1 rounded-lg overflow-hidden border border-white/10 bg-[#1e1e1e]", className)}>
             <Editor
                 height={height}
                 language={language}

@@ -3,6 +3,7 @@
 import { prettifyJson } from "@/core/lib/converters/prettifyJson";
 import { useEffect, useCallback } from "react";
 import { JSONFormatterConfig } from "@/core/types/json-formatter-config";
+import CodeEditor from "../../components/CodeEditor";
 
 interface JSONFormatterProps {
     config: JSONFormatterConfig;
@@ -48,14 +49,14 @@ export default function JSONFormatter({ config, input, setInput, formatted, setF
                 </div>
                 {/* <!-- TextField --> */}
                 <div className="relative flex flex-1 flex-col overflow-hidden">
-                    <textarea
-                        className="font-mono w-full h-full resize-none p-4 rounded text-white outline-0 bg-white/10"
-                        placeholder='{ "paste": "your json here" }'
+                    <CodeEditor
                         value={input}
-                        onChange={(e) => {
-                            setInput(e.target.value)
-                            handleFormat(e.target.value)
+                        language="json"
+                        onChange={(val) => {
+                            setInput(val || '');
+                            handleFormat(val || '');
                         }}
+                        placeholder='{ "paste": "your json here" }'
                     />
                 </div>
             </div>
@@ -74,9 +75,11 @@ export default function JSONFormatter({ config, input, setInput, formatted, setF
                 </div>
                 {/* <!-- TextField --> */}
                 <div className="relative flex flex-1 flex-col overflow-hidden">
-                    <textarea className="font-mono w-full flex-1 resize-none rounded-none border-none bg-transparent p-4 text-sm text-white/90 focus:outline-0 focus:ring-0 bg-white/10"
-                        readOnly={true} value={formatted}>
-                    </textarea>
+                    <CodeEditor
+                        value={formatted}
+                        language="json"
+                        readOnly={true}
+                    />
                 </div>
             </div>
 

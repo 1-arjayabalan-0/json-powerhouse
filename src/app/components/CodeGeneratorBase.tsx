@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
+import { Button } from "@/app/components/ui/button";
 import CodeEditor from './CodeEditor';
 
 interface CodeGeneratorBaseProps {
@@ -97,12 +98,14 @@ export default function CodeGeneratorBase({
             <div className="flex flex-1 flex-col gap-2">
                 <div className="flex items-center justify-between">
                     <h3 className="text-white text-sm font-semibold">JSON Input</h3>
-                    <button
+                    <Button
+                        variant="link"
+                        size="sm"
                         onClick={handleLoadSample}
-                        className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
+                        className="text-blue-400 hover:text-blue-300 h-auto p-0"
                     >
                         Load Sample
-                    </button>
+                    </Button>
                 </div>
                 <CodeEditor
                     value={input}
@@ -120,20 +123,24 @@ export default function CodeGeneratorBase({
                         {isGenerating && <span className="ml-2 text-xs text-blue-400">Generating...</span>}
                     </h3>
                     <div className="flex gap-2">
-                        <button
+                        <Button
                             onClick={handleCopy}
                             disabled={!output}
-                            className="text-xs px-3 py-1 rounded bg-white/10 text-white hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                            variant="secondary"
+                            size="sm"
+                            className="bg-white/10 text-white hover:bg-white/20 h-7 text-xs"
                         >
                             Copy
-                        </button>
-                        <button
+                        </Button>
+                        <Button
                             onClick={handleDownload}
                             disabled={!output}
-                            className="text-xs px-3 py-1 rounded bg-white/10 text-white hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                            variant="secondary"
+                            size="sm"
+                            className="bg-white/10 text-white hover:bg-white/20 h-7 text-xs"
                         >
                             Download
-                        </button>
+                        </Button>
                     </div>
                 </div>
                 <CodeEditor
