@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { useConfig } from "@/app/context/ConfigContext";
+import { useValidation } from "@/app/context/ValidationContext";
 import { JSON5ConverterConfig, defaultJSON5Config } from "@/app/types/json5-converter-config";
+import { validateJson } from "@/core/lib/converters/validateJson";
 import JSON5 from "json5";
 import { toast } from "sonner";
 import { Button } from "@/app/components/ui/button";
@@ -12,10 +14,25 @@ type ConversionDirection = 'json-to-json5' | 'json5-to-json';
 
 export default function JSON5ConverterPage() {
     const { config, setConfig } = useConfig();
+    const { setErrors, setWarnings, setOnErrorClick } = useValidation();
     const [input, setInput] = useState("");
     const [output, setOutput] = useState("");
     const [direction, setDirection] = useState<ConversionDirection>('json-to-json5');
     const [error, setError] = useState<string | null>(null);
+
+    // Update validation results when input changes
+    useEffect(() => {
+        const validation = validateJson(input);
+        setErrors(validation.errors);
+        setWarnings(validation.warnings);
+    }, [input, setErrors, setWarnings]);
+
+    // Set up error click handler
+    useEffect(() => {
+        setOnErrorClick((error) => {
+            toast.info(`Error on line ${error?.line}`);
+        });
+    }, [setOnErrorClick]);
 
     // Initialize config
     useEffect(() => {

@@ -2,9 +2,11 @@
 
 import JSONFormatter from "../tools/json-formatter/JSONFormatter";
 import { useConfig } from "@/app/context/ConfigContext";
+import { useValidation } from "@/app/context/ValidationContext";
 import { useEffect, useState } from "react";
 import { toolPresets, toolMetadata } from "@/app/config/tool-presets";
 import { JSONFormatterConfig } from "../types/json-formatter-config";
+import { validateJson } from "@/core/lib/converters/validateJson";
 import { toast } from "sonner";
 
 interface JSONToolPageProps {
@@ -13,11 +15,28 @@ interface JSONToolPageProps {
 
 export default function JSONToolPage({ toolId }: JSONToolPageProps) {
     const { config, setConfig } = useConfig();
+    const { setErrors, setWarnings, setOnErrorClick } = useValidation();
     const metadata = toolMetadata[toolId] || toolMetadata['json-formatter'];
     const preset = toolPresets[toolId] || {};
 
     const [input, setInput] = useState("");
     const [formatted, setFormatted] = useState("");
+
+    // Update validation results when input changes
+    useEffect(() => {
+        const validation = validateJson(input);
+        setErrors(validation.errors);
+        setWarnings(validation.warnings);
+    }, [input, setErrors, setWarnings]);
+
+    // Set up error click handler (could navigate to line in editor)
+    useEffect(() => {
+        setOnErrorClick((error) => {
+            // This could be enhanced to scroll to the line in the editor
+            console.log('Navigate to line', error.line);
+            toast.info(`Error on line ${error.line}`);
+        });
+    }, [setOnErrorClick]);
 
     // Apply preset configuration when tool loads
     useEffect(() => {
@@ -33,8 +52,10 @@ export default function JSONToolPage({ toolId }: JSONToolPageProps) {
 
     const handleCopy = async () => {
         try {
-            await navigator.clipboard.writeText(formatted);
-            toast.success("Copied to clipboard!");
+            if (formatted && formatted !== "❌ Invalid JSON") {
+                await navigator.clipboard.writeText(formatted);
+                toast.success("Copied to clipboard!");
+            }
         } catch (err) {
             console.error('Failed to copy!', err);
             toast.error("Failed to copy to clipboard");
@@ -43,16 +64,18 @@ export default function JSONToolPage({ toolId }: JSONToolPageProps) {
 
     const handleDownload = () => {
         try {
-            const blob = new Blob([formatted], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'formatted.json';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            toast.success("Download started!");
+            if (formatted && formatted !== "❌ Invalid JSON") {
+                const blob = new Blob([formatted], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'formatted.json';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                toast.success("Downloaded successfully!");
+            }
         } catch (err) {
             console.error('Download failed', err);
             toast.error("Download failed");
@@ -83,6 +106,8 @@ export default function JSONToolPage({ toolId }: JSONToolPageProps) {
                 setInput={setInput}
                 formatted={formatted}
                 setFormatted={setFormatted}
+                onCopy={handleCopy}
+                onDownload={handleDownload}
             />
 
             {/* <!-- Bottom Action Bar --> */}
@@ -94,22 +119,6 @@ export default function JSONToolPage({ toolId }: JSONToolPageProps) {
                     >
                         <span className="material-symbols-outlined text-xl">delete</span>
                         <span className="truncate">Clear</span>
-                    </button>
-                </div>
-                <div className="flex items-center gap-2">
-                    <button
-                        onClick={handleCopy}
-                        className="flex min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-10 px-4 bg-white/10 text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-white/20"
-                    >
-                        <span className="material-symbols-outlined text-xl">content_copy</span>
-                        <span className="truncate">Copy</span>
-                    </button>
-                    <button
-                        onClick={handleDownload}
-                        className="flex min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-10 px-4 bg-white/10 text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-white/20"
-                    >
-                        <span className="material-symbols-outlined text-xl">download</span>
-                        <span className="truncate">Download</span>
                     </button>
                 </div>
             </div>

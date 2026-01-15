@@ -17,13 +17,18 @@ import { Switch } from "@/app/components/ui/switch";
 import { Input } from "@/app/components/ui/input";
 import { Label } from "@/app/components/ui/label";
 import { Button } from "@/app/components/ui/button";
+import { JSONError } from "@/core/lib/converters/validateJson";
+import ErrorTreeViewer from "./ErrorTreeViewer";
 
 interface SettingsSidenavProps {
     config: any;
     onConfigChange: (config: any) => void;
+    errors?: JSONError[];
+    warnings?: JSONError[];
+    onErrorClick?: (error: JSONError) => void;
 }
 
-export default function SettingsSidenav({ config, onConfigChange }: SettingsSidenavProps) {
+export default function SettingsSidenav({ config, onConfigChange, errors = [], warnings = [], onErrorClick }: SettingsSidenavProps) {
     const pathname = usePathname();
     const isTreeViewer = pathname === '/tools/json-viewer';
     const isJSON5Converter = pathname === '/tools/json-json5';
@@ -41,41 +46,85 @@ export default function SettingsSidenav({ config, onConfigChange }: SettingsSide
     const isPHP = pathname === '/tools/json-to-php';
 
     const [isCollapsed, setIsCollapsed] = useState(false);
+    const [viewMode, setViewMode] = useState<'errors' | 'settings'>('errors'); // Default to errors view
 
     const updateConfig = (key: string, value: any) => {
         onConfigChange({ ...config, [key]: value });
     };
 
-    const SettingsContainer = ({ title, children, onReset, defaultConf }: { title: string, children: React.ReactNode, onReset: () => void, defaultConf?: any }) => (
-        <div className={`bg-background-dark border-l border-white/10 flex flex-col h-full transition-all duration-300 ${isCollapsed ? 'w-12' : 'w-80'}`}>
-            <div className="flex items-center justify-between border-b border-white/10 p-1">
-                {!isCollapsed && <h2 className="text-white text-lg font-bold">{title}</h2>}
-                <button
-                    onClick={() => setIsCollapsed(!isCollapsed)}
-                    className="pr-2 flex rounded-md text-white/70 hover:bg-white/10 hover:text-white transition-colors ml-auto"
-                    title={isCollapsed ? "Expand settings" : "Collapse settings"}
-                >
-                    <span className={`material-symbols-outlined text-xl transition-transform ${isCollapsed ? 'rotate-180' : ''}`}>
-                        chevron_right
-                    </span>
-                </button>
-            </div>
-            {!isCollapsed && (
-                <div className="overflow-y-auto flex-1 p-4 space-y-6">
-                    {children}
-                    <div className="pt-4 border-t border-white/10">
-                        <Button
-                            onClick={onReset}
-                            variant="secondary"
-                            className="w-full bg-white/10 text-white hover:bg-white/20"
-                        >
-                            Reset to Defaults
-                        </Button>
-                    </div>
+    const SettingsContainer = ({ title, children, onReset, defaultConf }: { title: string, children: React.ReactNode, onReset: () => void, defaultConf?: any }) => {
+        const displayTitle = viewMode === 'errors' ? 'Errors & Warnings' : title;
+        
+        return (
+            <div className={`bg-background-dark border-l border-white/10 flex flex-col h-full transition-all duration-300 ${isCollapsed ? 'w-12' : 'w-80'}`}>
+                <div className="flex items-center justify-between border-b border-white/10 p-1">
+                    {!isCollapsed && (
+                        <div className="flex items-center gap-2 flex-1">
+                            <h2 className="text-white text-lg font-bold">{displayTitle}</h2>
+                            {/* View Toggle */}
+                            <div className="flex gap-1 ml-auto bg-white/5 rounded p-1">
+                                <button
+                                    onClick={() => setViewMode('errors')}
+                                    className={`px-2 py-1 rounded text-xs transition-colors ${
+                                        viewMode === 'errors'
+                                            ? 'bg-blue-600 text-white'
+                                            : 'text-white/60 hover:text-white'
+                                    }`}
+                                    title="Errors & Warnings"
+                                >
+                                    <span className="material-symbols-outlined text-base">error</span>
+                                </button>
+                                <button
+                                    onClick={() => setViewMode('settings')}
+                                    className={`px-2 py-1 rounded text-xs transition-colors ${
+                                        viewMode === 'settings'
+                                            ? 'bg-blue-600 text-white'
+                                            : 'text-white/60 hover:text-white'
+                                    }`}
+                                    title="Settings"
+                                >
+                                    <span className="material-symbols-outlined text-base">settings</span>
+                                </button>
+                            </div>
+                        </div>
+                    )}
+                    <button
+                        onClick={() => setIsCollapsed(!isCollapsed)}
+                        className="pr-2 flex rounded-md text-white/70 hover:bg-white/10 hover:text-white transition-colors"
+                        title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+                    >
+                        <span className={`material-symbols-outlined text-xl transition-transform ${isCollapsed ? 'rotate-180' : ''}`}>
+                            chevron_right
+                        </span>
+                    </button>
                 </div>
-            )}
-        </div>
-    );
+                {!isCollapsed && (
+                    <>
+                        {viewMode === 'errors' ? (
+                            <ErrorTreeViewer
+                                errors={errors}
+                                warnings={warnings}
+                                onErrorClick={onErrorClick}
+                            />
+                        ) : (
+                            <div className="overflow-y-auto flex-1 p-4 space-y-6">
+                                {children}
+                                <div className="pt-4 border-t border-white/10">
+                                    <Button
+                                        onClick={onReset}
+                                        variant="secondary"
+                                        className="w-full bg-white/10 text-white hover:bg-white/20"
+                                    >
+                                        Reset to Defaults
+                                    </Button>
+                                </div>
+                            </div>
+                        )}
+                    </>
+                )}
+            </div>
+        );
+    };
 
     // ----------------------------------------------------------------------
     // TypeScript Settings

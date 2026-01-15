@@ -2,13 +2,63 @@
 
 import JSONFormatter from "./JSONFormatter";
 import { useConfig } from "@/app/context/ConfigContext";
-import { useState } from "react";
+import { useValidation } from "@/app/context/ValidationContext";
+import { useState, useEffect } from "react";
+import { validateJson } from "@/core/lib/converters/validateJson";
 import { Button } from "@/app/components/ui/button";
+import { toast } from "sonner";
 
 export default function JSONFormatterPage() {
     const { config } = useConfig();
+    const { setErrors, setWarnings, setOnErrorClick } = useValidation();
     const [input, setInput] = useState("");
     const [formatted, setFormatted] = useState("");
+
+    // Update validation results when input changes
+    useEffect(() => {
+        const validation = validateJson(input);
+        setErrors(validation.errors);
+        setWarnings(validation.warnings);
+    }, [input, setErrors, setWarnings]);
+
+    // Set up error click handler
+    useEffect(() => {
+        setOnErrorClick((error) => {
+            toast.info(`Error on line ${error?.line}`);
+        });
+    }, [setOnErrorClick]);
+
+    const handleCopy = async () => {
+        try {
+            if (formatted && formatted !== "❌ Invalid JSON") {
+                await navigator.clipboard.writeText(formatted);
+                toast.success("Copied to clipboard!");
+            }
+        } catch (err) {
+            console.error('Failed to copy!', err);
+            toast.error("Failed to copy to clipboard");
+        }
+    };
+
+    const handleDownload = () => {
+        try {
+            if (formatted && formatted !== "❌ Invalid JSON") {
+                const blob = new Blob([formatted], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'formatted.json';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                toast.success("Downloaded successfully!");
+            }
+        } catch (err) {
+            console.error('Download failed', err);
+            toast.error("Download failed");
+        }
+    };
 
     const handleClear = () => {
         setInput("");
@@ -32,6 +82,8 @@ export default function JSONFormatterPage() {
                 setInput={setInput}
                 formatted={formatted}
                 setFormatted={setFormatted}
+                onCopy={handleCopy}
+                onDownload={handleDownload}
             />
 
             {/* <!-- Bottom Action Bar --> */}
@@ -44,16 +96,6 @@ export default function JSONFormatterPage() {
                     >
                         <span className="material-symbols-outlined text-xl mr-2">delete</span>
                         <span className="truncate">Clear</span>
-                    </Button>
-                </div>
-                <div className="flex items-center gap-2">
-                    <Button variant="secondary" className="h-10 px-4 bg-white/10 text-white hover:bg-white/20">
-                        <span className="material-symbols-outlined text-xl mr-2">content_copy</span>
-                        <span className="truncate">Copy</span>
-                    </Button>
-                    <Button variant="secondary" className="h-10 px-4 bg-white/10 text-white hover:bg-white/20">
-                        <span className="material-symbols-outlined text-xl mr-2">download</span>
-                        <span className="truncate">Download</span>
                     </Button>
                 </div>
             </div>

@@ -1,13 +1,14 @@
 "use client";
 
 import Header from "@/app/components/Header";
-import SideNav from "@/app/components/SideNav";
 import SettingsSidenav from "@/app/components/SettingsSidenav";
 import Footer from "@/app/components/Footer";
 import { ConfigProvider, useConfig } from "@/app/context/ConfigContext";
+import { ValidationProvider, useValidation } from "@/app/context/ValidationContext";
 
 function ToolsLayoutContent({ children }: { children: React.ReactNode }) {
     const { config, setConfig } = useConfig();
+    const { errors, warnings, onErrorClick } = useValidation();
 
     return (
         <div className="bg-background-light dark:bg-background-dark font-display text-[#EAEAEA]">
@@ -15,15 +16,18 @@ function ToolsLayoutContent({ children }: { children: React.ReactNode }) {
                 <Header />
 
                 <div className="flex h-full min-h-0 grow">
-                    {/* SideNavBar */}
-                    <SideNav />
-
                     {/* Main Content */}
                     <main className="flex flex-1 flex-col overflow-hidden">
                         {children}
                     </main>
 
-                    <SettingsSidenav config={config} onConfigChange={setConfig} />
+                    <SettingsSidenav 
+                        config={config} 
+                        onConfigChange={setConfig}
+                        errors={errors}
+                        warnings={warnings}
+                        onErrorClick={onErrorClick}
+                    />
                    
                 </div>
 
@@ -40,7 +44,9 @@ export default function ToolsLayout({
 }) {
     return (
         <ConfigProvider>
-            <ToolsLayoutContent>{children}</ToolsLayoutContent>
+            <ValidationProvider>
+                <ToolsLayoutContent>{children}</ToolsLayoutContent>
+            </ValidationProvider>
         </ConfigProvider>
     );
 }

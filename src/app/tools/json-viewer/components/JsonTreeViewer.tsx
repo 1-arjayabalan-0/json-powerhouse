@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { JsonTreeViewerConfig, defaultViewerConfig } from "@/core/types/json-viewer-config";
 import { useConfig } from "@/app/context/ConfigContext";
+import { useValidation } from "@/app/context/ValidationContext";
+import { validateJson } from "@/core/lib/converters/validateJson";
 import { toast } from "sonner";
 import JsonTreeNode from "./JsonTreeNode";
 import TreeControls from "./TreeControls";
@@ -14,8 +16,23 @@ export default function JsonTreeViewer() {
     const [parsedJson, setParsedJson] = useState<any>(null);
     const [error, setError] = useState<string | null>(null);
     const { config, setConfig } = useConfig();
+    const { setErrors, setWarnings, setOnErrorClick } = useValidation();
     const [treeKey, setTreeKey] = useState(0);
     const [searchTerm, setSearchTerm] = useState("");
+
+    // Update validation results when input changes
+    useEffect(() => {
+        const validation = validateJson(input);
+        setErrors(validation.errors);
+        setWarnings(validation.warnings);
+    }, [input, setErrors, setWarnings]);
+
+    // Set up error click handler
+    useEffect(() => {
+        setOnErrorClick((error) => {
+            toast.info(`Error on line ${error?.line}`);
+        });
+    }, [setOnErrorClick]);
 
     // Initialize config if needed
     useEffect(() => {
@@ -63,6 +80,38 @@ export default function JsonTreeViewer() {
         setTreeKey(prev => prev + 1);
     };
 
+    const handleCopy = async () => {
+        try {
+            if (input && !error) {
+                await navigator.clipboard.writeText(input);
+                toast.success("Copied to clipboard!");
+            }
+        } catch (err) {
+            console.error('Failed to copy!', err);
+            toast.error("Failed to copy to clipboard");
+        }
+    };
+
+    const handleDownload = () => {
+        try {
+            if (input && !error) {
+                const blob = new Blob([input], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'json-viewer.json';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                toast.success("Downloaded successfully!");
+            }
+        } catch (err) {
+            console.error('Download failed', err);
+            toast.error("Download failed");
+        }
+    };
+
     // Cast config to JsonTreeViewerConfig for type safety in render
     const viewerConfig = config as JsonTreeViewerConfig;
 
@@ -100,6 +149,24 @@ export default function JsonTreeViewer() {
                 <div className="flex items-center justify-between p-3 border-b border-white/10 bg-white/5">
                     <h2 className="text-white text-lg font-bold">Tree View</h2>
                     <div className="flex items-center gap-2">
+                        <Button
+                            onClick={handleCopy}
+                            disabled={!input || !!error}
+                            variant="secondary"
+                            size="sm"
+                            className="bg-white/10 text-white hover:bg-white/20 h-7 text-xs"
+                        >
+                            Copy
+                        </Button>
+                        <Button
+                            onClick={handleDownload}
+                            disabled={!input || !!error}
+                            variant="secondary"
+                            size="sm"
+                            className="bg-white/10 text-white hover:bg-white/20 h-7 text-xs"
+                        >
+                            Download
+                        </Button>
                         <TreeControls
                             config={viewerConfig}
                             setConfig={setConfig}
