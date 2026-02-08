@@ -8,13 +8,13 @@ export interface DiffOptions {
 }
 
 export function generateDiff(
-    a: ParsedJSON, 
-    b: ParsedJSON, 
+    a: ParsedJSON,
+    b: ParsedJSON,
     strategy: DiffStrategy,
     options: DiffOptions = { arrayStrategy: 'index' }
 ): any {
     if (strategy === DiffStrategy.MERGE_PATCH_7396) {
-        return jsonMergePatch.diff(a, b);
+        return jsonMergePatch.generate(a, b);
     }
 
     // RFC 6902
@@ -22,10 +22,10 @@ export function generateDiff(
     // fast-json-patch does not support complex array strategies out of the box in the same way.
     // However, we can simulate some behaviors if needed.
     // For now, we will stick to standard compare which is index-based.
-    
+
     // If strategy is 'replace', we could treat arrays as atomic?
     // fast-json-patch doesn't have an option for that.
-    
+
     return compare(a, b);
 }
 

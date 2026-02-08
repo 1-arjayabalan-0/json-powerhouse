@@ -5,6 +5,7 @@ import { useConfig } from "@/app/context/ConfigContext";
 import CodeGeneratorBase from "@/app/components/CodeGeneratorBase";
 import { generateGoCode } from "@/core/generators/json-to-go";
 import { GoConfig } from "@/core/types/code-generator-config";
+import { usePersistentState } from "@/app/hooks/usePersistentState";
 
 export default function GoGeneratorPage() {
     const { config } = useConfig();

@@ -20,17 +20,17 @@ export function threeWayMerge(
 
     if (strategy === DiffStrategy.MERGE_PATCH_7396) {
         // RFC 7396
-        const patchLeftObj = jsonMergePatch.diff(normBase, normLeft) || {};
-        const patchRightObj = jsonMergePatch.diff(normBase, normRight) || {};
+        const patchLeftObj = jsonMergePatch.generate(normBase, normLeft) || {};
+        const patchRightObj = jsonMergePatch.generate(normBase, normRight) || {};
 
         const conflicts = detectMergePatchConflicts(patchLeftObj, patchRightObj, normBase, normLeft, normRight);
-        
+
         // Auto-merge non-conflicting changes?
         // For simplicity in UI, we might just return the "Right" document as the starting point
         // But ideally we merge what we can.
         // Let's just return the Right document as "Merged" initially, 
         // OR apply the non-conflicting parts of Left to Right.
-        
+
         // For now, return Right as the "Result" canvas.
         return {
             patchLeft: [patchLeftObj], // Wrap in array to match generic type if needed, or cast
@@ -59,17 +59,17 @@ export function threeWayMerge(
 }
 
 function detectJsonPatchConflicts(
-    p1: Operation[], 
-    p2: Operation[], 
-    base: any, 
-    left: any, 
+    p1: Operation[],
+    p2: Operation[],
+    base: any,
+    left: any,
     right: any
 ): Conflict[] {
     const conflicts: Conflict[] = [];
-    
+
     // Naive O(N*M) check for now, or Map optimization
     // We also need to check for path prefixes: /a vs /a/b
-    
+
     for (const op1 of p1) {
         for (const op2 of p2) {
             if (isConflictingPath(op1.path, op2.path)) {
@@ -88,11 +88,11 @@ function detectJsonPatchConflicts(
             }
         }
     }
-    
+
     // Deduplicate conflicts by path
     const uniqueConflicts = new Map<string, Conflict>();
     conflicts.forEach(c => uniqueConflicts.set(c.path, c));
-    
+
     return Array.from(uniqueConflicts.values());
 }
 
@@ -104,11 +104,11 @@ function isConflictingPath(path1: string, path2: string): boolean {
 }
 
 function detectMergePatchConflicts(
-    p1: any, 
-    p2: any, 
-    base: any, 
-    left: any, 
-    right: any, 
+    p1: any,
+    p2: any,
+    base: any,
+    left: any,
+    right: any,
     path: string = ''
 ): Conflict[] {
     const conflicts: Conflict[] = [];
@@ -158,7 +158,7 @@ export function safeApplyPatch(doc: any, patch: any[], strategy: DiffStrategy): 
             const p = Array.isArray(patch) ? patch[0] : patch;
             return jsonMergePatch.apply(doc, p);
         }
-        
+
         // RFC 6902
         // clone doc first? fast-json-patch modifies in place usually
         const docClone = JSON.parse(JSON.stringify(doc));

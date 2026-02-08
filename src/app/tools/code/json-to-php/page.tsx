@@ -5,6 +5,7 @@ import { useConfig } from "@/app/context/ConfigContext";
 import CodeGeneratorBase from "@/app/components/CodeGeneratorBase";
 import { generatePHPCode } from "@/core/generators/json-to-php";
 import { PHPConfig } from "@/core/types/code-generator-config";
+import { usePersistentState } from "@/app/hooks/usePersistentState";
 
 export default function PHPGeneratorPage() {
     const { config } = useConfig();

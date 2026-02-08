@@ -1,4 +1,5 @@
 import { create } from 'jsondiffpatch';
+import { diff_match_patch } from '@dmsnell/diff-match-patch';
 
 const diffpatcher = create({
     // Configuration for visual diff
@@ -7,7 +8,8 @@ const diffpatcher = create({
         includeValueOnMove: false
     },
     textDiff: {
-        minLength: 60
+        minLength: 60,
+        diffMatchPatch: diff_match_patch
     }
 });
 

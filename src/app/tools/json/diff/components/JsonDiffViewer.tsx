@@ -100,8 +100,8 @@ export default function JsonDiffViewer() {
                 if (node.leftPathSegments && leftTree && (node.changeType === 'removed' || node.changeType === 'modified' || node.changeType === 'type-changed')) {
                     const jsonNode = findNodeAtLocation(leftTree, node.leftPathSegments);
                     if (jsonNode) {
-                        const start = getLocation(leftTxt, jsonNode.offset);
-                        const end = getLocation(leftTxt, jsonNode.offset + jsonNode.length);
+                        const start: any = getLocation(leftTxt, jsonNode.offset);
+                        const end: any = getLocation(leftTxt, jsonNode.offset + jsonNode.length);
                         const range = {
                             startLineNumber: start.line + 1,
                             startColumn: start.column + 1,
@@ -142,8 +142,8 @@ export default function JsonDiffViewer() {
                 if (node.rightPathSegments && rightTree && (node.changeType === 'added' || node.changeType === 'modified' || node.changeType === 'type-changed')) {
                     const jsonNode = findNodeAtLocation(rightTree, node.rightPathSegments);
                     if (jsonNode) {
-                        const start = getLocation(rightTxt, jsonNode.offset);
-                        const end = getLocation(rightTxt, jsonNode.offset + jsonNode.length);
+                        const start: any = getLocation(rightTxt, jsonNode.offset);
+                        const end: any = getLocation(rightTxt, jsonNode.offset + jsonNode.length);
                         const range = {
                             startLineNumber: start.line + 1,
                             startColumn: start.column + 1,
@@ -197,8 +197,8 @@ export default function JsonDiffViewer() {
             if (tree) {
                 const jsonNode = findNodeAtLocation(tree, node.leftPathSegments);
                 if (jsonNode) {
-                    const start = getLocation(leftInput, jsonNode.offset);
-                    const end = getLocation(leftInput, jsonNode.offset + jsonNode.length);
+                    const start: any = getLocation(leftInput, jsonNode.offset);
+                    const end: any = getLocation(leftInput, jsonNode.offset + jsonNode.length);
                     setLeftSelection({
                         startLineNumber: start.line + 1,
                         startColumn: start.column + 1,
@@ -217,8 +217,8 @@ export default function JsonDiffViewer() {
             if (tree) {
                 const jsonNode = findNodeAtLocation(tree, node.rightPathSegments);
                 if (jsonNode) {
-                    const start = getLocation(rightInput, jsonNode.offset);
-                    const end = getLocation(rightInput, jsonNode.offset + jsonNode.length);
+                    const start: any = getLocation(rightInput, jsonNode.offset);
+                    const end: any = getLocation(rightInput, jsonNode.offset + jsonNode.length);
                     setRightSelection({
                         startLineNumber: start.line + 1,
                         startColumn: start.column + 1,
