@@ -17,6 +17,7 @@ import {
     defaultRustConfig,
     defaultPHPConfig,
 } from '@/core/types/code-generator-config';
+import { defaultDiffConfig } from '@/core/types/diff-config';
 
 interface ConfigContextType {
     config: any;
@@ -31,30 +32,32 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
 
     // Update config when pathname changes
     useEffect(() => {
-        if (pathname === '/tools/json-viewer') {
+        if (pathname === '/tools/json/viewer') {
             setConfig(defaultViewerConfig);
-        } else if (pathname === '/tools/json-json5') {
+        } else if (pathname === '/tools/json/json5') {
             setConfig(defaultJSON5Config);
-        } else if (pathname === '/tools/json-to-typescript') {
+        } else if (pathname === '/tools/code/json-to-typescript') {
             setConfig(defaultTypeScriptConfig);
-        } else if (pathname === '/tools/json-to-java') {
+        } else if (pathname === '/tools/code/json-to-java') {
             setConfig(defaultJavaConfig);
-        } else if (pathname === '/tools/json-to-kotlin') {
+        } else if (pathname === '/tools/code/json-to-kotlin') {
             setConfig(defaultKotlinConfig);
-        } else if (pathname === '/tools/json-to-dart') {
+        } else if (pathname === '/tools/code/json-to-dart') {
             setConfig(defaultDartConfig);
-        } else if (pathname === '/tools/json-to-swift') {
+        } else if (pathname === '/tools/code/json-to-swift') {
             setConfig(defaultSwiftConfig);
-        } else if (pathname === '/tools/json-to-go') {
+        } else if (pathname === '/tools/code/json-to-go') {
             setConfig(defaultGoConfig);
-        } else if (pathname === '/tools/json-to-csharp') {
+        } else if (pathname === '/tools/code/json-to-csharp') {
             setConfig(defaultCSharpConfig);
-        } else if (pathname === '/tools/json-to-python') {
+        } else if (pathname === '/tools/code/json-to-python') {
             setConfig(defaultPythonConfig);
-        } else if (pathname === '/tools/json-to-rust') {
+        } else if (pathname === '/tools/code/json-to-rust') {
             setConfig(defaultRustConfig);
-        } else if (pathname === '/tools/json-to-php') {
+        } else if (pathname === '/tools/code/json-to-php') {
             setConfig(defaultPHPConfig);
+        } else if (pathname === '/tools/json/diff') {
+            setConfig({ ...defaultDiffConfig, diffStrategy: 'json-patch-6902' }); // Adding strategy here
         } else {
             setConfig(defaultFormatterConfig);
         }

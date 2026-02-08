@@ -132,11 +132,17 @@ export type CSharpFramework = 'SystemTextJson' | 'NewtonsoftJson' | 'none';
 export type CSharpNumberType = 'double' | 'decimal';
 export type CSharpArrayType = 'array' | 'list';
 export type CSharpDensity = 'normal' | 'dense';
+export type CSharpRecordType = 'class' | 'record' | 'struct';
+export type CSharpAccessLevel = 'public' | 'internal';
 
 export interface CSharpConfig {
     namespace: string;
     framework: CSharpFramework;
     useProperties: boolean;
+    recordType: CSharpRecordType;
+    accessLevel: CSharpAccessLevel;
+    nullable: boolean;
+    systemTextJson: boolean;
     numberType: CSharpNumberType;
     arrayType: CSharpArrayType;
     density: CSharpDensity;
@@ -147,6 +153,10 @@ export const defaultCSharpConfig: CSharpConfig = {
     namespace: 'MyNamespace',
     framework: 'SystemTextJson',
     useProperties: true,
+    recordType: 'class',
+    accessLevel: 'public',
+    nullable: true,
+    systemTextJson: true,
     numberType: 'double',
     arrayType: 'list',
     density: 'normal',

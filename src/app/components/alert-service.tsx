@@ -17,10 +17,10 @@ export default function AlertService() {
 
     const getColor = (type: string) => {
         return {
-            success: "border-green-500/40 bg-green-900/20 text-green-200",
-            error: "border-red-500/40 bg-red-900/20 text-red-200",
-            warning: "border-yellow-500/40 bg-yellow-900/20 text-yellow-100",
-            info: "border-blue-500/40 bg-blue-900/20 text-blue-200",
+            success: "border-success/40 bg-success/20 text-success",
+            error: "border-destructive/40 bg-destructive/20 text-destructive",
+            warning: "border-warning/40 bg-warning/20 text-warning",
+            info: "border-primary/40 bg-primary/20 text-primary",
         }[type];
     };
 
@@ -29,7 +29,7 @@ export default function AlertService() {
             {alerts.map((alert) => (
                 <Alert
                     key={alert.id}
-                    className={`border p-4 rounded-lg shadow-md dark:bg-black/50 ${getColor(alert.type)}`}
+                    className={`border p-4 rounded-lg shadow-md bg-background ${getColor(alert.type)}`}
                 >
                     <AlertTitle>{alert.title}</AlertTitle>
                     <AlertDescription>{alert.message}</AlertDescription>

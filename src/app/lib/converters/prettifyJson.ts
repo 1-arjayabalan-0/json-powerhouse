@@ -3,11 +3,11 @@ import JSON5 from 'json5';
 
 // Helper function to strip comments from JSON string
 function stripComments(jsonString: string): string {
-    // Remove single-line comments
-    let result = jsonString.replace(/\/\/.*$/gm, '');
-    // Remove multi-line comments
-    result = result.replace(/\/\*[\s\S]*?\*\//g, '');
-    return result;
+    const tokenRegex = /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|(\/\*[\s\S]*?\*\/)|(\/\/.*$)/gm;
+    return jsonString.replace(tokenRegex, (match, block, line) => {
+        if (block || line) return '';
+        return match;
+    });
 }
 
 // Helper function to transform key case

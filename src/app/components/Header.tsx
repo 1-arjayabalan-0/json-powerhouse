@@ -1,161 +1,47 @@
 "use client"
 
 import { useTheme } from "next-themes"
-import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger, navigationMenuTriggerStyle } from "./ui/navigation-menu"
 import Link from "next/link"
-import { CircleCheckIcon, CircleHelpIcon, CircleIcon } from "lucide-react"
 import { useIsMobile } from "../hooks/utils/use-mobile"
-import router from "next/router"
-
-function ListItem({
-    title,
-    children,
-    href,
-    ...props
-}: React.ComponentPropsWithoutRef<"li"> & { href: string }) {
-    return (
-        <li {...props}>
-            <NavigationMenuLink asChild>
-                <Link href={href}>
-                    <CircleHelpIcon />
-                    <div className="text-sm leading-none font-medium">{title}</div>
-                    <p className="text-muted-foreground line-clamp-2 text-sm leading-snug">
-                        {children}
-                    </p>
-                </Link>
-            </NavigationMenuLink>
-        </li>
-    )
-}
+import { useMode } from "@/app/context/ModeContext"
+import Image from 'next/image'
 
 export default function Header() {
     const { theme, setTheme } = useTheme()
     const isMobile = useIsMobile()
-
-    const components: { title: string; href: string; description: string }[] = [
-        {
-            title: "Alert Dialog",
-            href: "/docs/primitives/alert-dialog",
-            description:
-                "A modal dialog that interrupts the user with important content and expects a response.",
-        },
-        {
-            title: "Hover Card",
-            href: "/docs/primitives/hover-card",
-            description:
-                "For sighted users to preview content available behind a link.",
-        },
-        {
-            title: "Progress",
-            href: "/docs/primitives/progress",
-            description:
-                "Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.",
-        },
-        {
-            title: "Scroll-area",
-            href: "/docs/primitives/scroll-area",
-            description: "Visually or semantically separates content.",
-        },
-        {
-            title: "Tabs",
-            href: "/docs/primitives/tabs",
-            description:
-                "A set of layered sections of content—known as tab panels—that are displayed one at a time.",
-        },
-        {
-            title: "Tooltip",
-            href: "/docs/primitives/tooltip",
-            description:
-                "A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.",
-        },
-    ]
+    const { mode, setMode } = useMode()
 
     return (
-        <header className="flex shrink-0 items-center justify-between whitespace-nowrap border-b border-white/10 p-5 h-15">
-            <Link href={"/"} className="flex items-center gap-4 text-white" >
-                <div className="size-5">
-                    <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-                        <g clipPath="url(#clip0_6_535)">
-                            <path clipRule="evenodd" d="M47.2426 24L24 47.2426L0.757355 24L24 0.757355L47.2426 24ZM12.2426 21H35.7574L24 9.24264L12.2426 21Z"
-                                fill="currentColor" fillRule="evenodd"></path>
-                        </g>
-                        <defs>
-                            <clipPath id="clip0_6_535">
-                                <rect fill="white" height="48" width="48"></rect>
-                            </clipPath>
-                        </defs>
-                    </svg>
-                </div>
-                <h2 className="text-white text-lg font-bold leading-tight tracking-[-0.015em]">JSON PowerHouse</h2>
+        <header className="flex shrink-0 items-center justify-between whitespace-nowrap border-border px-5 py-2 h-20">
+            <Link href={"/"} className="flex items-center gap-3 text-foreground hover:text-primary transition-colors" >
+               <Image src={"/JSON-PowerHouse-Logo.png"} alt="logo"
+               width={150} height={50} />
             </Link>
-            {/* <div className="flex flex-1 justify-end gap-6">
-                <NavigationMenu>
-                    <NavigationMenuList className="flex-wrap">
-                        <NavigationMenuItem>
-                            <NavigationMenuTrigger>JSON Formatters</NavigationMenuTrigger>
-                            <NavigationMenuContent>
-                                <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                                    {components?.map((component) => (
-                                        <ListItem
-                                            className="p-2"
-                                            key={component.title}
-                                            title={component.title}
-                                            href={component.href}
-                                        >
-                                            {component.description}
-                                        </ListItem>
-                                    ))}
-                                </ul>
-                            </NavigationMenuContent>
-                        </NavigationMenuItem>
-                        <NavigationMenuItem className="hidden md:block">
-                            <NavigationMenuTrigger>JSON Converters</NavigationMenuTrigger>
-                            <NavigationMenuContent>
-                                <ul className="grid w-[300px] gap-4">
-                                    <li>
-                                        <NavigationMenuLink className="p-2" asChild>
-                                            <Link href="#">
-                                                <div className="font-medium">Components</div>
-                                                <div className="text-muted-foreground">
-                                                    Browse all components in the library.
-                                                </div>
-                                            </Link>
-                                        </NavigationMenuLink>
-                                        <NavigationMenuLink className="p-2" asChild>
-                                            <Link href="#">
-                                                <div className="font-medium">Documentation</div>
-                                                <div className="text-muted-foreground">
-                                                    Learn how to use the library.
-                                                </div>
-                                            </Link>
-                                        </NavigationMenuLink>
-                                        <NavigationMenuLink className="p-2" asChild>
-                                            <Link href="#">
-                                                <div className="font-medium">Blog</div>
-                                                <div className="text-muted-foreground">
-                                                    Read our latest blog posts.
-                                                </div>
-                                            </Link>
-                                        </NavigationMenuLink>
-                                    </li>
-                                </ul>
-                            </NavigationMenuContent>
-                        </NavigationMenuItem>
-
-                    </NavigationMenuList>
-                </NavigationMenu>
-                <div className="flex items-center gap-6">
-                    <a className="text-white/80 hover:text-white text-sm font-medium leading-normal" href="#">API</a>
-                    <a className="text-white/80 hover:text-white text-sm font-medium leading-normal" href="#">Docs</a>
-                    <a className="text-white/80 hover:text-white text-sm font-medium leading-normal" href="#">Pricing</a>
+            <div className="flex flex-1 justify-end gap-6">
+                <div className="flex items-center bg-muted rounded-lg p-1 border border-border">
+                    <button
+                        onClick={() => setMode('json')}
+                        className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
+                            mode === 'json'
+                            ? 'bg-primary text-primary-foreground shadow-lg'
+                            : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+                        }`}
+                    >
+                        JSON Editor
+                    </button>
+                    <div className="relative">
+                        <button
+                            disabled
+                            className="px-4 py-1.5 rounded-md text-sm font-medium text-muted-foreground cursor-not-allowed"
+                        >
+                            Code Editor
+                        </button>
+                        <span className="absolute -top-2 -right-3 bg-[color-mix(in_srgb,var(--secondary)_10%,transparent)] text-secondary text-[9px] font-bold px-1.5 py-0.5 rounded-full border border-[color-mix(in_srgb,var(--secondary)_50%,transparent)] shadow-sm">
+                            SOON
+                        </span>
+                    </div>
                 </div>
-                <button className="flex h-9 w-9 cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-white/10 text-white hover:bg-white/20"
-                    onClick={() => {
-                        theme == 'dark' || theme == 'system' ? setTheme('light') : setTheme('dark')
-                    }}>
-                    <span className="material-symbols-outlined text-xl">dark_mode</span>
-                </button>
-            </div> */}
+            </div>
         </header>
     )
 }

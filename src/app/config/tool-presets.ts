@@ -97,6 +97,11 @@ export const toolMetadata: Record<string, ToolMetadata> = {
         description: 'Remove comments and normalize your JSON formatting.',
         icon: 'cleaning_services',
     },
+    'json-diff': {
+        title: 'JSON Diff Checker',
+        description: 'Compare two JSON inputs to find structural differences.',
+        icon: 'difference',
+    },
     'json-to-json5': {
         title: 'JSON to JSON5',
         description: 'Convert standard JSON to JSON5 (supports comments, single quotes, etc).',

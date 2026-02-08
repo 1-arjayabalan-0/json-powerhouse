@@ -5,34 +5,34 @@ import Header from "../components/Header"
 
 export default function TermsPage() {
     return (
-        <div className="min-h-screen bg-background-dark text-white">
+        <div className="min-h-screen bg-background text-foreground">
             <Header />
             <div className="max-w-4xl mx-auto px-6 py-12">
                 {/* Header */}
                 <div className="mb-8">
                     <h1 className="text-4xl font-bold mb-4">Terms and Conditions</h1>
-                    <p className="text-white/60">Last Updated: November 30, 2024</p>
+                    <p className="text-muted-foreground">Last Updated: November 30, 2024</p>
                 </div>
 
                 {/* Update History */}
-                <div className="mb-8 bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
+                <div className="mb-8 bg-muted border border-border rounded-lg p-4">
                     <h2 className="text-lg font-semibold mb-3 flex items-center gap-2">
                         <span className="material-symbols-outlined">history</span>
                         Update History
                     </h2>
                     <div className="space-y-2 text-sm">
                         <div className="flex items-start gap-3">
-                            <span className="text-white/40 min-w-[140px]">November 30, 2024</span>
-                            <span className="text-white/80">Initial terms and conditions published</span>
+                            <span className="text-muted-foreground min-w-[140px]">November 30, 2024</span>
+                            <span className="text-foreground">Initial terms and conditions published</span>
                         </div>
                     </div>
                 </div>
 
                 {/* Main Content */}
-                <div className="space-y-8 text-white/80 leading-relaxed">
+                <div className="space-y-8 text-muted-foreground leading-relaxed">
                     {/* Introduction */}
                     <section>
-                        <h2 className="text-2xl font-bold text-white mb-4">1. Introduction</h2>
+                        <h2 className="text-2xl font-bold text-foreground mb-4">1. Introduction</h2>
                         <p className="mb-4">
                             Welcome to JSON PowerHouse ("we," "our," or "the Service"). By accessing or using our website
                             and tools, you agree to be bound by these Terms and Conditions. If you do not agree with any
@@ -42,7 +42,7 @@ export default function TermsPage() {
 
                     {/* Service Description */}
                     <section>
-                        <h2 className="text-2xl font-bold text-white mb-4">2. Service Description</h2>
+                        <h2 className="text-2xl font-bold text-foreground mb-4">2. Service Description</h2>
                         <p className="mb-4">
                             JSON PowerHouse provides a suite of web-based tools for JSON data manipulation, including but
                             not limited to:
@@ -62,8 +62,8 @@ export default function TermsPage() {
 
                     {/* Use of Service */}
                     <section>
-                        <h2 className="text-2xl font-bold text-white mb-4">3. Use of Service</h2>
-                        <h3 className="text-xl font-semibold text-white mb-3">3.1 Acceptable Use</h3>
+                        <h2 className="text-2xl font-bold text-foreground mb-4">3. Use of Service</h2>
+                        <h3 className="text-xl font-semibold text-foreground mb-3">3.1 Acceptable Use</h3>
                         <p className="mb-4">You agree to use the Service only for lawful purposes and in accordance with these Terms. You agree not to:</p>
                         <ul className="space-y-2 ml-6 list-disc mb-4">
                             <li>Use the Service in any way that violates any applicable laws or regulations</li>
@@ -73,7 +73,7 @@ export default function TermsPage() {
                             <li>Attempt to reverse engineer or decompile any part of the Service</li>
                         </ul>
 
-                        <h3 className="text-xl font-semibold text-white mb-3">3.2 No Account Required</h3>
+                        <h3 className="text-xl font-semibold text-foreground mb-3">3.2 No Account Required</h3>
                         <p>
                             The Service does not require user registration or accounts. All tools are available for immediate use.
                         </p>
@@ -81,7 +81,7 @@ export default function TermsPage() {
 
                     {/* Intellectual Property */}
                     <section>
-                        <h2 className="text-2xl font-bold text-white mb-4">4. Intellectual Property</h2>
+                        <h2 className="text-2xl font-bold text-foreground mb-4">4. Intellectual Property</h2>
                         <p className="mb-4">
                             The Service, including its original content, features, and functionality, is owned by JSON PowerHouse
                             and is protected by international copyright, trademark, and other intellectual property laws.
@@ -93,7 +93,7 @@ export default function TermsPage() {
 
                     {/* Disclaimer of Warranties */}
                     <section>
-                        <h2 className="text-2xl font-bold text-white mb-4">5. Disclaimer of Warranties</h2>
+                        <h2 className="text-2xl font-bold text-foreground mb-4">5. Disclaimer of Warranties</h2>
                         <p className="mb-4">
                             THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS
                             OR IMPLIED, INCLUDING BUT NOT LIMITED TO:
@@ -111,7 +111,7 @@ export default function TermsPage() {
 
                     {/* Limitation of Liability */}
                     <section>
-                        <h2 className="text-2xl font-bold text-white mb-4">6. Limitation of Liability</h2>
+                        <h2 className="text-2xl font-bold text-foreground mb-4">6. Limitation of Liability</h2>
                         <p className="mb-4">
                             TO THE MAXIMUM EXTENT PERMITTED BY LAW, JSON POWERHOUSE SHALL NOT BE LIABLE FOR ANY INDIRECT,
                             INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, OR ANY LOSS OF PROFITS OR REVENUES,
@@ -128,7 +128,7 @@ export default function TermsPage() {
 
                     {/* Data Security */}
                     <section>
-                        <h2 className="text-2xl font-bold text-white mb-4">7. Data Security and Privacy</h2>
+                        <h2 className="text-2xl font-bold text-foreground mb-4">7. Data Security and Privacy</h2>
                         <p className="mb-4">
                             Since all processing occurs client-side in your browser:
                         </p>
@@ -142,7 +142,7 @@ export default function TermsPage() {
 
                     {/* Third-Party Links */}
                     <section>
-                        <h2 className="text-2xl font-bold text-white mb-4">8. Third-Party Links</h2>
+                        <h2 className="text-2xl font-bold text-foreground mb-4">8. Third-Party Links</h2>
                         <p>
                             The Service may contain links to third-party websites or services that are not owned or controlled
                             by JSON PowerHouse. We have no control over and assume no responsibility for the content, privacy
@@ -152,7 +152,7 @@ export default function TermsPage() {
 
                     {/* Changes to Terms */}
                     <section>
-                        <h2 className="text-2xl font-bold text-white mb-4">9. Changes to Terms</h2>
+                        <h2 className="text-2xl font-bold text-foreground mb-4">9. Changes to Terms</h2>
                         <p className="mb-4">
                             We reserve the right to modify or replace these Terms at any time. When we make changes:
                         </p>
@@ -168,7 +168,7 @@ export default function TermsPage() {
 
                     {/* Termination */}
                     <section>
-                        <h2 className="text-2xl font-bold text-white mb-4">10. Termination</h2>
+                        <h2 className="text-2xl font-bold text-foreground mb-4">10. Termination</h2>
                         <p>
                             We may terminate or suspend access to our Service immediately, without prior notice or liability,
                             for any reason whatsoever, including without limitation if you breach the Terms. Upon termination,
@@ -178,7 +178,7 @@ export default function TermsPage() {
 
                     {/* Governing Law */}
                     <section>
-                        <h2 className="text-2xl font-bold text-white mb-4">11. Governing Law</h2>
+                        <h2 className="text-2xl font-bold text-foreground mb-4">11. Governing Law</h2>
                         <p>
                             These Terms shall be governed and construed in accordance with applicable laws, without regard
                             to its conflict of law provisions.
@@ -187,21 +187,21 @@ export default function TermsPage() {
 
                     {/* Contact */}
                     <section>
-                        <h2 className="text-2xl font-bold text-white mb-4">12. Contact Information</h2>
+                        <h2 className="text-2xl font-bold text-foreground mb-4">12. Contact Information</h2>
                         <p className="mb-4">
                             If you have any questions about these Terms, please contact us through our feedback form.
                         </p>
                         <a
                             href="/feedback"
-                            className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                            className="inline-block px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors"
                         >
                             Send Feedback
                         </a>
                     </section>
 
                     {/* Acknowledgment */}
-                    <section className="border-t border-white/10 pt-8">
-                        <h2 className="text-2xl font-bold text-white mb-4">Acknowledgment</h2>
+                    <section className="border-t border-border/50 pt-8">
+                        <h2 className="text-2xl font-bold text-foreground mb-4">Acknowledgment</h2>
                         <p>
                             BY USING THE SERVICE, YOU ACKNOWLEDGE THAT YOU HAVE READ THESE TERMS AND CONDITIONS AND AGREE
                             TO BE BOUND BY THEM.

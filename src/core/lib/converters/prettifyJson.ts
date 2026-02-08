@@ -3,11 +3,11 @@ import JSON5 from 'json5';
 
 // Helper function to strip comments from JSON string
 function stripComments(jsonString: string): string {
-    // Remove single-line comments
-    let result = jsonString.replace(/\/\/.*$/gm, '');
-    // Remove multi-line comments
-    result = result.replace(/\/\*[\s\S]*?\*\//g, '');
-    return result;
+    const tokenRegex = /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|(\/\*[\s\S]*?\*\/)|(\/\/.*$)/gm;
+    return jsonString.replace(tokenRegex, (match, block, line) => {
+        if (block || line) return '';
+        return match;
+    });
 }
 
 // Helper function to transform key case
@@ -134,6 +134,10 @@ export function prettifyJson(jsonString: any, config: JSONFormatterConfig) {
 
         if (config.useJSON5) {
             result = JSON5.stringify(processed, null, indent);
+            // JSON5 adds trailing commas by default. Remove them if user explicitly disabled them.
+            if (!config.trailingCommas && config.pretty) {
+                result = result.replace(/,(\s*[\]}])/g, '$1');
+            }
         } else {
             result = JSON.stringify(processed, null, indent);
         }
@@ -160,7 +164,6 @@ export function prettifyJson(jsonString: any, config: JSONFormatterConfig) {
         // Normalize spaces if enabled
         if (config.normalizeSpaces) {
             result = result.replace(/\s+$/gm, ''); // Remove trailing spaces
-            result = result.replace(/  +/g, ' '); // Replace multiple spaces with single space
         }
 
         return result;

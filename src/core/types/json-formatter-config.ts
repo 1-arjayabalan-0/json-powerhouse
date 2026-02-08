@@ -44,7 +44,7 @@ export const defaultConfig: JSONFormatterConfig = {
     trailingCommas: false,
 
     // Extended JSON
-    stripComments: false,
+    stripComments: true,
     removeNull: false,
     removeEmptyArrays: false,
     removeEmptyObjects: false,
