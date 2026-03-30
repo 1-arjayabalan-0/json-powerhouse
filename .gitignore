@@ -43,3 +43,6 @@ next-env.d.ts
 
 /implementation.md
 /src/design
+
+/extension/node_modules
+/extension/dist

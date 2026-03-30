@@ -99,7 +99,7 @@ export default function JsonTreeViewer() {
                                 title="Load Sample JSON"
                             >
                                 <span className="material-symbols-outlined !text-[12px]">auto_fix_high</span>
-                                <span className="hidden xs:inline">Sample</span>
+                                <span>Sample</span>
                             </button>
                             <button
                                 onClick={async () => {
@@ -118,7 +118,7 @@ export default function JsonTreeViewer() {
                                 title="Paste from clipboard"
                             >
                                 <span className="material-symbols-outlined !text-[12px]">content_paste</span>
-                                <span className="hidden xs:inline">Paste</span>
+                                <span>Paste</span>
                             </button>
                             <button
                                 onClick={() => {
@@ -129,7 +129,7 @@ export default function JsonTreeViewer() {
                                 title="Clear Input"
                             >
                                 <span className="material-symbols-outlined !text-[12px]">delete</span>
-                                <span className="hidden xs:inline">Clear</span>
+                                <span>Clear</span>
                             </button>
 
                         </div>

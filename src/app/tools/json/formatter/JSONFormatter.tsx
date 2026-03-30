@@ -159,9 +159,9 @@ export default function JSONFormatter({ config, input, setInput, formatted, setF
     };
 
     return (
-        <main className="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden w-full">
+        <main className="flex-1 flex flex-col lg:flex-row overflow-hidden w-full">
             {/* Left Section: Input Editor */}
-            <section className="lg:w-[40%] flex-none lg:flex-0.7 flex flex-col border-b lg:border-b-0 lg:border-r border-border relative bg-background h-[45vh] lg:h-full min-h-[300px] lg:min-h-0">
+            <section className="flex flex-col border-b lg:border-b-0 lg:border-r border-border relative bg-background flex-1 min-h-[40vh] lg:w-[40%] lg:flex-[0.7] lg:min-h-0">
                 <div className="h-10 px-4 border-b border-border flex items-center bg-muted shrink-0 overflow-x-auto whitespace-nowrap scrollbar-none">
                     <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest mr-4">Input Editor</span>
 
@@ -190,7 +190,7 @@ export default function JSONFormatter({ config, input, setInput, formatted, setF
                                 title="Load Sample JSON"
                             >
                                 <span className="material-symbols-outlined !text-[12px]">auto_fix_high</span>
-                                <span className="hidden xs:inline">Sample</span>
+                                <span>Sample</span>
                             </button>
                             <button
                                 onClick={async () => {
@@ -209,7 +209,7 @@ export default function JSONFormatter({ config, input, setInput, formatted, setF
                                 title="Paste from clipboard"
                             >
                                 <span className="material-symbols-outlined !text-[12px]">content_paste</span>
-                                <span className="hidden xs:inline">Paste</span>
+                                <span>Paste</span>
                             </button>
                             <button
                                 onClick={() => {
@@ -221,7 +221,7 @@ export default function JSONFormatter({ config, input, setInput, formatted, setF
                                 title="Clear Input"
                             >
                                 <span className="material-symbols-outlined !text-[12px]">delete</span>
-                                <span className="hidden xs:inline">Clear</span>
+                                <span>Clear</span>
                             </button>
                         </div>
                     </div>
@@ -244,7 +244,7 @@ export default function JSONFormatter({ config, input, setInput, formatted, setF
             </section>
 
             {/* Right Section: Output Workspace */}
-            <section className="lg:w-[60%] flex-none lg:flex-1.3 flex flex-col bg-background w-full h-[55vh] lg:h-full min-h-[400px] lg:min-h-0">
+            <section className="flex flex-col bg-background w-full flex-1 min-h-[40vh] lg:w-[60%] lg:flex-[1.3] lg:min-h-0">
                 <div className="flex flex-col border-b border-border shrink-0">
                     <div className="h-10 px-4 flex items-center justify-between bg-card border-b border-border overflow-x-auto whitespace-nowrap scrollbar-none">
                         <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest mr-4">Workspace</span>

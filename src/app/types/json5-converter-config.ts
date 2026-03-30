@@ -5,6 +5,7 @@ export type JSON5ConverterConfig = {
     stripComments: boolean;
     indentation: '2' | '4' | 'tab';
     unquotedKeys: boolean;
+    keyCase: 'none' | 'camelCase' | 'snake_case' | 'kebab-case' | 'PascalCase';
 };
 
 export const defaultJSON5Config: JSON5ConverterConfig = {
@@ -14,4 +15,5 @@ export const defaultJSON5Config: JSON5ConverterConfig = {
     stripComments: false,
     indentation: '2',
     unquotedKeys: true,
+    keyCase: 'none',
 };

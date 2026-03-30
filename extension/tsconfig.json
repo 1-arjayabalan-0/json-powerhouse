@@ -7,9 +7,11 @@
             "es6"
         ],
         "sourceMap": true,
-        "rootDir": "src",
         "strict": true,
         "baseUrl": ".",
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "noImplicitAny": true,
         "paths": {
             "@/core/*": [
                 "../src/core/*"

@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function JSONFormatterPage() {
     return (
         <>
-            <div className="h-[calc(100vh-48px)] w-full relative flex flex-col">
+            <div className="lg:h-[calc(100vh-48px)] md:h-[calc(100vh-130px)] w-full relative flex flex-col">
                 <JSONToolPage toolId="json-formatter" />
             </div>
         </>

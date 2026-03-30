@@ -7,6 +7,7 @@ import {
     Download,
     FileJson,
     RotateCcw,
+    RotateCw,
     Copy,
     LayoutList,
     Network,
@@ -46,6 +47,12 @@ type Change =
     | { id: string; kind: "add"; path: string; value: any; included: boolean }
     | { id: string; kind: "remove"; path: string; oldValue: any; included: boolean }
     | { id: string; kind: "replace"; path: string; oldValue: any; newValue: any; included: boolean }
+
+type HistoryEntry = {
+    originalInput: string;
+    modifiedInput: string;
+    label: string;
+}
 
 // --- Helpers ---
 
@@ -131,6 +138,9 @@ export function UnifiedJsonDiffMerge() {
     const [isChangelogExpanded, setIsChangelogExpanded] = useState(true)
     const [activeSidebarTab, setActiveSidebarTab] = useState<'structure' | 'changes'>('changes')
 
+    const [undoStack, setUndoStack] = useState<HistoryEntry[]>([])
+    const [redoStack, setRedoStack] = useState<HistoryEntry[]>([])
+
     // Editor Refs & Alignment
     const leftEditorRef = useRef<any>(null)
     const rightEditorRef = useRef<any>(null)
@@ -168,6 +178,42 @@ export function UnifiedJsonDiffMerge() {
     const strategy = config.diffStrategy === 'merge-patch-7396'
         ? DiffStrategy.MERGE_PATCH_7396
         : DiffStrategy.JSON_PATCH_6902;
+
+    const canUndo = undoStack.length > 0
+    const canRedo = redoStack.length > 0
+
+    const pushUndo = (label: string) => {
+        setUndoStack(prev => [...prev, { originalInput, modifiedInput, label }]);
+        setRedoStack([]);
+    }
+
+    const handleUndo = () => {
+        setUndoStack(prev => {
+            if (prev.length === 0) {
+                toast.info("Nothing to undo");
+                return prev;
+            }
+            const last = prev[prev.length - 1];
+            setRedoStack(rprev => [...rprev, { originalInput, modifiedInput, label: last.label }]);
+            setOriginalInput(last.originalInput);
+            setModifiedInput(last.modifiedInput);
+            return prev.slice(0, -1);
+        });
+    }
+
+    const handleRedo = () => {
+        setRedoStack(prev => {
+            if (prev.length === 0) {
+                toast.info("Nothing to redo");
+                return prev;
+            }
+            const last = prev[prev.length - 1];
+            setUndoStack(uprev => [...uprev, { originalInput, modifiedInput, label: last.label }]);
+            setOriginalInput(last.originalInput);
+            setModifiedInput(last.modifiedInput);
+            return prev.slice(0, -1);
+        });
+    }
 
     // -- JSON Patch Result Logic --
     const resultJson = useMemo(() => {
@@ -575,6 +621,7 @@ export function UnifiedJsonDiffMerge() {
 
         try {
             if (direction === 'leftToRight') {
+                pushUndo(`Merge A → B: ${node.path}`);
                 // Determine target text and path
                 const targetText = modifiedInput;
                 const path = node.rightPathSegments || node.leftPathSegments;
@@ -606,6 +653,7 @@ export function UnifiedJsonDiffMerge() {
                 // but handleCompare will catch it anyway.
                 toast.success("Synchronized Right side");
             } else {
+                pushUndo(`Merge B → A: ${node.path}`);
                 // Copy Right -> Left (Apply Right's changes to Left)
                 const targetText = originalInput;
                 const path = node.leftPathSegments || node.rightPathSegments;
@@ -644,6 +692,9 @@ export function UnifiedJsonDiffMerge() {
         let currentContent = direction === 'leftToRight' ? modifiedInput : originalInput;
 
         try {
+            pushUndo(direction === 'leftToRight'
+                ? `Batch merge A → B (${nodes.length})`
+                : `Batch merge B → A (${nodes.length})`);
             // Sort nodes by path length (deepest first) to avoid invalidating parent paths
             // though jsonc-parser.modify is path-based, this is a safer heuristic for sequential edits.
             const sortedNodes = [...nodes].sort((a, b) =>
@@ -751,6 +802,7 @@ export function UnifiedJsonDiffMerge() {
     }
 
     const handleLoadSample = () => {
+        pushUndo("Load sample data");
         setOriginalInput(JSON.stringify(DIFF_SAMPLES.baseline, null, 2))
         setModifiedInput(JSON.stringify(DIFF_SAMPLES.modified, null, 2))
         toast.success("Sample diff data loaded")
@@ -760,6 +812,7 @@ export function UnifiedJsonDiffMerge() {
         try {
             const text = await navigator.clipboard.readText();
             if (text) {
+                pushUndo("Paste Baseline A");
                 setOriginalInput(text);
                 toast.success('Pasted to Baseline A');
             }
@@ -772,6 +825,7 @@ export function UnifiedJsonDiffMerge() {
         try {
             const text = await navigator.clipboard.readText();
             if (text) {
+                pushUndo("Paste Modified B");
                 setModifiedInput(text);
                 toast.success('Pasted to Modified B');
             }
@@ -781,7 +835,7 @@ export function UnifiedJsonDiffMerge() {
     }
 
     return (
-        <main className="flex-1 flex flex-col overflow-hidden w-full bg-background h-full">
+        <main className="flex-1 flex flex-col overflow-hidden w-full bg-background h-full pb-12 lg:pb-0">
             <style jsx global>{`
                 .diff-removed-line { background-color: color-mix(in srgb, var(--destructive), transparent 85%); }
                 .diff-added-line { background-color: color-mix(in srgb, var(--success), transparent 85%); }
@@ -815,9 +869,9 @@ export function UnifiedJsonDiffMerge() {
                 .merge-gutter-btn.success:hover { background-color: color-mix(in srgb, var(--success), #fff 20%); }
                 .merge-gutter-btn.warning:hover { background-color: color-mix(in srgb, var(--warning), #fff 20%); }
             `}</style>
-            <div className="flex-1 flex flex-row lg:flex-row overflow-hidden w-full bg-background h-full">
+            <div className="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden w-full bg-background h-full">
                 {/* A Side (Left) */}
-                <div className="flex-1 flex flex-col border-r border-border h-1/2 lg:h-full min-w-0">
+                <div className="flex-none lg:flex-1 flex flex-col border-b lg:border-b-0 lg:border-r border-border h-[50vh] lg:h-full min-w-0">
                     <div className="h-10 px-4 border-b border-border flex items-center bg-[color-mix(in_srgb,var(--muted)_50%,transparent)] shrink-0 justify-between">
                         <div className="flex items-center gap-2">
                             <FileJson className="w-3.5 h-3.5 text-primary" />
@@ -826,7 +880,14 @@ export function UnifiedJsonDiffMerge() {
                                 <button onClick={handlePasteA} className="p-1 hover:bg-accent rounded text-muted-foreground hover:text-primary transition-colors" title="Paste to A">
                                     <ClipboardPaste className="w-3.5 h-3.5" />
                                 </button>
-                                <button onClick={() => setOriginalInput("")} className="p-1 hover:bg-accent rounded text-muted-foreground hover:text-destructive transition-colors" title="Clear A">
+                                <button
+                                    onClick={() => {
+                                        pushUndo("Clear Baseline A");
+                                        setOriginalInput("");
+                                    }}
+                                    className="p-1 hover:bg-accent rounded text-muted-foreground hover:text-destructive transition-colors"
+                                    title="Clear A"
+                                >
                                     <Trash2 className="w-3.5 h-3.5" />
                                 </button>
                             </div>
@@ -843,7 +904,12 @@ export function UnifiedJsonDiffMerge() {
                             <Button
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => { setOriginalInput(""); setModifiedInput(""); setDiffResult(null); }}
+                                onClick={() => {
+                                    pushUndo("Clear both sides");
+                                    setOriginalInput("");
+                                    setModifiedInput("");
+                                    setDiffResult(null);
+                                }}
                                 className="h-6 text-[10px] px-2 text-muted-foreground hover:text-destructive"
                             >
                                 Clear All
@@ -868,7 +934,7 @@ export function UnifiedJsonDiffMerge() {
                 </div>
 
                 {/* Central Action Gutter */}
-                <div className="w-12 shrink-0 bg-muted/30 border-x border-border relative overflow-hidden flex flex-col h-full">
+                <div className="hidden lg:flex w-12 shrink-0 bg-muted/30 border-x border-border relative overflow-hidden flex-col h-full">
                     {/* Gutter Header Actions */}
                     <div className="h-10 border-b border-border flex items-center justify-center gap-1 bg-muted/50 shrink-0">
                         <Button
@@ -877,6 +943,7 @@ export function UnifiedJsonDiffMerge() {
                             className="h-7 w-7 text-success hover:bg-success/10"
                             title="Apply All from Modified to Original (B → A)"
                             onClick={() => {
+                                pushUndo("Apply all B → A");
                                 setOriginalInput(modifiedInput);
                                 toast.success("Applied all changes to Baseline (A)");
                             }}
@@ -889,6 +956,7 @@ export function UnifiedJsonDiffMerge() {
                             className="h-7 w-7 hover:bg-primary/10"
                             title="Sync All from Original to Modified (A → B)"
                             onClick={() => {
+                                pushUndo("Sync all A → B");
                                 setModifiedInput(originalInput);
                                 toast.success("Synced all changes to Modified (B)");
                             }}
@@ -938,7 +1006,7 @@ export function UnifiedJsonDiffMerge() {
                 </div>
 
                 {/* B Side (Right) - Contains Editor, Sidebar, Bottom Config */}
-                <div className="flex-1 flex flex-col h-1/2 lg:h-full relative min-w-0">
+                <div className="flex-none lg:flex-1 flex flex-col md:h-[50vh] lg:h-[50vh] h-[30vh] lg:h-full relative min-w-0">
                     {/* Header B */}
                     <div className="h-10 px-4 border-b border-border flex items-center bg-muted/50 shrink-0 justify-between">
                         <div className="flex items-center gap-2">
@@ -948,23 +1016,73 @@ export function UnifiedJsonDiffMerge() {
                                 <button onClick={handlePasteB} className="p-1 hover:bg-accent rounded text-muted-foreground hover:text-secondary transition-colors" title="Paste to B">
                                     <ClipboardPaste className="w-3.5 h-3.5" />
                                 </button>
-                                <button onClick={() => setModifiedInput("")} className="p-1 hover:bg-accent rounded text-muted-foreground hover:text-destructive transition-colors" title="Clear B">
+                                <button
+                                    onClick={() => {
+                                        pushUndo("Clear Modified B");
+                                        setModifiedInput("");
+                                    }}
+                                    className="p-1 hover:bg-accent rounded text-muted-foreground hover:text-destructive transition-colors"
+                                    title="Clear B"
+                                >
                                     <Trash2 className="w-3.5 h-3.5" />
                                 </button>
                             </div>
                         </div>
 
                         {/* Resulting Changes Actions */}
-                        <div className="flex items-center gap-1 sm:gap-2">
-                            <span className="hidden sm:inline text-[10px] text-muted-foreground font-semibold uppercase tracking-wider mr-2">Result:</span>
-                            <button onClick={handleCopySummary} className="p-1.5 hover:bg-accent text-muted-foreground hover:text-foreground rounded transition-colors" title="Copy Summary">
-                                <ClipboardList className="w-3.5 h-3.5" />
+                        <div className="flex items-center gap-1.5 sm:gap-2">
+                            <button
+                                onClick={handleUndo}
+                                disabled={!canUndo}
+                                className={cn(
+                                    "flex items-center gap-1 px-1.5 sm:px-2 py-1 text-[10px] sm:text-[11px] font-medium rounded transition-colors",
+                                    canUndo
+                                        ? "bg-muted hover:bg-muted/80 text-foreground"
+                                        : "bg-muted text-muted-foreground opacity-60 cursor-not-allowed"
+                                )}
+                                title="Undo last change"
+                            >
+                                <RotateCcw className="w-3.5 h-3.5" />
+                                <span className="hidden sm:inline">Undo</span>
                             </button>
-                            <button onClick={handleCopyResult} className="p-1.5 hover:bg-accent text-muted-foreground hover:text-foreground rounded transition-colors" title="Copy Patch Result">
+                            <button
+                                onClick={handleRedo}
+                                disabled={!canRedo}
+                                className={cn(
+                                    "flex items-center gap-1 px-1.5 sm:px-2 py-1 text-[10px] sm:text-[11px] font-medium rounded transition-colors",
+                                    canRedo
+                                        ? "bg-muted hover:bg-muted/80 text-foreground"
+                                        : "bg-muted text-muted-foreground opacity-60 cursor-not-allowed"
+                                )}
+                                title="Redo last change"
+                            >
+                                <RotateCw className="w-3.5 h-3.5" />
+                                <span className="hidden sm:inline">Redo</span>
+                            </button>
+                            <button
+                                onClick={handleCopyResult}
+                                className="flex items-center gap-1 px-1.5 sm:px-2 py-1 text-[10px] sm:text-[11px] font-medium bg-primary hover:bg-primary/90 text-primary-foreground rounded transition-colors shadow-sm"
+                                title="Copy JSON Patch result to clipboard"
+                            >
                                 <Copy className="w-3.5 h-3.5" />
+                                <span className="hidden md:inline">Copy Patch</span>
+                                <span className="md:hidden">Copy</span>
                             </button>
-                            <button onClick={handleExport} className="p-1.5 hover:bg-accent text-muted-foreground hover:text-primary rounded transition-colors" title="Export Patch File">
+                            <button
+                                onClick={handleCopySummary}
+                                className="hidden sm:flex items-center gap-1 px-1.5 sm:px-2 py-1 text-[10px] sm:text-[11px] font-medium bg-accent hover:bg-accent/80 text-foreground rounded transition-colors"
+                                title="Copy human-readable summary"
+                            >
+                                <ClipboardList className="w-3.5 h-3.5" />
+                                <span className="hidden md:inline">Summary</span>
+                            </button>
+                            <button
+                                onClick={handleExport}
+                                className="hidden sm:flex items-center gap-1 px-1.5 sm:px-2 py-1 text-[10px] sm:text-[11px] font-medium bg-secondary hover:bg-secondary/90 text-secondary-foreground rounded transition-colors"
+                                title="Download patch file"
+                            >
                                 <Download className="w-3.5 h-3.5" />
+                                <span className="hidden md:inline">Export</span>
                             </button>
                         </div>
                     </div>
@@ -988,51 +1106,53 @@ export function UnifiedJsonDiffMerge() {
 
                         {/* Comparison Sidebar */}
                         {diffResult && (
-                            <aside
-                                className={cn(
-                                    "absolute right-0 top-0 bottom-0 border-l border-border bg-background transition-all duration-300 ease-in-out z-20 flex flex-col shadow-[-10px_0_20px_-5px_rgba(0,0,0,0.1)]",
-                                    isChangelogExpanded ? "w-80" : "w-10 bg-muted/20 hover:bg-muted/30"
-                                )}
-                            >
-                                {/* Toggle Button */}
-                                <div
-                                    className={cn(
-                                        "flex items-center cursor-pointer transition-colors shrink-0",
-                                        isChangelogExpanded ? "h-10 px-3 border-b border-border justify-between bg-muted/40" : "h-full w-full flex-col py-4 gap-6"
-                                    )}
-                                    onClick={() => setIsChangelogExpanded(!isChangelogExpanded)}
-                                >
-                                    {isChangelogExpanded ? (
-                                        <>
-                                            <div className="flex items-center gap-2">
-                                                <div className="w-5 h-5 rounded-md bg-primary/10 flex items-center justify-center">
-                                                    <History className="w-3.5 h-3.5 text-primary" />
-                                                </div>
-                                                <span className="text-[11px] font-bold uppercase tracking-wider">Comparison Result</span>
-                                            </div>
-                                            <ChevronRight className="w-4 h-4 text-muted-foreground transition-transform hover:text-foreground" />
-                                        </>
-                                    ) : (
-                                        <>
-                                            <ChevronRight className="w-4 h-4 text-muted-foreground rotate-180" />
-                                            <div className="flex-1 flex items-center justify-center">
-                                                <span className="writing-vertical text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] whitespace-nowrap">
-                                                    Changes Result
-                                                </span>
-                                            </div>
-                                            <div className="flex flex-col gap-3 pb-2 text-[10px] font-bold">
-                                                <span className="text-success">{diffResult.summary.added}</span>
-                                                <span className="text-destructive">{diffResult.summary.removed}</span>
-                                                <span className="text-warning">{diffResult.summary.modified}</span>
-                                            </div>
-                                        </>
-                                    )}
-                                </div>
-
+                            <>
                                 {isChangelogExpanded && (
-                                    <>
-                                        {/* Summary Stats Cards */}
-                                        {/* <div className="p-3 grid grid-cols-3 gap-2 bg-muted/20 border-b border-border">
+                                    <div
+                                        className="lg:hidden fixed inset-0 bg-background/80 backdrop-blur-sm z-40 transition-opacity"
+                                        onClick={() => setIsChangelogExpanded(false)}
+                                    />
+                                )}
+                                <aside
+                                    className={cn(
+                                        "border-l border-border bg-background flex flex-col shadow-[-10px_0_20px_-5px_rgba(0,0,0,0.1)]",
+                                        isChangelogExpanded
+                                            ? "fixed inset-y-0 right-0 z-50 w-[85vw] sm:w-[400px] lg:absolute lg:top-0 lg:bottom-0 lg:w-80 lg:z-20 shadow-[-10px_0_30px_-5px_rgba(0,0,0,0.3)] lg:shadow-[-10px_0_20px_-5px_rgba(0,0,0,0.1)]"
+                                            : "absolute right-0 top-1/2 -translate-y-1/2 bottom-auto w-10 h-10 z-20 bg-muted hover:bg-primary/80 rounded-l-lg"
+                                    )}
+                                >
+                                    {/* Toggle Button */}
+                                    <div
+                                        className={cn(
+                                            "flex items-center cursor-pointer shrink-0",
+                                            isChangelogExpanded
+                                                ? "h-10 px-3 border-b border-border justify-between bg-muted/40"
+                                                : "h-full w-full justify-center px-2 gap-2"
+                                        )}
+                                        onClick={() => setIsChangelogExpanded(!isChangelogExpanded)}
+                                    >
+                                        {isChangelogExpanded ? (
+                                            <>
+                                                <div className="flex items-center gap-2">
+                                                    {/* <div className="w-5 h-5 rounded-md bg-primary/10 flex items-center justify-center">
+                                                    <History className="w-3.5 h-3.5 text-primary" />
+                                                </div> */}
+                                                    <span className="text-[11px] font-bold uppercase tracking-wider">Comparison Result</span>
+                                                </div>
+                                                <ChevronRight className="w-4 h-4 text-muted-foreground transition-transform hover:text-foreground" />
+                                            </>
+                                        ) : (
+                                            <>
+                                                {/* <History className="w-4 h-4 text-primary" /> */}
+                                                <ChevronLeft className="w-4 h-4 text-muted-foreground" />
+                                            </>
+                                        )}
+                                    </div>
+
+                                    {isChangelogExpanded && (
+                                        <>
+                                            {/* Summary Stats Cards */}
+                                            {/* <div className="p-3 grid grid-cols-3 gap-2 bg-muted/20 border-b border-border">
                                         <div className="bg-background border border-border/50 rounded-lg p-2 text-center shadow-sm">
                                             <div className="text-[10px] text-muted-foreground mb-1">Added</div>
                                             <div className="text-sm font-bold text-success">{diffResult.summary.added}</div>
@@ -1047,55 +1167,55 @@ export function UnifiedJsonDiffMerge() {
                                         </div>
                                     </div> */}
 
-                                        {/* Sidebar Navigation Tabs */}
-                                        <div className="flex border-b border-border bg-muted/10 shrink-0">
-                                            {/* <button
-                                                onClick={() => setActiveSidebarTab('structure')}
-                                                className={cn(
-                                                    "flex-1 flex items-center justify-center gap-2 py-2 text-[10px] font-bold uppercase transition-all border-b-2",
-                                                    activeSidebarTab === 'structure' ? "border-primary text-primary bg-primary/5" : "border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                                                )}
-                                            >
-                                                <Network className="w-3 h-3" />
-                                                Structure
-                                            </button> */}
-                                            <button
-                                                onClick={() => setActiveSidebarTab('changes')}
-                                                className={cn(
-                                                    "flex-1 flex items-center justify-center gap-2 py-2 text-[10px] font-bold uppercase transition-all border-b-2",
-                                                    activeSidebarTab === 'changes' ? "border-primary text-primary bg-primary/5" : "border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                                                )}
-                                            >
-                                                <LayoutList className="w-3 h-3" />
-                                                Changes Log
-                                            </button>
-                                        </div>
+                                            {/* Sidebar Navigation Tabs */}
+                                            <div className="flex border-b border-border bg-muted/10 shrink-0">
+                                                {/* <button
+                                                    onClick={() => setActiveSidebarTab('structure')}
+                                                    className={cn(
+                                                        "flex-1 flex items-center justify-center gap-2 py-2 text-[10px] font-bold uppercase transition-all border-b-2",
+                                                        activeSidebarTab === 'structure' ? "border-primary text-primary bg-primary/5" : "border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                                                    )}
+                                                >
+                                                    <Network className="w-3 h-3" />
+                                                    Structure
+                                                </button> */}
+                                                <button
+                                                    onClick={() => setActiveSidebarTab('changes')}
+                                                    className={cn(
+                                                        "flex-1 flex items-center justify-center gap-2 py-2 text-[10px] font-bold uppercase transition-all border-b-2",
+                                                        activeSidebarTab === 'changes' ? "border-primary text-primary bg-primary/5" : "border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                                                    )}
+                                                >
+                                                    <LayoutList className="w-3 h-3" />
+                                                    Changes Log
+                                                </button>
+                                            </div>
 
-                                        {/* Tab Content */}
-                                        <div className="flex-1 overflow-hidden">
-                                            {activeSidebarTab === 'structure' ? (
-                                                <div className="h-full overflow-auto p-2 scrollbar-thin">
-                                                    <DiffNodeRenderer
-                                                        node={diffResult.root}
-                                                        showUnchanged={config.showUnchanged}
-                                                        expandAll={false}
+                                            {/* Tab Content */}
+                                            <div className="flex-1 overflow-hidden">
+                                                {activeSidebarTab === 'structure' ? (
+                                                    <div className="h-full overflow-auto p-2 scrollbar-thin">
+                                                        <DiffNodeRenderer
+                                                            node={diffResult.root}
+                                                            showUnchanged={config.showUnchanged}
+                                                            expandAll={false}
+                                                            onNodeClick={handleNodeClick}
+                                                            onMerge={handleMerge}
+                                                        />
+                                                    </div>
+                                                ) : (
+                                                    <ChangeLogList
+                                                        root={diffResult.root}
                                                         onNodeClick={handleNodeClick}
                                                         onMerge={handleMerge}
+                                                        onBatchMerge={handleBatchMerge}
+                                                        diffResult={diffResult}
                                                     />
-                                                </div>
-                                            ) : (
-                                                <ChangeLogList
-                                                    root={diffResult.root}
-                                                    onNodeClick={handleNodeClick}
-                                                    onMerge={handleMerge}
-                                                    onBatchMerge={handleBatchMerge}
-                                                    diffResult={diffResult}
-                                                />
-                                            )}
-                                        </div>
+                                                )}
+                                            </div>
 
-                                        {/* Footer Action */}
-                                        {/* <div className="p-3 border-t border-border bg-muted/10 flex flex-col gap-2">
+                                            {/* Footer Action */}
+                                            {/* <div className="p-3 border-t border-border bg-muted/10 flex flex-col gap-2">
                                             <div className="flex items-center gap-2 text-[10px] text-muted-foreground opacity-70 mb-1">
                                                 <Info className="w-3 h-3" />
                                                 Use the central gutter arrows to merge.
@@ -1122,9 +1242,10 @@ export function UnifiedJsonDiffMerge() {
                                                 </Button>
                                             </div>
                                         </div> */}
-                                    </>
-                                )}
-                            </aside>
+                                        </>
+                                    )}
+                                </aside>
+                            </>
                         )}
                     </div>
 
@@ -1132,7 +1253,6 @@ export function UnifiedJsonDiffMerge() {
             </div>
 
             <BottomConfigurationPanel />
-        </main>
+        </main >
     )
 }
-

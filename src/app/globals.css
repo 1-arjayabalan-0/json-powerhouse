@@ -261,14 +261,14 @@ select option {
 }
 
 .merge-arrow {
-  width: 20px;
-  height: 20px;
+  width: 25px;
+  height: 15px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 4px;
   background: var(--background);
-  border: 1px solid var(--border);
+  /* border: 1px solid var(--border); */
   cursor: pointer;
   transition: all 0.2s;
   padding: 0px;
@@ -277,9 +277,9 @@ select option {
 }
 
 .merge-arrow:hover {
-  border-color: var(--primary);
+  /* border-color: var(--primary); */
   color: var(--primary);
-  transform: scale(1.15);
+  /* transform: scale(1.15); */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
   z-index: 30;
 }

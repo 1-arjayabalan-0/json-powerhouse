@@ -429,6 +429,21 @@ export default function BottomConfigurationPanel() {
                         </Select>
                     </div>
                     <div className="space-y-1.5 min-w-0 flex flex-col">
+                        <Label className="text-[10px] font-semibold text-[var(--foreground-muted)] uppercase tracking-wider truncate">Key Case</Label>
+                        <Select value={conf.keyCase} onValueChange={(v) => updateConfig('keyCase', v)}>
+                            <SelectTrigger className="h-8 text-xs bg-[var(--input-background)] border-[var(--input)] text-[var(--foreground)] w-full">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="none">Original</SelectItem>
+                                <SelectItem value="camelCase">camelCase</SelectItem>
+                                <SelectItem value="PascalCase">PascalCase</SelectItem>
+                                <SelectItem value="snake_case">snake_case</SelectItem>
+                                <SelectItem value="kebab-case">kebab-case</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <div className="space-y-1.5 min-w-0 flex flex-col">
                         <Label className="text-[10px] font-semibold text-[var(--foreground-muted)] uppercase tracking-wider truncate">Quote Style</Label>
                         <Select value={conf.quoteStyle} onValueChange={(v) => updateConfig('quoteStyle', v)}>
                             <SelectTrigger className="h-8 text-xs bg-[var(--input-background)] border-[var(--input)] text-[var(--foreground)] w-full">
@@ -500,6 +515,21 @@ export default function BottomConfigurationPanel() {
                             </SelectContent>
                         </Select>
                     </div>
+                    <div className="space-y-1.5 min-w-0 flex flex-col">
+                        <Label className="text-[10px] font-semibold text-[var(--foreground-muted)] uppercase tracking-wider truncate">Key Case</Label>
+                        <Select value={conf.keyCase} onValueChange={(v) => updateConfig('keyCase', v)}>
+                            <SelectTrigger className="h-8 text-xs bg-[var(--input-background)] border-[var(--input)] text-[var(--foreground)] w-full">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="none">Original</SelectItem>
+                                <SelectItem value="camelCase">camelCase</SelectItem>
+                                <SelectItem value="PascalCase">PascalCase</SelectItem>
+                                <SelectItem value="snake_case">snake_case</SelectItem>
+                                <SelectItem value="kebab-case">kebab-case</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
                     <div className="space-y-1.5 flex flex-col justify-end pb-1 w-full">
                         <div className="flex items-center gap-2">
                             <Switch checked={conf.stripComments} onCheckedChange={(v) => updateConfig('stripComments', v)} id="stripComments" />
@@ -526,7 +556,7 @@ export default function BottomConfigurationPanel() {
             const conf = config as JsonDiffConfig & { diffStrategy: string };
             return (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 xl:grid-cols-5 gap-x-4 gap-y-4">
-                    <div className="space-y-1.5 min-w-0 flex flex-col">
+                    {/* <div className="space-y-1.5 min-w-0 flex flex-col">
                         <Label className="text-[10px] font-semibold text-[var(--foreground-muted)] uppercase tracking-wider truncate">Strategy</Label>
                         <Select value={conf.diffStrategy} onValueChange={(v) => updateConfig('diffStrategy', v)}>
                             <SelectTrigger className="h-8 text-xs bg-accent border-input text-foreground w-full">
@@ -537,8 +567,8 @@ export default function BottomConfigurationPanel() {
                                 <SelectItem value="merge-patch-7396">RFC 7396</SelectItem>
                             </SelectContent>
                         </Select>
-                    </div>
-                    <div className="space-y-1.5 min-w-0 flex flex-col">
+                    </div> */}
+                    {/* <div className="space-y-1.5 min-w-0 flex flex-col">
                         <Label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider truncate">Arrays</Label>
                         <Select value={conf.arrayStrategy} onValueChange={(v) => updateConfig('arrayStrategy', v)}>
                             <SelectTrigger className="h-8 text-xs bg-accent border-input text-foreground w-full">
@@ -551,8 +581,8 @@ export default function BottomConfigurationPanel() {
                                 <SelectItem value="key">Key Identification</SelectItem>
                             </SelectContent>
                         </Select>
-                    </div>
-                    {conf.arrayStrategy === 'key' && (
+                    </div> */}
+                    {/* {conf.arrayStrategy === 'key' && (
                         <div className="space-y-1.5 min-w-0 flex flex-col animate-in fade-in slide-in-from-top-1 duration-200">
                             <Label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider truncate">Match Key</Label>
                             <Input
@@ -562,19 +592,19 @@ export default function BottomConfigurationPanel() {
                                 placeholder="id, uuid, etc..."
                             />
                         </div>
-                    )}
-                    <div className="space-y-1.5 flex flex-col justify-end pb-1 w-full">
+                    )} */}
+                    {/* <div className="space-y-1.5 flex flex-col justify-end pb-1 w-full">
                         <div className="flex items-center gap-2">
                             <Switch checked={conf.allowComments} onCheckedChange={(v) => updateConfig('allowComments', v)} id="allowComments" />
                             <Label htmlFor="allowComments" className="text-xs text-muted-foreground whitespace-nowrap">Allow JSON5</Label>
                         </div>
-                    </div>
-                    <div className="space-y-1.5 flex flex-col justify-end pb-1 w-full">
+                    </div> */}
+                    {/* <div className="space-y-1.5 flex flex-col justify-end pb-1 w-full">
                         <div className="flex items-center gap-2">
                             <Switch checked={conf.showUnchanged} onCheckedChange={(v) => updateConfig('showUnchanged', v)} id="showUnchanged" />
                             <Label htmlFor="showUnchanged" className="text-xs text-muted-foreground whitespace-nowrap">Unchanged</Label>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             );
         }
@@ -605,8 +635,10 @@ export default function BottomConfigurationPanel() {
         // Add other resets here...
     };
 
+    const isJsonTool = pathname?.startsWith('/tools/json');
+
     return (
-        <div className="border-t border-border bg-popover shadow-[0_-8px_30px_-10px_color-mix(in_srgb,var(--foreground)_5%,transparent)] z-40 relative">
+        <div className={`border-t border-border bg-popover shadow-[0_-8px_30px_-10px_color-mix(in_srgb,var(--foreground)_5%,transparent)] z-40 ${isJsonTool ? 'fixed inset-x-0 bottom-0 lg:static' : 'relative'}`}>
             <div
                 className="min-h-9 py-2 px-2 flex flex-row items-start md:items-center justify-between cursor-pointer hover:bg-accent/50 transition-colors gap-3"
                 onClick={() => setIsExpanded(!isExpanded)}

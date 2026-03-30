@@ -169,7 +169,7 @@ export default function ChangeLogList({ root, diffResult, onNodeClick, onMerge, 
     return (
         <div className="flex flex-col h-full overflow-hidden">
             {/* Header with Title and Copy Patch */}
-            <div className="px-3 py-2 border-b border-border flex items-center justify-between bg-muted/30">
+            {/* <div className="px-3 py-2 border-b border-border flex items-center justify-between bg-muted/30">
                 <span className="text-[11px] font-bold text-foreground">
                     {filteredChanges.length} {filteredChanges.length === 1 ? 'change' : 'changes'}
                 </span>
@@ -182,7 +182,7 @@ export default function ChangeLogList({ root, diffResult, onNodeClick, onMerge, 
                     <Copy className="w-3 h-3" />
                     Copy JSON Patch
                 </Button>
-            </div>
+            </div> */}
 
             {/* Search and Filter */}
             <div className="p-2 border-b border-border space-y-2 bg-muted/10">
@@ -208,7 +208,7 @@ export default function ChangeLogList({ root, diffResult, onNodeClick, onMerge, 
                                     : "bg-transparent text-muted-foreground border-transparent hover:bg-muted"
                             )}
                         >
-                            {f} <span className="opacity-50 ml-1 font-mono">
+                            {f} <span className="opacity-100 ml-1 font-mono">
                                 {f === 'all' ?
                                     (diffResult?.summary?.added || 0) + (diffResult?.summary?.removed || 0) + (diffResult?.summary?.modified || 0) :
                                     diffResult?.summary?.[f] || 0}
@@ -274,17 +274,17 @@ export default function ChangeLogList({ root, diffResult, onNodeClick, onMerge, 
                                 <div className="flex flex-col gap-2 p-2.5 rounded bg-black/50 border border-white/[0.03]">
                                     {/* Baseline A Box */}
                                     <div className="flex flex-col gap-1 min-w-0">
-                                        <div className="flex items-center gap-1.5 text-[9px] font-bold text-muted-foreground/40 uppercase mb-0.5">
+                                        <div className="flex items-center gap-1.5 text-[9px] font-bold text-muted-foreground/70 uppercase mb-0.5">
                                             <span className="w-1 h-1 rounded-full bg-red-500/30" />
                                             Baseline A
                                         </div>
                                         <div className="flex items-start gap-1.5 pl-2.5 border-l border-red-500/10 min-w-0">
                                             {change.type === 'added' ? (
-                                                <span className="text-[10px] italic text-muted-foreground/20 leading-relaxed">(not present)</span>
+                                                <span className="text-[10px] italic text-muted-foreground/50 leading-relaxed">(not present)</span>
                                             ) : (
                                                 <div className="flex items-start gap-1.5 min-w-0 leading-relaxed">
                                                     {!change.path.endsWith(']') && change.key && (
-                                                        <span className="text-[10px] font-mono text-muted-foreground/50 shrink-0">"{change.key}":</span>
+                                                        <span className="text-[10px] font-mono text-muted-foreground/80 shrink-0">"{change.key}":</span>
                                                     )}
                                                     <span className="text-[10px] font-mono text-red-300/80 break-all line-through decoration-red-500/20">
                                                         {formatValue(change.oldValue)}
@@ -296,7 +296,7 @@ export default function ChangeLogList({ root, diffResult, onNodeClick, onMerge, 
 
                                     {/* Modified B Box */}
                                     <div className="flex flex-col gap-1 min-w-0 border-t border-white/[0.02] pt-2">
-                                        <div className="flex items-center gap-1.5 text-[9px] font-bold text-muted-foreground/40 uppercase mb-0.5">
+                                        <div className="flex items-center gap-1.5 text-[9px] font-bold text-muted-foreground/70 uppercase mb-0.5">
                                             <span className="w-1 h-1 rounded-full bg-green-500/50" />
                                             Modified B
                                         </div>
@@ -306,7 +306,7 @@ export default function ChangeLogList({ root, diffResult, onNodeClick, onMerge, 
                                             ) : (
                                                 <div className="flex items-start gap-1.5 min-w-0 leading-relaxed">
                                                     {!change.path.endsWith(']') && change.key && (
-                                                        <span className="text-[10px] font-mono text-muted-foreground/50 shrink-0">"{change.key}":</span>
+                                                        <span className="text-[10px] font-mono text-muted-foreground/80 shrink-0">"{change.key}":</span>
                                                     )}
                                                     <span className="text-[10px] font-mono text-green-300/90 break-all font-medium">
                                                         {formatValue(change.newValue)}

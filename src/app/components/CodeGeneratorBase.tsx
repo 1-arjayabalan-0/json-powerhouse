@@ -77,7 +77,8 @@ export default function CodeGeneratorBase({
     return (
         <main className="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden w-full">
             {/* Left Section: Input Editor */}
-            <section className="flex-none lg:flex-1 flex flex-col border-b lg:border-b-0 lg:border-r border-border relative bg-background h-[45vh] lg:h-full min-h-[300px] lg:min-h-0">
+            <section className="flex-none lg:flex-1 flex flex-col border-b lg:border-b-0 lg:border-r border-border relative bg-background 
+            lg:h-[45vh] md:h-[30vh] lg:h-full min-h-[300px] lg:min-h-0">
                 <div className="h-10 px-4 border-b border-border flex items-center bg-muted/50 shrink-0 overflow-x-auto whitespace-nowrap scrollbar-none">
                     <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest mr-4">Input Editor</span>
                     <div className="ml-auto flex gap-2 items-center">
@@ -105,7 +106,7 @@ export default function CodeGeneratorBase({
                                 title="Load Sample JSON"
                             >
                                 <span className="material-symbols-outlined !text-[12px]">auto_fix_high</span>
-                                <span className="hidden xs:inline">Sample</span>
+                                <span>Sample</span>
                             </button>
                             <button
                                 onClick={async () => {
@@ -124,7 +125,7 @@ export default function CodeGeneratorBase({
                                 title="Paste from clipboard"
                             >
                                 <span className="material-symbols-outlined !text-[12px]">content_paste</span>
-                                <span className="hidden xs:inline">Paste</span>
+                                <span>Paste</span>
                             </button>
                             <button
                                 onClick={() => {
@@ -135,7 +136,7 @@ export default function CodeGeneratorBase({
                                 title="Clear Input"
                             >
                                 <span className="material-symbols-outlined !text-[12px]">delete</span>
-                                <span className="hidden xs:inline">Clear</span>
+                                <span>Clear</span>
                             </button>
                         </div>
                     </div>

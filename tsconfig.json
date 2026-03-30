@@ -38,7 +38,7 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-  ],
+, "extension/eslint.config.js"  ],
   "exclude": [
     "node_modules"
   ]

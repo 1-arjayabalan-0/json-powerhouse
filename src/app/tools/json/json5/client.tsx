@@ -149,6 +149,43 @@ export default function JSON5ConverterClient() {
         return result;
     };
 
+    const transformKeyCase = (key: string, caseType: JSON5ConverterConfig['keyCase']): string => {
+        switch (caseType) {
+            case 'camelCase':
+                return key.replace(/[-_\s](.)/g, (_, char) => String(char).toUpperCase());
+            case 'snake_case':
+                return key
+                    .replace(/[A-Z]/g, letter => `_${String(letter).toLowerCase()}`)
+                    .replace(/[-\s]/g, '_');
+            case 'kebab-case':
+                return key
+                    .replace(/[A-Z]/g, letter => `-${String(letter).toLowerCase()}`)
+                    .replace(/[_\s]/g, '-');
+            case 'PascalCase': {
+                const camel = key.replace(/[-_\s](.)/g, (_, char) => String(char).toUpperCase());
+                return camel.charAt(0).toUpperCase() + camel.slice(1);
+            }
+            default:
+                return key;
+        }
+    };
+
+    const transformValueKeys = (value: any, caseType: JSON5ConverterConfig['keyCase']): any => {
+        if (caseType === 'none') return value;
+        if (Array.isArray(value)) {
+            return value.map(item => transformValueKeys(item, caseType));
+        }
+        if (value && typeof value === 'object') {
+            const result: any = {};
+            for (const [key, val] of Object.entries(value)) {
+                const transformedKey = transformKeyCase(key, caseType);
+                result[transformedKey] = transformValueKeys(val, caseType);
+            }
+            return result;
+        }
+        return value;
+    };
+
     // Perform conversion
     useEffect(() => {
         if (!input.trim()) {
@@ -160,13 +197,13 @@ export default function JSON5ConverterClient() {
         try {
             if (direction === 'json-to-json5') {
                 if (converterConfig.stripComments) {
-                    // Use standard JSON5 library (strips comments)
                     console.log("converterConfig", converterConfig);
 
                     const parsed = JSON5.parse(input);
+                    const transformed = transformValueKeys(parsed, converterConfig.keyCase);
                     const space = converterConfig.indentation === 'tab' ? '\t' :
                         converterConfig.indentation === '2' ? 2 : 4;
-                    const json5Output = JSON5.stringify(parsed, null, space);
+                    const json5Output = JSON5.stringify(transformed, null, space);
                     console.log("json5Output", json5Output);
 
                     setOutput(json5Output);
@@ -180,12 +217,11 @@ export default function JSON5ConverterClient() {
                     setOutput(converted);
                 }
             } else {
-                // Parse as JSON5, output as JSON (always strips comments as standard JSON doesn't support them)
                 const parsed = JSON5.parse(input);
+                const transformed = transformValueKeys(parsed, converterConfig.keyCase);
                 const space = converterConfig.indentation === 'tab' ? '\t' :
                     converterConfig.indentation === '2' ? 2 : 4;
-
-                const jsonOutput = JSON.stringify(parsed, null, space);
+                const jsonOutput = JSON.stringify(transformed, null, space);
                 setOutput(jsonOutput);
             }
             setError(null);
