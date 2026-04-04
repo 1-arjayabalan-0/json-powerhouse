@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { JsonTreeViewerConfig } from "@/core/types/json-viewer-config";
+import { toast } from "sonner";
 
 interface JsonTreeNodeProps {
     name?: string;
@@ -15,6 +16,7 @@ interface JsonTreeNodeProps {
 
 export default function JsonTreeNode({ name, value, path, depth, config, isLast, searchTerm }: JsonTreeNodeProps) {
     const [expanded, setExpanded] = useState(depth < config.autoExpandDepth);
+    const [showPathMenu, setShowPathMenu] = useState(false);
 
     // Highlight helper
     const highlightText = (text: string, term?: string) => {
@@ -29,6 +31,22 @@ export default function JsonTreeNode({ name, value, path, depth, config, isLast,
                 )}
             </span>
         );
+    };
+
+    const copyPath = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        const fullPath = path || name || 'root';
+        navigator.clipboard.writeText(fullPath);
+        toast.success(`Path copied: ${fullPath}`);
+        setShowPathMenu(false);
+    };
+
+    const copyValue = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        const text = typeof value === 'object' ? JSON.stringify(value, null, 2) : String(value);
+        navigator.clipboard.writeText(text);
+        toast.success("Value copied!");
+        setShowPathMenu(false);
     };
 
     const isObject = value !== null && typeof value === 'object';
@@ -48,7 +66,7 @@ export default function JsonTreeNode({ name, value, path, depth, config, isLast,
     // Render Primitive Value
     if (!isObject) {
         return (
-            <div className="font-mono text-sm leading-relaxed hover:bg-accent/50 px-1 rounded cursor-default flex items-start">
+            <div className="font-mono text-sm leading-relaxed hover:bg-accent/50 px-1 rounded cursor-default flex items-start group">
                 <div style={{ width: paddingLeft }} className="shrink-0 border-l border-transparent" />
 
                 {/* Key */}
@@ -69,6 +87,24 @@ export default function JsonTreeNode({ name, value, path, depth, config, isLast,
 
                 {/* Comma */}
                 {config.showCommas && !isLast && <span className="text-muted-foreground/40">,</span>}
+
+                {/* Copy buttons (visible on hover) */}
+                <div className="ml-auto hidden group-hover:flex items-center gap-1 shrink-0">
+                    <button
+                        onClick={copyPath}
+                        className="text-[9px] px-1.5 py-0.5 rounded bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground border border-border transition-colors"
+                        title={`Copy path: ${path || name || 'root'}`}
+                    >
+                        Copy Path
+                    </button>
+                    <button
+                        onClick={copyValue}
+                        className="text-[9px] px-1.5 py-0.5 rounded bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground border border-border transition-colors"
+                        title="Copy value"
+                    >
+                        Copy
+                    </button>
+                </div>
             </div>
         );
     }
@@ -118,6 +154,24 @@ export default function JsonTreeNode({ name, value, path, depth, config, isLast,
 
                 {/* Comma (if collapsed) */}
                 {!expanded && config.showCommas && !isLast && <span className="text-muted-foreground/40">,</span>}
+
+                {/* Copy buttons (visible on hover) */}
+                <div className="ml-auto hidden group-hover:flex items-center gap-1 shrink-0">
+                    <button
+                        onClick={copyPath}
+                        className="text-[9px] px-1.5 py-0.5 rounded bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground border border-border transition-colors"
+                        title={`Copy path: ${path || name || 'root'}`}
+                    >
+                        Copy Path
+                    </button>
+                    <button
+                        onClick={copyValue}
+                        className="text-[9px] px-1.5 py-0.5 rounded bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground border border-border transition-colors"
+                        title="Copy value"
+                    >
+                        Copy
+                    </button>
+                </div>
             </div>
 
             {/* Children (Expanded) */}

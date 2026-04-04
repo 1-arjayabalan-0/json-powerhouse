@@ -10,6 +10,7 @@ import BottomConfigurationPanel from "@/app/components/BottomConfigurationPanel"
 import { diagnoseJson } from "@/core/lib/diagnostics/engine";
 import { JsonIssue } from "@/core/types/diagnostics";
 import DiagnosticsPanel from "@/app/components/DiagnosticsPanel";
+import KeyboardShortcuts from "@/app/components/KeyboardShortcuts";
 import { COMPLEX_JSON_SAMPLE } from "@/core/config/samples";
 
 interface JSONFormatterProps {
@@ -160,6 +161,13 @@ export default function JSONFormatter({ config, input, setInput, formatted, setF
 
     return (
         <main className="flex-1 flex flex-col lg:flex-row overflow-hidden w-full">
+            <KeyboardShortcuts
+                onProcess={() => {
+                    // Ctrl+Enter: Apply all fixes + reformat
+                    handleApplyAllFixes();
+                }}
+                onCopyOutput={handleCopy}
+            />
             {/* Left Section: Input Editor */}
             <section className="flex flex-col border-b lg:border-b-0 lg:border-r border-border relative bg-background flex-1 min-h-[40vh] lg:w-[40%] lg:flex-[0.7] lg:min-h-0">
                 <div className="h-10 px-4 border-b border-border flex items-center bg-muted shrink-0 overflow-x-auto whitespace-nowrap scrollbar-none">

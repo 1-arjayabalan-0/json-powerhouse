@@ -30,6 +30,7 @@ import {
 import { ValidateHandler } from './validate';
 import { TreeViewPanel } from './tree-view';
 import { DiffViewPanel } from './diff-view';
+import { transformJson } from '@/core/lib/transformations/engine';
 
 let outputChannel: vscode.OutputChannel;
 let diagnosticCollection: vscode.DiagnosticCollection;
@@ -151,6 +152,35 @@ export function activate(context: vscode.ExtensionContext) {
     }));
     context.subscriptions.push(vscode.commands.registerCommand('json-powerhouse.toJson5', () => {
         handleJsonTransform('convert to JSON5', { pretty: true, indentation: '2', useJSON5: true, quoteStyle: 'single', trailingCommas: true, stripComments: false });
+    }));
+
+    // JSON Transformations
+    context.subscriptions.push(vscode.commands.registerCommand('json-powerhouse.flatten', () => {
+        log('Executing transform: flatten');
+        const editor = vscode.window.activeTextEditor;
+        if (!editor) { vscode.window.showErrorMessage('No active editor found'); return; }
+        const text = editor.selection.isEmpty ? editor.document.getText() : editor.document.getText(editor.selection);
+        if (!text.trim()) { vscode.window.showErrorMessage('No JSON text found'); return; }
+        try {
+            const result = transformJson(text, [{ id: 'flatten', type: 'flatten', enabled: true, separator: '.' }]);
+            if (result.error) { vscode.window.showErrorMessage(`Flatten failed: ${result.error}`); return; }
+            vscode.workspace.openTextDocument({ content: result.output, language: 'json' })
+                .then(doc => vscode.window.showTextDocument(doc, { preview: false, viewColumn: vscode.ViewColumn.Beside }));
+        } catch (e: any) { vscode.window.showErrorMessage(`Flatten failed: ${e.message}`); }
+    }));
+
+    context.subscriptions.push(vscode.commands.registerCommand('json-powerhouse.unflatten', () => {
+        log('Executing transform: unflatten');
+        const editor = vscode.window.activeTextEditor;
+        if (!editor) { vscode.window.showErrorMessage('No active editor found'); return; }
+        const text = editor.selection.isEmpty ? editor.document.getText() : editor.document.getText(editor.selection);
+        if (!text.trim()) { vscode.window.showErrorMessage('No JSON text found'); return; }
+        try {
+            const result = transformJson(text, [{ id: 'unflatten', type: 'unflatten', enabled: true, separator: '.' }]);
+            if (result.error) { vscode.window.showErrorMessage(`Unflatten failed: ${result.error}`); return; }
+            vscode.workspace.openTextDocument({ content: result.output, language: 'json' })
+                .then(doc => vscode.window.showTextDocument(doc, { preview: false, viewColumn: vscode.ViewColumn.Beside }));
+        } catch (e: any) { vscode.window.showErrorMessage(`Unflatten failed: ${e.message}`); }
     }));
 
     // JSON Tree Viewer

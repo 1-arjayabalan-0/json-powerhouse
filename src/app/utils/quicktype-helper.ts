@@ -16,7 +16,7 @@ export async function generateCodeFromJSON(
     jsonString: string,
     targetLanguage: string | TargetLanguage,
     typeName: string = "Root",
-    rendererOptions: { [key: string]: string } = {}
+    rendererOptions: { [key: string]: string | boolean | undefined } = {}
 ): Promise<string> {
     try {
         const jsonInput = jsonInputForTargetLanguage(targetLanguage as any);
@@ -30,14 +30,28 @@ export async function generateCodeFromJSON(
         const inputData = new InputData();
         inputData.addInput(jsonInput);
 
+        // Filter out undefined or null values from rendererOptions
+        const safeRendererOptions = Object.entries(rendererOptions).reduce(
+            (acc, [key, value]) => {
+                if (value !== undefined && value !== null && value !== "") {
+                    acc[key] = value;
+                }
+                return acc;
+            },
+            {} as { [key: string]: string | boolean }
+        );
+
+        console.log("safeRendererOptions", safeRendererOptions);
         const result = await quicktype({
             inputData,
             lang: targetLanguage as any,
-            rendererOptions,
+            rendererOptions: safeRendererOptions,
         });
 
         return result.lines.join("\n");
     } catch (error: any) {
+        console.log(error);
+
         throw new Error(`Failed to generate code: ${error.message}`);
     }
 }

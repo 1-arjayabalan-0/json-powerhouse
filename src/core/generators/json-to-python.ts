@@ -6,10 +6,6 @@ export async function generatePythonCode(jsonString: string, config: PythonConfi
         jsonString,
         "python",
         "Root",
-        {
-            "python-version": config.pythonVersion,
-            "type-hints": config.useTypeHints ? "true" : "false",
-            "nice-property-names": config.nicePropertyNames ? "true" : "false",
-        }
+        {}
     );
 }

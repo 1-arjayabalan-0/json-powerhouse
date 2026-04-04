@@ -39,6 +39,14 @@
                 "title": "JSON PowerHouse: Convert to JSON5"
             },
             {
+                "command": "json-powerhouse.flatten",
+                "title": "JSON PowerHouse: Flatten JSON"
+            },
+            {
+                "command": "json-powerhouse.unflatten",
+                "title": "JSON PowerHouse: Unflatten JSON"
+            },
+            {
                 "command": "json-powerhouse.validate",
                 "title": "JSON PowerHouse: Validate JSON"
             },
@@ -124,6 +132,14 @@
                 },
                 {
                     "command": "json-powerhouse.toJson5",
+                    "group": "1_tools"
+                },
+                {
+                    "command": "json-powerhouse.flatten",
+                    "group": "1_tools"
+                },
+                {
+                    "command": "json-powerhouse.unflatten",
                     "group": "1_tools"
                 },
                 {

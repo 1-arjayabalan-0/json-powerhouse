@@ -126,6 +126,8 @@ async function runTests() {
         'json-powerhouse.minify',
         'json-powerhouse.normalize',
         'json-powerhouse.toJson5',
+        'json-powerhouse.flatten',
+        'json-powerhouse.unflatten',
         'json-powerhouse.validate',
         'json-powerhouse.treeView',
         'json-powerhouse.diff',
@@ -241,7 +243,20 @@ async function runTests() {
     assert.strictEqual(lastError, null);
     console.log('✓ Code generation (TypeScript) verified');
 
-    // 11. Test empty text handling
+    // 11. Test flatten command
+    lastError = null;
+    vscodeMock.window.activeTextEditor = {
+        selection: { isEmpty: true },
+        document: {
+            getText: () => '{"user": {"name": "John", "address": {"city": "NYC"}}}',
+            languageId: 'json'
+        }
+    };
+    await registeredCommands.get('json-powerhouse.flatten')();
+    assert.strictEqual(lastError, null);
+    console.log('✓ Flatten command verified');
+
+    // 12. Test empty text handling
     lastError = null;
     vscodeMock.window.activeTextEditor = {
         selection: { isEmpty: true },

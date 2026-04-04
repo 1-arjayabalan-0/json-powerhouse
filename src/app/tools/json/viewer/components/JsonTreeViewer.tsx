@@ -9,41 +9,38 @@ import TreeControls from "./TreeControls";
 import { Button } from "@/app/components/ui/button";
 import CodeEditor from "@/app/components/CodeEditor";
 import BottomConfigurationPanel from "@/app/components/BottomConfigurationPanel";
+import KeyboardShortcuts from "@/app/components/KeyboardShortcuts";
 import { COMPLEX_JSON_SAMPLE } from "@/core/config/samples";
+import { useAutoRepair } from "@/app/hooks/useAutoRepair";
+import { useJsonWorker } from "@/app/hooks/useJsonWorker";
 
 export default function JsonTreeViewer() {
     const [input, setInput] = useState("");
-    const [parsedJson, setParsedJson] = useState<any>(null);
-    const [error, setError] = useState<string | null>(null);
     const { config, setConfig } = useConfig();
     const [treeKey, setTreeKey] = useState(0);
     const [searchTerm, setSearchTerm] = useState("");
 
+    // Auto-repair broken JSON before tree building
+    const { repaired, repairCount, isValid, error: repairError } = useAutoRepair(input);
+
+    // Parse JSON using Web Worker for large files, sync fallback for small ones
+    const {
+        data: parsedJson,
+        isParsing,
+        error: parseError,
+        parseTimeMs,
+        sizeBytes,
+        usedWorker
+    } = useJsonWorker(repaired);
+
+    const error = parseError || repairError;
+
     // Initialize config if needed
     useEffect(() => {
-        // Simple check to see if we have the right config shape, otherwise reset
         if (!('showDataTypes' in config)) {
             setConfig(defaultViewerConfig);
         }
     }, []);
-
-    // Parse JSON when input changes
-    useEffect(() => {
-        if (!input.trim()) {
-            setParsedJson(null);
-            setError(null);
-            return;
-        }
-
-        try {
-            const parsed = JSON.parse(input);
-            setParsedJson(parsed);
-            setError(null);
-        } catch (e: any) {
-            setParsedJson(null);
-            setError(e.message);
-        }
-    }, [input]);
 
     const handlePaste = async () => {
         try {
@@ -70,6 +67,14 @@ export default function JsonTreeViewer() {
 
     return (
         <main className="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden w-full">
+            <KeyboardShortcuts
+                onCopyOutput={() => {
+                    if (parsedJson) {
+                        navigator.clipboard.writeText(JSON.stringify(parsedJson, null, 2));
+                        toast.success("JSON copied!");
+                    }
+                }}
+            />
             {/* Left Section: Input Editor */}
             <section className="flex-none lg:flex-1 flex flex-col border-b lg:border-b-0 lg:border-r border-border relative bg-background h-[45vh] lg:h-full min-h-[300px] lg:min-h-0">
                 <div className="h-10 px-4 border-b border-border flex items-center bg-[color-mix(in_srgb,var(--muted)_50%,transparent)] shrink-0 overflow-x-auto whitespace-nowrap scrollbar-none">
@@ -152,10 +157,30 @@ export default function JsonTreeViewer() {
                     <div className="h-10 px-4 flex items-center justify-between bg-card border-b border-border">
                         <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Workspace</span>
                         <div className="flex items-center gap-3">
+                            {repairCount > 0 && (
+                                <div className="flex items-center gap-1.5 bg-[color-mix(in_srgb,var(--warning)_10%,transparent)] px-2 py-0.5 rounded border border-[color-mix(in_srgb,var(--warning)_20%,transparent)]" title={`${repairCount} auto-repairs applied`}>
+                                    <span className="material-symbols-outlined !text-[12px] text-warning">build</span>
+                                    <span className="text-[10px] text-warning font-medium">Repaired {repairCount}</span>
+                                </div>
+                            )}
                             <div className="flex items-center gap-1.5 bg-[color-mix(in_srgb,var(--success)_5%,transparent)] px-2 py-0.5 rounded border border-[color-mix(in_srgb,var(--success)_10%,transparent)]">
                                 <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse"></span>
                                 <span className="text-[9px] text-success font-bold uppercase">Live</span>
                             </div>
+                            {parsedJson && (
+                                <button
+                                    onClick={() => {
+                                        const text = JSON.stringify(parsedJson, null, 2);
+                                        navigator.clipboard.writeText(text);
+                                        toast.success("JSON copied to clipboard!");
+                                    }}
+                                    className="flex items-center gap-1.5 px-3 py-1 text-[11px] sm:text-[12px] font-medium bg-primary hover:opacity-90 text-primary-foreground rounded transition-colors shadow-sm"
+                                    title="Copy JSON"
+                                >
+                                    <span className="material-symbols-outlined !text-[12px]">content_copy</span>
+                                    <span>Copy</span>
+                                </button>
+                            )}
                         </div>
                     </div>
                     {/* Secondary Toolbar for Tree Controls */}
@@ -173,6 +198,40 @@ export default function JsonTreeViewer() {
                 <div className="flex-1 overflow-auto custom-scroll p-4 bg-background">
                     {parsedJson ? (
                         <div className="text-foreground">
+                            {/* File size + stats bar */}
+                            <div className="flex items-center gap-4 mb-3 px-2 py-1.5 bg-muted/30 rounded text-[10px] text-muted-foreground border border-border">
+                                <span className="flex items-center gap-1">
+                                    <span className="material-symbols-outlined !text-[12px]">data_usage</span>
+                                    Size: {formatBytes(sizeBytes || new Blob([input]).size)}
+                                </span>
+                                <span className="flex items-center gap-1">
+                                    <span className="material-symbols-outlined !text-[12px]">account_tree</span>
+                                    Depth: {getJsonDepth(parsedJson)}
+                                </span>
+                                <span className="flex items-center gap-1">
+                                    <span className="material-symbols-outlined !text-[12px]">tag</span>
+                                    Type: {Array.isArray(parsedJson) ? `Array[${parsedJson.length}]` : `Object{${Object.keys(parsedJson).length}}`}
+                                </span>
+                                {parseTimeMs > 0 && (
+                                    <span className="flex items-center gap-1">
+                                        <span className="material-symbols-outlined !text-[12px]">timer</span>
+                                        {parseTimeMs < 1 ? '<1ms' : `${Math.round(parseTimeMs)}ms`}
+                                        {usedWorker && <span className="text-primary ml-1">(worker)</span>}
+                                    </span>
+                                )}
+                                {isParsing && (
+                                    <span className="flex items-center gap-1 text-primary">
+                                        <span className="material-symbols-outlined !text-[12px] animate-spin">progress_activity</span>
+                                        Parsing...
+                                    </span>
+                                )}
+                                {repairCount > 0 && (
+                                    <span className="flex items-center gap-1 text-warning">
+                                        <span className="material-symbols-outlined !text-[12px]">build</span>
+                                        {repairCount} repaired
+                                    </span>
+                                )}
+                            </div>
                             <JsonTreeNode
                                 key={treeKey}
                                 value={parsedJson}
@@ -193,4 +252,19 @@ export default function JsonTreeViewer() {
             </section>
         </main>
     );
+}
+
+function formatBytes(bytes: number): string {
+    if (bytes === 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+}
+
+function getJsonDepth(obj: any): number {
+    if (obj === null || typeof obj !== 'object') return 0;
+    const values = Array.isArray(obj) ? obj : Object.values(obj);
+    if (values.length === 0) return 1;
+    return 1 + Math.max(...values.map(getJsonDepth));
 }

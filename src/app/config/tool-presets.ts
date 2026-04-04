@@ -112,4 +112,9 @@ export const toolMetadata: Record<string, ToolMetadata> = {
         description: 'Visualize your JSON data in an interactive tree view.',
         icon: 'account_tree',
     },
+    'json-transform': {
+        title: 'JSON Transform',
+        description: 'Transform JSON visually: rename keys, remove fields, convert case, flatten/nest.',
+        icon: 'transform',
+    },
 };

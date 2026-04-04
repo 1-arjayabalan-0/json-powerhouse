@@ -11,6 +11,8 @@ import { useConfig } from "@/app/context/ConfigContext";
 import { parseTree, findNodeAtLocation, getLocation, modify, applyEdits } from 'jsonc-parser';
 import BottomConfigurationPanel from "@/app/components/BottomConfigurationPanel";
 import { cn } from "@/app/lib/utils";
+import { useAutoRepair } from "@/app/hooks/useAutoRepair";
+import KeyboardShortcuts from "@/app/components/KeyboardShortcuts";
 
 export default function JsonDiffViewer() {
     const { config, setConfig } = useConfig();
@@ -21,6 +23,10 @@ export default function JsonDiffViewer() {
     const [diffResult, setDiffResult] = useState<DiffResult | null>(null);
     const [isComputing, setIsComputing] = useState(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+    // Auto-repair both inputs
+    const leftRepair = useAutoRepair(leftInput, { allowComments: diffConfig.allowComments });
+    const rightRepair = useAutoRepair(rightInput, { allowComments: diffConfig.allowComments });
     
     const [leftSelection, setLeftSelection] = useState<{
         startLineNumber: number;
@@ -50,18 +56,21 @@ export default function JsonDiffViewer() {
             }
         }, 800);
         return () => clearTimeout(timer);
-    }, [leftInput, rightInput, diffConfig]);
+    }, [leftInput, rightInput, diffConfig, leftRepair.repaired, rightRepair.repaired]);
 
     const handleCompare = async () => {
         setIsComputing(true);
         // Small delay to let UI render loading state
         setTimeout(() => {
-            const result = parseAndDiff(leftInput, rightInput, diffConfig);
+            // Use auto-repaired JSON for comparison
+            const leftJson = leftRepair.repaired || leftInput;
+            const rightJson = rightRepair.repaired || rightInput;
+            const result = parseAndDiff(leftJson, rightJson, diffConfig);
             setDiffResult(result);
             setIsComputing(false);
             
-            // Generate Decorations
-            generateDecorations(result, leftInput, rightInput);
+            // Generate Decorations using repaired inputs
+            generateDecorations(result, leftJson, rightJson);
             
             // Auto-open sidebar on new results
             setIsSidebarOpen(true);
@@ -191,14 +200,15 @@ export default function JsonDiffViewer() {
     };
 
     const handleNodeClick = (node: DiffNode) => {
-        // Handle Left Selection
-        if (node.leftPathSegments && leftInput) {
-            const tree = parseTree(leftInput);
+        // Handle Left Selection (use repaired JSON for navigation)
+        const leftJson = leftRepair.repaired || leftInput;
+        if (node.leftPathSegments && leftJson) {
+            const tree = parseTree(leftJson);
             if (tree) {
                 const jsonNode = findNodeAtLocation(tree, node.leftPathSegments);
                 if (jsonNode) {
-                    const start: any = getLocation(leftInput, jsonNode.offset);
-                    const end: any = getLocation(leftInput, jsonNode.offset + jsonNode.length);
+                    const start: any = getLocation(leftJson, jsonNode.offset);
+                    const end: any = getLocation(leftJson, jsonNode.offset + jsonNode.length);
                     setLeftSelection({
                         startLineNumber: start.line + 1,
                         startColumn: start.column + 1,
@@ -211,14 +221,15 @@ export default function JsonDiffViewer() {
             setLeftSelection(null);
         }
 
-        // Handle Right Selection
-        if (node.rightPathSegments && rightInput) {
-            const tree = parseTree(rightInput);
+        // Handle Right Selection (use repaired JSON for navigation)
+        const rightJson = rightRepair.repaired || rightInput;
+        if (node.rightPathSegments && rightJson) {
+            const tree = parseTree(rightJson);
             if (tree) {
                 const jsonNode = findNodeAtLocation(tree, node.rightPathSegments);
                 if (jsonNode) {
-                    const start: any = getLocation(rightInput, jsonNode.offset);
-                    const end: any = getLocation(rightInput, jsonNode.offset + jsonNode.length);
+                    const start: any = getLocation(rightJson, jsonNode.offset);
+                    const end: any = getLocation(rightJson, jsonNode.offset + jsonNode.length);
                     setRightSelection({
                         startLineNumber: start.line + 1,
                         startColumn: start.column + 1,
@@ -291,6 +302,9 @@ export default function JsonDiffViewer() {
 
     return (
         <main className="flex-1 flex overflow-hidden h-full">
+            <KeyboardShortcuts
+                onProcess={handleCompare}
+            />
             <style jsx global>{`
                 .diff-removed-line { background-color: color-mix(in srgb, var(--destructive), transparent 85%); }
                 .diff-added-line { background-color: color-mix(in srgb, var(--success), transparent 85%); }
@@ -314,10 +328,16 @@ export default function JsonDiffViewer() {
 
             {/* Left Input (A Side) */}
             <div className="w-1/2 flex flex-col border-r border-border bg-background">
-                <div className="h-8 px-3 border-b border-border flex items-center bg-[color-mix(in_srgb,var(--muted)_50%,transparent)] shrink-0 justify-between">
+                <div className="h-10 px-4 border-b border-border flex items-center bg-muted shrink-0 justify-between">
                     <div className="flex items-center gap-2">
                          <span className="material-symbols-outlined text-primary text-sm">difference</span>
-                         <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Original (Left)</span>
+                         <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Original (Left)</span>
+                         {leftRepair.repairCount > 0 && (
+                             <span className="text-[9px] bg-[color-mix(in_srgb,var(--warning)_10%,transparent)] text-warning px-1.5 py-0.5 rounded border border-[color-mix(in_srgb,var(--warning)_20%,transparent)] flex items-center gap-1">
+                                 <span className="material-symbols-outlined !text-[10px]">build</span>
+                                 Repaired {leftRepair.repairCount}
+                             </span>
+                         )}
                     </div>
                     <div className="flex items-center gap-2">
                         <Button 
@@ -348,8 +368,16 @@ export default function JsonDiffViewer() {
             {/* Right Input (B Side) + Sidebar + Bottom Config */}
             <div className="w-1/2 flex flex-col bg-background relative">
                 {/* Header */}
-                <div className="h-8 px-3 border-b border-border flex items-center bg-muted/50 shrink-0 justify-between">
-                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Modified (Right)</span>
+                <div className="h-10 px-4 border-b border-border flex items-center bg-muted shrink-0 justify-between">
+                    <div className="flex items-center gap-2">
+                        <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Modified (Right)</span>
+                        {rightRepair.repairCount > 0 && (
+                            <span className="text-[9px] bg-[color-mix(in_srgb,var(--warning)_10%,transparent)] text-warning px-1.5 py-0.5 rounded border border-[color-mix(in_srgb,var(--warning)_20%,transparent)] flex items-center gap-1">
+                                <span className="material-symbols-outlined !text-[10px]">build</span>
+                                Repaired {rightRepair.repairCount}
+                            </span>
+                        )}
+                    </div>
                     <div className="flex items-center gap-2">
                         <Button 
                             size="sm" 
@@ -390,7 +418,7 @@ export default function JsonDiffViewer() {
                             <div 
                                 className={cn(
                                     "flex items-center cursor-pointer transition-colors shrink-0",
-                                    isSidebarOpen ? "h-8 px-2 border-b border-border justify-between bg-muted/30" : "h-full w-full flex-col py-2 gap-2"
+                                    isSidebarOpen ? "h-10 px-3 border-b border-border justify-between bg-muted/30" : "h-full w-full flex-col py-2 gap-2"
                                 )}
                                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
                                 title={isSidebarOpen ? "Collapse Changes" : "Expand Changes"}
@@ -416,6 +444,22 @@ export default function JsonDiffViewer() {
                                                 <span className="w-1.5 h-1.5 rounded-full bg-warning"/>
                                                 {rightDecorations.filter(d => d.options.className === 'diff-modified-line').length}
                                             </span>
+                                            {/* Toggle collapse unchanged */}
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setConfig({ ...diffConfig, showUnchanged: !diffConfig.showUnchanged });
+                                                }}
+                                                className={cn(
+                                                    "px-1.5 py-0.5 rounded text-[9px] font-bold border transition-colors",
+                                                    diffConfig.showUnchanged
+                                                        ? "bg-muted text-muted-foreground border-border hover:bg-accent"
+                                                        : "bg-primary/10 text-primary border-primary/20 hover:bg-primary/20"
+                                                )}
+                                                title={diffConfig.showUnchanged ? "Hide unchanged nodes" : "Show unchanged nodes"}
+                                            >
+                                                {diffConfig.showUnchanged ? "All" : "Changes"}
+                                            </button>
                                         </div>
 
                                         <span className="material-symbols-outlined text-[14px] text-muted-foreground hover:text-foreground">chevron_right</span>

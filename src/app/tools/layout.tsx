@@ -1,7 +1,6 @@
 "use client";
 
 import Header from "@/app/components/Header";
-import BottomConfigurationPanel from "@/app/components/BottomConfigurationPanel";
 import { ConfigProvider } from "@/app/context/ConfigContext";
 
 export default function ToolsLayout({

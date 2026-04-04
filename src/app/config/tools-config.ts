@@ -25,6 +25,7 @@ export const toolsConfig: ToolCategory[] = [
             { id: 'json-viewer', name: 'JSON Viewer (Tree)', path: '/tools/json/viewer', icon: 'account_tree' },
             { id: 'json-json5', name: 'JSON ↔ JSON5', path: '/tools/json/json5', icon: 'swap_horiz' },
             { id: 'json-diff', name: 'JSON Diff Checker', path: '/tools/json/diff', icon: 'difference' },
+            { id: 'json-transform', name: 'JSON Transform', path: '/tools/json/transform', icon: 'transform' },
             // { id: 'json-merge', name: 'JSON Merge Tool', path: '/tools/json/merge', icon: 'merge' },
             // { id: 'json-editor', name: 'JSON Editor', path: '/tools/json/editor', icon: 'edit_note' },
             // { id: 'json-normalize', name: 'Strip Comments / Normalize', path: '/tools/json/normalize', icon: 'cleaning_services' },
@@ -44,7 +45,7 @@ export const toolsConfig: ToolCategory[] = [
             { id: 'json-to-csharp', name: 'JSON → C# Class', path: '/tools/code/json-to-csharp', icon: 'code' },
             { id: 'json-to-python', name: 'JSON → Python Dataclass', path: '/tools/code/json-to-python', icon: 'code' },
             { id: 'json-to-rust', name: 'JSON → Rust Struct', path: '/tools/code/json-to-rust', icon: 'code' },
-            { id: 'json-to-php', name: 'JSON → PHP Class', path: '/tools/code/json-to-php', icon: 'code' },
+            // { id: 'json-to-php', name: 'JSON → PHP Class', path: '/tools/code/json-to-php', icon: 'code' },
         ],
     },
     // {

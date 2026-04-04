@@ -29,17 +29,16 @@ export default function Header() {
                     >
                         JSON Editor
                     </button>
-                    <div className="relative">
-                        <button
-                            disabled
-                            className="px-4 py-1.5 rounded-md text-sm font-medium text-muted-foreground cursor-not-allowed"
-                        >
-                            Code Editor
-                        </button>
-                        <span className="absolute -top-2 -right-3 bg-[color-mix(in_srgb,var(--secondary)_10%,transparent)] text-secondary text-[9px] font-bold px-1.5 py-0.5 rounded-full border border-[color-mix(in_srgb,var(--secondary)_50%,transparent)] shadow-sm">
-                            SOON
-                        </span>
-                    </div>
+                    <button
+                        onClick={() => setMode('code')}
+                        className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
+                            mode === 'code'
+                            ? 'bg-primary text-primary-foreground shadow-lg'
+                            : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+                        }`}
+                    >
+                        Code Editor
+                    </button>
                 </div>
             </div>
         </header>

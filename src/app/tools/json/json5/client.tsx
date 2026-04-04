@@ -9,6 +9,8 @@ import CodeEditor from "@/app/components/CodeEditor";
 import BottomConfigurationPanel from "@/app/components/BottomConfigurationPanel";
 import { usePersistentState } from "@/app/hooks/usePersistentState";
 import { COMPLEX_JSON_SAMPLE } from "@/core/config/samples";
+import { useAutoRepair } from "@/app/hooks/useAutoRepair";
+import KeyboardShortcuts from "@/app/components/KeyboardShortcuts";
 
 type ConversionDirection = 'json-to-json5' | 'json5-to-json';
 
@@ -19,6 +21,9 @@ export default function JSON5ConverterClient() {
     const [output, setOutput] = useState("");
     const [direction, setDirection] = useState<ConversionDirection>('json-to-json5');
     const [error, setError] = useState<string | null>(null);
+
+    // Auto-repair broken JSON before JSON5 conversion
+    const { repaired, repairCount } = useAutoRepair(input, { allowComments: true });
 
     // Initialize config
     useEffect(() => {
@@ -197,21 +202,15 @@ export default function JSON5ConverterClient() {
         try {
             if (direction === 'json-to-json5') {
                 if (converterConfig.stripComments) {
-                    console.log("converterConfig", converterConfig);
-
                     const parsed = JSON5.parse(input);
                     const transformed = transformValueKeys(parsed, converterConfig.keyCase);
                     const space = converterConfig.indentation === 'tab' ? '\t' :
                         converterConfig.indentation === '2' ? 2 : 4;
                     const json5Output = JSON5.stringify(transformed, null, space);
-                    console.log("json5Output", json5Output);
 
                     setOutput(json5Output);
                 } else {
                     // Custom conversion to preserve comments
-                    // We first validate the input using JSON5.parse to ensure it's valid
-                    console.log("converterConfig:Else", converterConfig);
-
                     JSON5.parse(input);
                     const converted = convertWithComments(input, converterConfig);
                     setOutput(converted);
@@ -249,6 +248,9 @@ export default function JSON5ConverterClient() {
 
     return (
         <main className="flex-1 flex overflow-hidden w-full">
+            <KeyboardShortcuts
+                onCopyOutput={handleCopy}
+            />
             {/* Left Section: Input Editor */}
             <section className="flex-0.7 lg:w-[40%] flex flex-col border-r border-border">
                 <div className="h-10 px-4 flex items-center justify-between bg-muted border-b border-border shrink-0">
@@ -268,18 +270,18 @@ export default function JSON5ConverterClient() {
                                 Valid
                             </span>
                         )}
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1.5 sm:gap-2">
                             <button
                                 onClick={() => {
                                     setInput(JSON.stringify(COMPLEX_JSON_SAMPLE, null, 2));
                                     toast.success('Sample JSON loaded');
                                 }}
-                                className="px-2 py-1 text-[12px] bg-primary hover:opacity-90 text-primary-foreground rounded border 
+                                className="px-2 py-1 text-[11px] sm:text-[12px] bg-primary hover:opacity-90 text-primary-foreground rounded border 
                                 border-[color-mix(in_srgb,var(--primary)_30%,transparent)] flex items-center gap-1 transition-colors"
                                 title="Load Sample JSON"
                             >
                                 <span className="material-symbols-outlined !text-[12px]">auto_fix_high</span>
-                                Sample
+                                <span>Sample</span>
                             </button>
                             <button
                                 onClick={async () => {
@@ -293,23 +295,23 @@ export default function JSON5ConverterClient() {
                                         toast.error('Failed to paste from clipboard');
                                     }
                                 }}
-                                className="ml-4 px-2 py-1 text-[12px] bg-secondary hover:opacity-90 text-secondary-foreground rounded border 
-                                border-[color-mix(in_srgb,var(--secondary)_30%,transparent)] flex items-center gap-1 transition-colors"
+                                className="px-2 py-1 text-[11px] sm:text-[12px] bg-secondary hover:opacity-90 text-secondary-foreground rounded border 
+                                border-border flex items-center gap-1 transition-colors"
                                 title="Paste from clipboard"
                             >
                                 <span className="material-symbols-outlined !text-[12px]">content_paste</span>
-                                Paste
+                                <span>Paste</span>
                             </button>
                             <button
                                 onClick={() => {
                                     setInput("");
                                 }}
-                                className="px-2 py-1 text-[12px] bg-[color-mix(in_srgb,var(--destructive)_10%,transparent)] hover:bg-[color-mix(in_srgb,var(--destructive)_20%,transparent)] text-destructive border border-[color-mix(in_srgb,var(--destructive)_20%,transparent)] rounded text-xs transition-all 
-                                flex items-center justify-center"
+                                className="px-2 py-1 text-[11px] sm:text-[12px] bg-[color-mix(in_srgb,var(--destructive)_10%,transparent)] hover:bg-[color-mix(in_srgb,var(--destructive)_20%,transparent)] text-destructive border border-[color-mix(in_srgb,var(--destructive)_20%,transparent)] rounded transition-all 
+                                flex items-center justify-center gap-1"
                                 title="Clear Input"
                             >
                                 <span className="material-symbols-outlined !text-[12px]">delete</span>
-                                Clear
+                                <span>Clear</span>
                             </button>
 
                         </div>
@@ -341,28 +343,34 @@ export default function JSON5ConverterClient() {
                 <div className="flex flex-col border-b border-border shrink-0">
                     <div className="h-10 px-4 flex items-center justify-between bg-muted border-b border-border">
                         <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Workspace</span>
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2 sm:gap-3">
+                            {repairCount > 0 && (
+                                <div className="hidden sm:flex items-center gap-1.5 bg-[color-mix(in_srgb,var(--warning)_10%,transparent)] px-2 py-0.5 rounded border border-[color-mix(in_srgb,var(--warning)_20%,transparent)]" title={`${repairCount} auto-repairs applied`}>
+                                    <span className="material-symbols-outlined !text-[12px] text-warning">build</span>
+                                    <span className="text-[10px] text-warning font-medium">Repaired {repairCount}</span>
+                                </div>
+                            )}
                             <div className="flex items-center gap-1.5 bg-[color-mix(in_srgb,var(--success)_5%,transparent)] px-2 py-0.5 rounded border border-[color-mix(in_srgb,var(--success)_10%,transparent)]">
                                 <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse"></span>
                                 <span className="text-[9px] text-success font-bold uppercase">Live</span>
                             </div>
                             <button
                                 onClick={handleCopy}
-                                className="flex items-center gap-2 px-3 py-1 text-xs font-medium bg-primary hover:opacity-90 text-primary-foreground rounded transition-colors shadow-sm shadow-[color-mix(in_srgb,var(--primary)_20%,transparent)]"
+                                className="flex items-center gap-1.5 px-3 py-1 text-[11px] sm:text-[12px] font-medium bg-primary hover:opacity-90 text-primary-foreground rounded transition-colors shadow-sm"
                             >
-                                <span className="material-symbols-outlined !text-sm">content_copy</span>
-                                Copy
+                                <span className="material-symbols-outlined !text-[12px] sm:text-sm">content_copy</span>
+                                <span>Copy</span>
                             </button>
                             <button
                                 onClick={() => {
                                     setOutput("");
                                 }}
-                                className="px-2 py-1 text-[12px] bg-[color-mix(in_srgb,var(--destructive)_10%,transparent)] hover:bg-[color-mix(in_srgb,var(--destructive)_20%,transparent)] text-destructive border border-[color-mix(in_srgb,var(--destructive)_60%,transparent)] rounded text-xs transition-all 
-                                flex items-center justify-center"
+                                className="px-2 py-1 text-[11px] sm:text-[12px] bg-[color-mix(in_srgb,var(--destructive)_10%,transparent)] hover:bg-[color-mix(in_srgb,var(--destructive)_20%,transparent)] text-destructive border border-[color-mix(in_srgb,var(--destructive)_20%,transparent)] rounded transition-all 
+                                flex items-center justify-center gap-1"
                                 title="Clear Output"
                             >
                                 <span className="material-symbols-outlined !text-[12px]">delete</span>
-                                Clear
+                                <span>Clear</span>
                             </button>
                         </div>
                     </div>

@@ -50,8 +50,20 @@ export async function generateCodeFromJSON(
 
         return result.lines.join("\n");
     } catch (error: any) {
-        console.log(error);
+        console.log(error.message);
+        console.log(jsonString);
+        
 
-        throw new Error(`Failed to generate code: ${error.message}`);
+        const errorMessage = error.message || String(error);
+        
+        if (errorMessage.includes("union are not supported")) {
+            throw new Error(
+                "The PHP generator does not support union types (properties that can have multiple different non-null types). " +
+                "Your JSON contains a property with values that have different structures. " +
+                "Try simplifying your JSON to avoid union types, or use a different generator."
+            );
+        }
+
+        throw new Error(`Failed to generate code: ${errorMessage}`);
     }
 }

@@ -43,11 +43,6 @@ export default function BottomConfigurationPanel() {
         setConfig({ ...config, [key]: value });
     };
 
-    useEffect(() => {
-        console.log("config", config);
-
-    })
-
     // Helper to render specific settings based on current tool
     const renderSettings = () => {
         // --- Code Generators ---
