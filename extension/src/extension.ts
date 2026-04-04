@@ -201,7 +201,7 @@ export function activate(context: vscode.ExtensionContext) {
         }
 
         try {
-            TreeViewPanel.createOrShow(context.extensionUri, text);
+            TreeViewPanel.createOrShow(context.extension.extensionUri, text);
             log('JSON Tree Viewer opened');
         } catch (error: any) {
             log(`Error opening tree viewer: ${error.message}`, 'ERROR');
@@ -243,7 +243,7 @@ export function activate(context: vscode.ExtensionContext) {
             const leftText = leftDoc.getText();
             const rightText = rightDoc.getText();
 
-            DiffViewPanel.createOrShow(context.extensionUri, leftText, rightText);
+            DiffViewPanel.createOrShow(context.extension.extensionUri, leftText, rightText);
             log('JSON Diff Viewer opened');
         } catch (error: any) {
             log(`Error opening diff viewer: ${error.message}`, 'ERROR');
