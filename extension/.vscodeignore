@@ -1,0 +1,15 @@
+node_modules/**
+src/**
+extension/src/**
+web/**
+.next/**
+out/test/**
+.vscode/**
+.git/**
+.gitignore
+README.md
+tsconfig.json
+webpack.config.js
+esbuild.js
+**/*.map
+**/*.ts
