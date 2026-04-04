@@ -40,6 +40,7 @@
     "**/*.mts"
 , "extension/eslint.config.js", "jest.config.ts"  ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "extension"
   ]
 }
