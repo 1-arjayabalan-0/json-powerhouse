@@ -13,13 +13,13 @@ Paste messy, broken, or invalid JSON → get clean JSON and ready-to-use types i
 
 ## 📸 Demo
 
-![JSON Formatting](assets/JSONFormat-Gif.gif)
+![JSON Formatting](https://raw.githubusercontent.com/1-arjayabalan-0/json-powerhouse/refs/heads/main/extension/assets/JSONFormat-Gif.gif)
 
-![JSON Flatten](assets/JSONFLAT-Gif.gif)
+![JSON Flatten](https://raw.githubusercontent.com/1-arjayabalan-0/json-powerhouse/refs/heads/main/extension/assets/JSONFLAT-Gif.gif)
 
-![JSON to Csharp](assets/JSONCsharp-Gif.gif)
+![JSON to Csharp](https://raw.githubusercontent.com/1-arjayabalan-0/json-powerhouse/refs/heads/main/extension/assets/JSONCsharp-Gif.gif)
 
-![JSON to Python](assets/JSONPython-Gif.gif)
+![JSON to Python](https://raw.githubusercontent.com/1-arjayabalan-0/json-powerhouse/refs/heads/main/extension/assets/JSONPython-Gif.gif)
 
 ---
 
