@@ -5,14 +5,29 @@
         "email": "jsonpowerhousesupport@codarivu.com",
         "url": ""
     },
+    "icon": "assets/json-powerhouse-icon.png",
+    "publisher": "arjayabalan",
     "repository": {
         "url": "https://github.com/1-arjayabalan-0/json-powerhouse",
         "directory": "json-powerhouse",
         "type": "github"
     },
     "license": "MIT",
-    "displayName": "JSON PowerHouse",
-    "description": "All-in-one JSON tools for VS Code - Format, Minify, Validate, Diff, Tree View, and Generate Code",
+    "displayName": "JSON PowerHouse – Instant JSON → TypeScript & C# + Repair",
+    "description": "Paste broken JSON → get clean JSON and production-ready types instantly. Format, validate, and generate TypeScript, C#, Go, Java, Python, and more.",
+    "keywords": [
+        "json",
+        "json formatter",
+        "json to typescript",
+        "json to c#",
+        "fix invalid json",
+        "json parser",
+        "api response formatter",
+        "json minify",
+        "json validate",
+        "json tree view",
+        "json diff"
+    ],
     "version": "1.0.0",
     "engines": {
         "vscode": "^1.80.0"

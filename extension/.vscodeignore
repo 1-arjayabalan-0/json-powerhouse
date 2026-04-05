@@ -7,8 +7,9 @@ out/test/**
 .vscode/**
 .git/**
 .gitignore
+.gitignore
 README.md
-tsconfig.json
+../README.md
 webpack.config.js
 esbuild.js
 **/*.map
