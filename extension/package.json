@@ -13,8 +13,8 @@
         "type": "github"
     },
     "license": "MIT",
-    "displayName": "JSON PowerHouse – Instant JSON → TypeScript & C# + Repair",
-    "description": "Paste broken JSON → get clean JSON and production-ready types instantly. Format, validate, and generate TypeScript, C#, Go, Java, Python, and more.",
+    "displayName": "JSON Powerhouse - Fix Broken JSON & Generate TypeScript, C#, Go",
+    "description": "Fix broken JSON and generate TypeScript, C#, Go, Java, and Python models instantly — right inside your editor.",
     "keywords": [
         "json",
         "json formatter",

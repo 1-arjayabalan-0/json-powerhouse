@@ -116,7 +116,6 @@ export default function BottomConfigurationPanel() {
                             <SelectContent>
                                 <SelectItem value="none">None</SelectItem>
                                 <SelectItem value="zod">Zod Schema</SelectItem>
-                                <SelectItem value="io-ts">io-ts</SelectItem>
                             </SelectContent>
                         </Select>
                     </div>

@@ -1,117 +1,141 @@
-# JSON PowerHouse – Instant JSON → Format JSON/ Code Convertions + Repair
+# JSON Powerhouse
 
-> Paste broken JSON → get clean JSON and production-ready types instantly.
+> **Fix broken JSON and generate production-ready types — instantly, inside VS Code.**
 
-[![Visual Studio Code](https://img.shields.io/badge/VS_Code-Extension-blue)](https://marketplace.visualstudio.com/items?itemName=arjayabalan.json-powerhouse-vscode)
-[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
-[![Version](https://img.shields.io/badge/Version-1.0.0-orange)](package.json)
+[![Version](https://img.shields.io/visual-studio-marketplace/v/1-arjayabalan-0.json-powerhouse?color=blue&label=VS%20Marketplace)](https://marketplace.visualstudio.com/items?itemName=arjayabalan.json-powerhouse-vscode)
+[![Installs](https://img.shields.io/visual-studio-marketplace/i/1-arjayabalan-0.json-powerhouse)](https://marketplace.visualstudio.com/items?itemName=arjayabalan.json-powerhouse-vscode)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![VS Code](https://img.shields.io/badge/VS%20Code-1.80%2B-007ACC?logo=visual-studio-code)](https://code.visualstudio.com/)
 
----
-
-## 🚀 What this extension does
-
-- **Format & prettify JSON** with customizable indentation and sorting
-- **Convert JSON → TypeScript / C# / Go / Java / Python / Dart / Kotlin / Swift / Rust**
-- **Fix broken/invalid JSON** automatically
-- **Validate JSON** in real-time as you type
-- **Tree View** for navigating complex JSON structures
-- **Diff comparison** between two JSON files
-- Works instantly inside the editor with **one-click** or **keyboard shortcuts**
+Paste messy, broken, or invalid JSON → get clean JSON and ready-to-use types in one command. No copy-pasting to online tools. No manual cleanup. No scripts. Everything runs offline inside your editor.
 
 ---
 
-## ⚡ Why this is different
+## 📸 Demo
 
-- Handles **broken / invalid JSON** that other tools reject
-- Works with **real API responses** from your codebase
-- **Zero config, one-click** usage for quick results
-- Designed for **speed, not features** — get your types in seconds
-- **Works offline** — no need for internet access
+![JSON Formatting](assets/JSONFormat-Gif.gif)
+
+![JSON Flatten](assets/JSONFLAT-Gif.gif)
+
+![JSON to Csharp](assets/JSONCsharp-Gif.gif)
+
+![JSON to Python](assets/JSONPython-Gif.gif)
 
 ---
 
-## 🧠 Example use case
+## ✨ Features
+
+- **Auto-fix broken JSON** — handles missing quotes, trailing commas, single quotes, unquoted keys, and more
+- **Format & prettify** — clean, consistent output every time
+- **Generate types instantly** — TypeScript, C#, Go, Java, Python, and more
+- **Real-time validation** — catch errors as you type
+- **100% offline** — nothing leaves your machine
+
+---
+
+## 🚀 Installation
+
+1. Open VS Code
+2. Go to the **Extensions** panel (`Ctrl+Shift+X` / `Cmd+Shift+X`)
+3. Search for **JSON Powerhouse**
+4. Click **Install**
+
+Or install directly from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=arjayabalan.json-powerhouse-vscode).
+
+---
+
+## ⚡ Quick Start
+
+Paste this broken JSON into any `.json` file:
 
 ```json
-// messy API response
 {'user_id': 1, name: "John",}
 ```
 
-⬇️
+Run `JSON Powerhouse: Fix & Format JSON` — you get:
+
+```json
+{
+  "user_id": 1,
+  "name": "John"
+}
+```
+
+Then run `JSON Powerhouse: Generate TypeScript` — you get:
 
 ```ts
-interface User {
+interface RootObject {
   userId: number;
   name: string;
 }
 ```
 
----
-
-## 🎯 Who is this for
-
-- Backend devs working with APIs
-- Frontend devs integrating JSON
-- Anyone tired of broken JSON tools
+Done. Two commands. Zero cleanup.
 
 ---
 
-## 📦 Supported Languages
+## ⌨️ Commands
 
-Generate production-ready code in:
+Open the Command Palette (`Ctrl+Shift+P` / `Cmd+Shift+P`) and type **JSON Powerhouse**:
 
-| Language | Command |
-|----------|---------|
-| TypeScript | `json-powerhouse.generateTypeScript` |
-| C# | `json-powerhouse.generateCSharp` |
-| Go | `json-powerhouse.generateGo` |
-| Java | `json-powerhouse.generateJava` |
-| Python | `json-powerhouse.generatePython` |
-| Dart | `json-powerhouse.generateDart` |
-| Kotlin | `json-powerhouse.generateKotlin` |
-| Swift | `json-powerhouse.generateSwift` |
-| Rust | `json-powerhouse.generateRust` |
+| Command | Description |
+|---|---|
+| `JSON Powerhouse: Fix & Format JSON` | Auto-fix and prettify invalid JSON |
+| `JSON Powerhouse: Validate JSON` | Check JSON for errors in real time |
+| `JSON Powerhouse: Generate TypeScript` | Generate a TypeScript interface |
+| `JSON Powerhouse: Generate C#` | Generate a C# class |
+| `JSON Powerhouse: Generate Go` | Generate a Go struct |
+| `JSON Powerhouse: Generate Java` | Generate a Java class |
+| `JSON Powerhouse: Generate Python` | Generate a Python dataclass |
 
----
-
-## ⌨️ Keyboard Shortcuts
-
-| Action | Shortcut |
-|--------|----------|
-| Format JSON | `Ctrl+Shift+F` |
-| Minify JSON | `Ctrl+Shift+M` |
-| Validate JSON | `Ctrl+Shift+V` |
-| Generate TypeScript | `Ctrl+Shift+T` |
-| Generate C# | `Ctrl+Shift+C` |
-
-*(Note: Shortcuts can be customized in VS Code settings)*
+> Keyboard shortcuts can be customised in **File → Preferences → Keyboard Shortcuts**.
 
 ---
 
-## 🔧 Configuration
+## ⚙️ Configuration
 
-Configure JSON PowerHouse via VS Code settings:
+Open **Settings** (`Ctrl+,`) and search for `jsonPowerhouse`:
 
-- **Formatting indentation**: 2, 4, tab, or 0
-- **Key sorting**: none, ascending, or descending
-- **Quote style**: double or single quotes
-- **Trailing commas**: enable/disable
-- **Auto-validate on save/change**: enable/disable
+| Setting | Options | Default |
+|---|---|---|
+| `jsonPowerhouse.indentation` | `2`, `4`, `tab` | `2` |
+| `jsonPowerhouse.sortKeys` | `none`, `asc`, `desc` | `none` |
+| `jsonPowerhouse.quoteStyle` | `double`, `single` | `double` |
+| `jsonPowerhouse.trailingCommas` | `true`, `false` | `false` |
+| `jsonPowerhouse.validateOnSave` | `true`, `false` | `true` |
+
+---
+
+## 🧠 Built for real-world JSON
+
+Most JSON tools assume your data is valid. Real API responses rarely are.
+
+JSON Powerhouse is designed for the messy, inconsistent payloads that show up in actual development — broken logs, partial responses, copy-pasted output from terminals, third-party APIs with inconsistent formatting. It fixes what it finds and generates types from what remains.
+
+**Common scenarios where it helps:**
+
+- Integrating a new backend and need types fast
+- Debugging a broken API response in production
+- Working with legacy data that nobody cleaned up
+- Switching between languages and needing type stubs quickly
 
 ---
 
 ## 📋 Requirements
 
-- Visual Studio Code 1.80.0 or higher
+- Visual Studio Code **1.80 or later**
+
+---
+
+## 🤝 Contributing & Support
+
+Found a bug or have a feature request?
+Open an issue on [GitHub](https://github.com/1-arjayabalan-0/json-powerhouse).
+
+Pull requests are welcome.
 
 ---
 
 ## 📝 License
 
-MIT License - see [LICENSE](LICENSE) file.
-
----
-
-## 🤝 Support
-
-For issues or feature requests, visit the [GitHub repository](https://github.com/1-arjayabalan-0/json-powerhouse).
+[MIT](LICENSE) © 2024 Arjayabalan

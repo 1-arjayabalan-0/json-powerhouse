@@ -2,7 +2,7 @@
 // TypeScript Configuration
 // ============================================================================
 export type TypeScriptTypeKind = 'interface' | 'type';
-export type TypeScriptRuntimeTypecheck = 'none' | 'io-ts' | 'zod';
+export type TypeScriptRuntimeTypecheck = 'none' | 'zod';
 export type AcronymStyle = 'camel' | 'pascal' | 'lowerCase' | 'upperCase' | 'original';
 
 export interface TypeScriptConfig {

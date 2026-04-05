@@ -12,7 +12,7 @@ async function main() {
     sourcemap: !production,
     sourcesContent: false,
     platform: 'node',
-    outfile: 'dist/extension.js',
+    outfile: 'dist/extension/src/extension.js',
     external: ['vscode'],
     logLevel: 'warning',
     plugins: [
