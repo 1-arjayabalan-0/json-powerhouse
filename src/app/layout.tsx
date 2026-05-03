@@ -14,7 +14,6 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
-
 export const metadata = {
   title: "JSON PowerHouse - Convert, Validate & Transform JSON",
   description: "A powerful suite of JSON tools: formatter, validator, CSV converter, YAML converter, diff, schema generator and more.",
@@ -24,7 +23,11 @@ export const metadata = {
     "json to csv",
     "json to yaml",
     "developer tools"
-  ]
+  ],
+  metadataBase: new URL("https://json-powerhouse.codarivu.com"),
+  verification: {
+    google: 'cWbG2nIb2Zeyu4_3DjbZQERidDmzsMfJTLcl2Ih0ED8',
+  }
 }
 
 import { Toaster } from "sonner";
