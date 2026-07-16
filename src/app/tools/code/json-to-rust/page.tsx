@@ -1,22 +1,25 @@
-"use client"
+import { Metadata } from "next";
+import RustGeneratorClient from "./client";
 
-import { useState, useCallback } from 'react';
-import { usePersistentState } from "@/app/hooks/usePersistentState";
-import { useConfig } from "@/app/context/ConfigContext";
-import CodeGeneratorBase from "@/app/components/CodeGeneratorBase";
-import { generateRustCode } from "@/core/generators/json-to-rust";
-import { RustConfig } from "@/core/types/code-generator-config";
+export const metadata: Metadata = {
+    title: "JSON to Rust Converter Online – Free Tool | JSON PowerHouse",
+    description: "Convert JSON data to Rust structs instantly. Free online JSON to Rust code generator with type inference.",
+    keywords: ["json to rust", "json to rust struct", "rust code generator", "json to rust converter"],
+    alternates: {
+        canonical: "/tools/code/json-to-rust",
+    },
+    openGraph: {
+        title: "JSON to Rust Converter Online – Free Tool | JSON PowerHouse",
+        description: "Convert JSON data to Rust structs instantly. Free online JSON to Rust code generator with type inference.",
+        url: "https://json-powerhouse.codarivu.com/tools/code/json-to-rust",
+        type: "website",
+    },
+};
 
 export default function RustGeneratorPage() {
-    const { config } = useConfig();
-    const [input, setInput] = usePersistentState("json-powerhouse-input", "");
-    const [output, setOutput] = useState("");
-
-    const handleGenerate = useCallback(async (json: string) => {
-        return await generateRustCode(json, config as RustConfig);
-    }, [config]);
-
     return (
-        <CodeGeneratorBase language="rust" languageDisplayName="Rust" fileExtension="rs" input={input} setInput={setInput} output={output} setOutput={setOutput} generateCode={handleGenerate} />
+        <div className="lg:h-[calc(100vh-48px)] md:h-[calc(100vh-130px)] w-full relative flex flex-col">
+            <RustGeneratorClient />
+        </div>
     );
 }

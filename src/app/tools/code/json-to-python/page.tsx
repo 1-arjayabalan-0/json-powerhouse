@@ -1,22 +1,25 @@
-"use client"
+import { Metadata } from "next";
+import PythonGeneratorClient from "./client";
 
-import { useState, useCallback } from 'react';
-import { usePersistentState } from "@/app/hooks/usePersistentState";
-import { useConfig } from "@/app/context/ConfigContext";
-import CodeGeneratorBase from "@/app/components/CodeGeneratorBase";
-import { generatePythonCode } from "@/core/generators/json-to-python";
-import { PythonConfig } from "@/core/types/code-generator-config";
+export const metadata: Metadata = {
+    title: "JSON to Python Converter Online – Free Tool | JSON PowerHouse",
+    description: "Convert JSON to Python dictionaries and dataclasses instantly. Free online JSON to Python code generator.",
+    keywords: ["json to python", "json to python dict", "python code generator", "json to python converter"],
+    alternates: {
+        canonical: "/tools/code/json-to-python",
+    },
+    openGraph: {
+        title: "JSON to Python Converter Online – Free Tool | JSON PowerHouse",
+        description: "Convert JSON to Python dictionaries and dataclasses instantly. Free online JSON to Python code generator.",
+        url: "https://json-powerhouse.codarivu.com/tools/code/json-to-python",
+        type: "website",
+    },
+};
 
 export default function PythonGeneratorPage() {
-    const { config } = useConfig();
-    const [input, setInput] = usePersistentState("json-powerhouse-input", "");
-    const [output, setOutput] = useState("");
-
-    const handleGenerate = useCallback(async (json: string) => {
-        return await generatePythonCode(json, config as PythonConfig);
-    }, [config]);
-
     return (
-        <CodeGeneratorBase language="python" languageDisplayName="Python" fileExtension="py" input={input} setInput={setInput} output={output} setOutput={setOutput} generateCode={handleGenerate} />
+        <div className="lg:h-[calc(100vh-48px)] md:h-[calc(100vh-130px)] w-full relative flex flex-col">
+            <PythonGeneratorClient />
+        </div>
     );
 }

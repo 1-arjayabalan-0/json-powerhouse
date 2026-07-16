@@ -1,22 +1,25 @@
-"use client"
+import { Metadata } from "next";
+import PHPGeneratorClient from "./client";
 
-import { useState, useCallback } from 'react';
-import { useConfig } from "@/app/context/ConfigContext";
-import CodeGeneratorBase from "@/app/components/CodeGeneratorBase";
-import { generatePHPCode } from "@/core/generators/json-to-php";
-import { PHPConfig } from "@/core/types/code-generator-config";
-import { usePersistentState } from "@/app/hooks/usePersistentState";
+export const metadata: Metadata = {
+    title: "JSON to PHP Converter Online – Free Tool | JSON PowerHouse",
+    description: "Convert JSON to PHP arrays and classes instantly. Free online JSON to PHP code generator.",
+    keywords: ["json to php", "json to php array", "php code generator", "json to php converter"],
+    alternates: {
+        canonical: "/tools/code/json-to-php",
+    },
+    openGraph: {
+        title: "JSON to PHP Converter Online – Free Tool | JSON PowerHouse",
+        description: "Convert JSON to PHP arrays and classes instantly. Free online JSON to PHP code generator.",
+        url: "https://json-powerhouse.codarivu.com/tools/code/json-to-php",
+        type: "website",
+    },
+};
 
 export default function PHPGeneratorPage() {
-    const { config } = useConfig();
-    const [input, setInput] = usePersistentState("json-powerhouse-input", "");
-    const [output, setOutput] = useState("");
-
-    const handleGenerate = useCallback(async (json: string) => {
-        return await generatePHPCode(json, config as PHPConfig);
-    }, [config]);
-
     return (
-        <CodeGeneratorBase language="php" languageDisplayName="PHP" fileExtension="php" input={input} setInput={setInput} output={output} setOutput={setOutput} generateCode={handleGenerate} />
+        <div className="lg:h-[calc(100vh-48px)] md:h-[calc(100vh-130px)] w-full relative flex flex-col">
+            <PHPGeneratorClient />
+        </div>
     );
 }
