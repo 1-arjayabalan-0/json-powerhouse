@@ -8,11 +8,9 @@ export const metadata: Metadata = {
     alternates: {
         canonical: "/tools/tests/diagnostics",
     },
-    openGraph: {
-        title: "JSON Diagnostics Test Suite | JSON PowerHouse",
-        description: "Test and validate the JSON parsing, healing, and fixing engine with comprehensive diagnostics.",
-        url: "https://json-powerhouse.codarivu.com/tools/tests/diagnostics",
-        type: "website",
+    robots: {
+        index: false,
+        follow: true,
     },
 };
 

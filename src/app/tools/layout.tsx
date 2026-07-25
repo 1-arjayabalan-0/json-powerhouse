@@ -1,19 +1,9 @@
-"use client";
-
-import Header from "@/app/components/Header";
-import { ConfigProvider } from "@/app/context/ConfigContext";
+import ToolsLayoutClient from "./ToolsLayoutClient";
 
 export default function ToolsLayout({
-    children,
+  children,
 }: {
-    children: React.ReactNode;
+  children: React.ReactNode;
 }) {
-    return (
-        <ConfigProvider>
-            <div className="bg-background h-screen overflow-hidden flex flex-col text-foreground">
-                <Header />
-                {children}
-            </div>
-        </ConfigProvider>
-    );
+  return <ToolsLayoutClient>{children}</ToolsLayoutClient>;
 }

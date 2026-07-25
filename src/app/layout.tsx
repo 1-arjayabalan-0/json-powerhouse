@@ -40,7 +40,7 @@ export const metadata = {
     siteName: "JSON PowerHouse",
     images: [
       {
-        url: "/JSON-PowerHouse-Logo.png",
+        url: "https://json-powerhouse.codarivu.com/JSON-PowerHouse-Logo.png",
         width: 1200,
         height: 630,
         alt: "JSON PowerHouse",
@@ -53,7 +53,7 @@ export const metadata = {
     card: "summary_large_image",
     title: "JSON PowerHouse - Convert, Validate & Transform JSON",
     description: "A powerful suite of JSON tools: formatter, validator, CSV converter, YAML converter, diff, schema generator and more.",
-    images: ["/JSON-PowerHouse-Logo.png"],
+    images: ["https://json-powerhouse.codarivu.com/JSON-PowerHouse-Logo.png"],
   },
   verification: {
     google: 'cWbG2nIb2Zeyu4_3DjbZQERidDmzsMfJTLcl2Ih0ED8',
@@ -72,6 +72,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <link rel="manifest" href="/site.webmanifest" />
         <link
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
           rel="stylesheet"
