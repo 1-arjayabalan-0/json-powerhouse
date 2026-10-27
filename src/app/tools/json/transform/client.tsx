@@ -15,6 +15,9 @@ import {
     generateOpId,
 } from "@/core/lib/transformations/types";
 import { transformJson } from "@/core/lib/transformations/engine";
+import { ArrowDown, ArrowRight, ArrowUp, CircleAlert, ClipboardPaste, Copy, Sparkles, Trash2, Undo2, Wrench, X } from "lucide-react";
+import { Pencil, CaseSensitive, Scissors, Layers, ListTree, CircleCheck, CircleX } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 const OPERATION_LABELS: Record<TransformOperationType, string> = {
     'rename-key': 'Rename Key',
@@ -25,13 +28,13 @@ const OPERATION_LABELS: Record<TransformOperationType, string> = {
     'unflatten': 'Unflatten',
 };
 
-const OPERATION_ICONS: Record<TransformOperationType, string> = {
-    'rename-key': 'edit',
-    'remove-key': 'delete',
-    'case-convert': 'text_fields',
-    'extract-subtree': 'content_cut',
-    'flatten': 'layers',
-    'unflatten': 'account_tree',
+const OPERATION_ICONS: Record<TransformOperationType, LucideIcon> = {
+    'rename-key': Pencil,
+    'remove-key': Trash2,
+    'case-convert': CaseSensitive,
+    'extract-subtree': Scissors,
+    'flatten': Layers,
+    'unflatten': ListTree,
 };
 
 export default function JSONTransformClient() {
@@ -131,7 +134,7 @@ export default function JSONTransformClient() {
                     <div className="ml-auto flex gap-2 items-center">
                         {repairCount > 0 && (
                             <div className="hidden sm:flex items-center gap-1 bg-[color-mix(in_srgb,var(--warning)_10%,transparent)] px-2 py-0.5 rounded border border-[color-mix(in_srgb,var(--warning)_20%,transparent)]">
-                                <span className="material-symbols-outlined !text-[10px] text-warning">build</span>
+                                <Wrench className="size-3 text-warning" />
                                 <span className="text-[10px] text-warning font-medium">Repaired {repairCount}</span>
                             </div>
                         )}
@@ -139,7 +142,7 @@ export default function JSONTransformClient() {
                             onClick={() => { setInput(JSON.stringify(COMPLEX_JSON_SAMPLE, null, 2)); toast.success('Sample loaded'); }}
                             className="px-2 py-1 text-[11px] sm:text-[12px] bg-primary hover:opacity-90 text-primary-foreground rounded border border-[color-mix(in_srgb,var(--primary)_30%,transparent)] flex items-center gap-1 transition-colors"
                         >
-                            <span className="material-symbols-outlined !text-[12px]">auto_fix_high</span> Sample
+                            <Sparkles className="size-3.5" /> Sample
                         </button>
                         <button
                             onClick={async () => {
@@ -148,10 +151,10 @@ export default function JSONTransformClient() {
                             }}
                             className="px-2 py-1 text-[11px] sm:text-[12px] bg-secondary hover:opacity-90 text-secondary-foreground rounded border border-border flex items-center gap-1 transition-colors"
                         >
-                            <span className="material-symbols-outlined !text-[12px]">content_paste</span> Paste
+                            <ClipboardPaste className="size-3.5" /> Paste
                         </button>
                         <button onClick={() => setInput("")} className="px-2 py-1 text-[11px] sm:text-[12px] bg-[color-mix(in_srgb,var(--destructive)_10%,transparent)] hover:bg-[color-mix(in_srgb,var(--destructive)_20%,transparent)] text-destructive border border-[color-mix(in_srgb,var(--destructive)_20%,transparent)] rounded flex items-center gap-1">
-                            <span className="material-symbols-outlined !text-[12px]">delete</span> Clear
+                            <Trash2 className="size-3.5" /> Clear
                         </button>
                     </div>
                 </div>
@@ -174,12 +177,12 @@ export default function JSONTransformClient() {
                     <div className="flex items-center gap-1">
                         {undoStack.length > 0 && (
                             <button onClick={handleUndo} className="px-2 py-1 text-[10px] bg-secondary hover:opacity-80 text-secondary-foreground rounded border border-border" title="Undo last apply">
-                                <span className="material-symbols-outlined !text-[12px]">undo</span>
+                                <Undo2 className="size-3.5" />
                             </button>
                         )}
                         {output && (
                             <button onClick={handleApplyToInput} className="px-2 py-1 text-[10px] bg-primary hover:opacity-90 text-primary-foreground rounded" title="Apply output to input for chaining">
-                                <span className="material-symbols-outlined !text-[12px]">arrow_forward</span> Apply
+                                <ArrowRight className="size-3.5" /> Apply
                             </button>
                         )}
                     </div>
@@ -210,7 +213,7 @@ export default function JSONTransformClient() {
                                     onClick={() => addOperation(type)}
                                     className="flex items-center gap-1.5 px-2 py-1.5 text-[11px] bg-muted/50 hover:bg-muted rounded border border-border transition-colors text-left"
                                 >
-                                    <span className="material-symbols-outlined !text-[14px] text-primary">{OPERATION_ICONS[type]}</span>
+                                    {(() => { const OpIcon = OPERATION_ICONS[type]; return <OpIcon className="size-3.5 text-primary" />; })()}
                                     {OPERATION_LABELS[type]}
                                 </button>
                             ))}
@@ -231,12 +234,12 @@ export default function JSONTransformClient() {
                         )}
                         {error && (
                             <span className="text-[10px] bg-destructive/10 text-destructive px-2 py-0.5 rounded border border-destructive/20 flex items-center gap-1">
-                                <span className="material-symbols-outlined !text-[10px]">error</span>
+                                <CircleAlert className="size-3" />
                                 Error
                             </span>
                         )}
                         <button onClick={handleCopy} className="flex items-center gap-1.5 px-3 py-1 text-[11px] sm:text-[12px] font-medium bg-primary hover:opacity-90 text-primary-foreground rounded transition-colors shadow-sm">
-                            <span className="material-symbols-outlined !text-[12px] sm:text-sm">content_copy</span> Copy
+                            <Copy className="size-3.5" /> Copy
                         </button>
                     </div>
                 </div>
@@ -279,22 +282,22 @@ function OperationCard({
         )}>
             <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
-                    <span className="material-symbols-outlined !text-[16px] text-primary">{OPERATION_ICONS[op.type]}</span>
+                    {(() => { const OpIcon = OPERATION_ICONS[op.type]; return <OpIcon className="size-4 text-primary" />; })()}
                     <span className="text-xs font-bold">{OPERATION_LABELS[op.type]}</span>
                     <span className="text-[9px] text-muted-foreground">#{index + 1}</span>
                 </div>
                 <div className="flex items-center gap-1">
                     <button onClick={onMoveUp} disabled={index === 0} className="p-0.5 text-muted-foreground hover:text-foreground disabled:opacity-30">
-                        <span className="material-symbols-outlined !text-[14px]">arrow_upward</span>
+                        <ArrowUp className="size-3.5" />
                     </button>
                     <button onClick={onMoveDown} disabled={index === total - 1} className="p-0.5 text-muted-foreground hover:text-foreground disabled:opacity-30">
-                        <span className="material-symbols-outlined !text-[14px]">arrow_downward</span>
+                        <ArrowDown className="size-3.5" />
                     </button>
                     <button onClick={() => onUpdate({ enabled: !op.enabled })} className={cn("p-0.5", op.enabled ? "text-success" : "text-muted-foreground")}>
-                        <span className="material-symbols-outlined !text-[14px]">{op.enabled ? 'check_circle' : 'cancel'}</span>
+                        {op.enabled ? <CircleCheck className="size-3.5" /> : <CircleX className="size-3.5" />}
                     </button>
                     <button onClick={onRemove} className="p-0.5 text-destructive hover:text-destructive/80">
-                        <span className="material-symbols-outlined !text-[14px]">close</span>
+                        <X className="size-3.5" />
                     </button>
                 </div>
             </div>

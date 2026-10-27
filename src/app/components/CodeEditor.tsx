@@ -1,7 +1,8 @@
 "use client"
 
-import { Editor } from '@monaco-editor/react';
+import { Editor, type Monaco } from '@monaco-editor/react';
 import { useTheme } from 'next-themes';
+import { Copy, ClipboardPaste, Sparkles, Play } from 'lucide-react';
 import { cn } from "@/app/lib/utils";
 import { useEffect, useRef, useState } from 'react';
 
@@ -48,8 +49,9 @@ export default function CodeEditor({
     onGlyphMarginClick,
     onMount
 }: CodeEditorProps) {
-    const { theme } = useTheme();
+    const { resolvedTheme } = useTheme();
     const editorRef = useRef<any>(null);
+    const monacoRef = useRef<Monaco | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const [contextMenu, setContextMenu] = useState<{ x: number; y: number; visible: boolean } | null>(null);
     const decorationIds = useRef<string[]>([]);
@@ -61,6 +63,11 @@ export default function CodeEditor({
             decorationIds.current = editorRef.current.deltaDecorations(decorationIds.current, decorations);
         }
     }, [decorations]);
+
+    // Follow the resolved site theme
+    useEffect(() => {
+        monacoRef.current?.editor.setTheme(resolvedTheme === 'light' ? 'json-powerhouse-light' : 'json-powerhouse-dark');
+    }, [resolvedTheme]);
 
     // Handle selection changes
     useEffect(() => {
@@ -88,6 +95,7 @@ export default function CodeEditor({
 
     const handleEditorDidMount = (editor: any, monaco: any) => {
         editorRef.current = editor;
+        monacoRef.current = monaco;
 
         // Glyph Margin Click Handler
         if (onGlyphMarginClick) {
@@ -104,10 +112,10 @@ export default function CodeEditor({
             inherit: true,
             rules: [],
             colors: {
-                'editor.background': '#0B0E14', // --background (Deep Navy)
-                'minimap.background': '#0B0E14',
-                'editor.lineHighlightBackground': '#1E293B', // --muted
-                'editorGutter.background': '#0B0E14',
+                'editor.background': '#0b0f17',
+                'minimap.background': '#0b0f17',
+                'editor.lineHighlightBackground': '#111827',
+                'editorGutter.background': '#0b0f17',
                 'scrollbarSlider.background': '#334155', // Slate 700
                 'scrollbarSlider.hoverBackground': '#475569', // Slate 600
                 'scrollbarSlider.activeBackground': '#64748B', // Slate 500
@@ -119,17 +127,17 @@ export default function CodeEditor({
             inherit: true,
             rules: [],
             colors: {
-                'editor.background': '#F8FAFC', // --background (Slate 50)
-                'minimap.background': '#F8FAFC',
-                'editor.lineHighlightBackground': '#F1F5F9', // --muted
-                'editorGutter.background': '#F8FAFC',
+                'editor.background': '#ffffff',
+                'minimap.background': '#ffffff',
+                'editor.lineHighlightBackground': '#f8fafc',
+                'editorGutter.background': '#ffffff',
                 'scrollbarSlider.background': '#CBD5E1', // Slate 300
                 'scrollbarSlider.hoverBackground': '#94A3B8', // Slate 400
                 'scrollbarSlider.activeBackground': '#64748B', // Slate 500
             }
         });
 
-        monaco.editor.setTheme(theme === 'dark' ? 'json-powerhouse-dark' : 'json-powerhouse-light');
+        monaco.editor.setTheme(resolvedTheme === 'light' ? 'json-powerhouse-light' : 'json-powerhouse-dark');
 
         // Add Command: Ctrl + K, Enter -> Generate
         if (onGenerate) {
@@ -203,7 +211,7 @@ export default function CodeEditor({
                     readOnly,
                     contextmenu: false, // Disable default context menu
                     minimap: { enabled: false },
-                    fontSize: 14,
+                    fontSize: 13,
                     lineNumbers: 'on',
                     scrollBeyondLastLine: false,
                     automaticLayout: true,
@@ -239,7 +247,7 @@ export default function CodeEditor({
                         top: 12,
                         bottom: 12,
                     },
-                    fontFamily: "'Fira Code', 'Cascadia Code', 'Consolas', 'Monaco', monospace",
+                    fontFamily: "var(--font-geist-mono), 'Cascadia Code', Consolas, monospace",
                     fontLigatures: true,
                     bracketPairColorization: {
                         enabled: true,
@@ -273,7 +281,7 @@ export default function CodeEditor({
                         className="w-full text-left px-3 py-1.5 hover:bg-primary hover:text-primary-foreground flex items-center justify-between group transition-colors"
                     >
                         <div className="flex items-center gap-2">
-                            <span className="material-symbols-outlined !text-[16px] text-muted-foreground group-hover:text-primary-foreground">content_copy</span>
+                            <Copy className="size-4 " />
                             <span>Copy</span>
                         </div>
                         <span className="text-[10px] text-muted-foreground group-hover:text-primary-foreground/80 font-mono">Ctrl+C</span>
@@ -285,7 +293,7 @@ export default function CodeEditor({
                             className="w-full text-left px-3 py-1.5 hover:bg-primary hover:text-primary-foreground flex items-center justify-between group transition-colors"
                         >
                             <div className="flex items-center gap-2">
-                                <span className="material-symbols-outlined !text-[16px] text-muted-foreground group-hover:text-primary-foreground">content_paste</span>
+                                <ClipboardPaste className="size-4 " />
                                 <span>Paste</span>
                             </div>
                             <span className="text-[10px] text-muted-foreground group-hover:text-primary-foreground/80 font-mono">Ctrl+V</span>
@@ -300,7 +308,7 @@ export default function CodeEditor({
                                 className="w-full text-left px-3 py-1.5 hover:bg-primary hover:text-primary-foreground flex items-center justify-between group transition-colors"
                             >
                                 <div className="flex items-center gap-2">
-                                    <span className="material-symbols-outlined !text-[16px] text-muted-foreground group-hover:text-primary-foreground">auto_fix</span>
+                                    <Sparkles className="size-4 " />
                                     <span>Quick Fix</span>
                                 </div>
                             </button>
@@ -315,7 +323,7 @@ export default function CodeEditor({
                                 className="w-full text-left px-3 py-1.5 hover:bg-primary hover:text-primary-foreground flex items-center justify-between group transition-colors"
                             >
                                 <div className="flex items-center gap-2">
-                                    <span className="material-symbols-outlined !text-[16px] text-muted-foreground group-hover:text-primary-foreground">play_arrow</span>
+                                    <Play className="size-4 " />
                                     <span>Generate</span>
                                 </div>
                                 <span className="text-[10px] text-muted-foreground group-hover:text-primary-foreground/80 font-mono">Ctrl+K ↵</span>

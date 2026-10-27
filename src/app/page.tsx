@@ -3,6 +3,7 @@
 import Link from "next/link";
 import AppHeader from "@/app/components/shell/AppHeader";
 import Footer from "@/app/components/Footer";
+import { ArrowLeftRight, CircleCheck, Code, ListTree, Minimize2, ShieldCheck, TextAlignStart, Wrench, Zap } from "lucide-react";
 
 export default function HomePage() {
   return (
@@ -46,21 +47,21 @@ export default function HomePage() {
             <div className="grid md:grid-cols-3 gap-8">
               <div className="text-center">
                 <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="material-symbols-outlined text-3xl text-primary">security</span>
+                  <ShieldCheck className="size-8 text-primary" />
                 </div>
                 <h3 className="text-xl font-semibold mb-2">100% Private</h3>
                 <p className="text-muted-foreground">All processing happens in your browser. Your data never leaves your device.</p>
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="material-symbols-outlined text-3xl text-primary">bolt</span>
+                  <Zap className="size-8 text-primary" />
                 </div>
                 <h3 className="text-xl font-semibold mb-2">Lightning Fast</h3>
                 <p className="text-muted-foreground">Instant processing with no network delays or server wait times.</p>
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="material-symbols-outlined text-3xl text-primary">build</span>
+                  <Wrench className="size-8 text-primary" />
                 </div>
                 <h3 className="text-xl font-semibold mb-2">Complete Toolkit</h3>
                 <p className="text-muted-foreground">Dozens of tools for formatting, validation, conversion, and more.</p>
@@ -149,7 +150,7 @@ export default function HomePage() {
                 href="/tools/json/formatter"
                 className="bg-card rounded-lg p-6 border border-border hover:bg-muted transition-colors"
               >
-                <span className="material-symbols-outlined text-3xl text-primary mb-3">format_align_left</span>
+                <TextAlignStart className="size-8 text-primary mb-3" />
                 <h3 className="text-lg font-semibold mb-2">JSON Formatter</h3>
                 <p className="text-muted-foreground text-sm">Format and beautify your JSON with customizable indentation and styling.</p>
               </Link>
@@ -158,7 +159,7 @@ export default function HomePage() {
                 href="/tools/json/validator"
                 className="bg-card rounded-lg p-6 border border-border hover:bg-muted transition-colors"
               >
-                <span className="material-symbols-outlined text-3xl text-primary mb-3">task_alt</span>
+                <CircleCheck className="size-8 text-primary mb-3" />
                 <h3 className="text-lg font-semibold mb-2">JSON Validator</h3>
                 <p className="text-muted-foreground text-sm">Validate your JSON syntax and get detailed error messages.</p>
               </Link>
@@ -167,7 +168,7 @@ export default function HomePage() {
                 href="/tools/json/viewer"
                 className="bg-card rounded-lg p-6 border border-border hover:bg-muted transition-colors"
               >
-                <span className="material-symbols-outlined text-3xl text-primary mb-3">account_tree</span>
+                <ListTree className="size-8 text-primary mb-3" />
                 <h3 className="text-lg font-semibold mb-2">JSON Tree Viewer</h3>
                 <p className="text-muted-foreground text-sm">Visualize JSON structure with an interactive tree view.</p>
               </Link>
@@ -176,7 +177,7 @@ export default function HomePage() {
                 href="/tools/json/minifier"
                 className="bg-card rounded-lg p-6 border border-border hover:bg-muted transition-colors"
               >
-                <span className="material-symbols-outlined text-3xl text-primary mb-3">compress</span>
+                <Minimize2 className="size-8 text-primary mb-3" />
                 <h3 className="text-lg font-semibold mb-2">JSON Minifier</h3>
                 <p className="text-muted-foreground text-sm">Compress JSON by removing whitespace and reducing file size.</p>
               </Link>
@@ -185,7 +186,7 @@ export default function HomePage() {
                 href="/tools/json/json5"
                 className="bg-card rounded-lg p-6 border border-border hover:bg-muted transition-colors"
               >
-                <span className="material-symbols-outlined text-3xl text-primary mb-3">swap_horiz</span>
+                <ArrowLeftRight className="size-8 text-primary mb-3" />
                 <h3 className="text-lg font-semibold mb-2">JSON ↔ JSON5</h3>
                 <p className="text-muted-foreground text-sm">Convert between standard JSON and JSON5 format.</p>
               </Link>
@@ -194,7 +195,7 @@ export default function HomePage() {
                 href="/tools/json-to-typescript"
                 className="bg-card rounded-lg p-6 border border-border hover:bg-muted transition-colors"
               >
-                <span className="material-symbols-outlined text-3xl text-primary mb-3">code</span>
+                <Code className="size-8 text-primary mb-3" />
                 <h3 className="text-lg font-semibold mb-2">JSON to TypeScript</h3>
                 <p className="text-muted-foreground text-sm">Generate TypeScript interfaces from JSON data.</p>
               </Link>

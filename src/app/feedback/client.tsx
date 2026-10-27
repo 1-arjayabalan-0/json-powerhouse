@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import AppHeader from "@/app/components/shell/AppHeader";
 import Footer from "@/app/components/Footer";
+import { Bug, CircleCheck, Info, Lightbulb, Mail } from "lucide-react";
 
 export default function FeedbackClient() {
     const [submitted, setSubmitted] = useState(false);
@@ -27,7 +28,7 @@ export default function FeedbackClient() {
 
                     {submitted ? (
                         <div className="bg-success/10 border border-success/20 rounded-lg p-8 text-center">
-                            <span className="material-symbols-outlined text-5xl text-success mb-4">check_circle</span>
+                            <CircleCheck className="size-12 text-success mb-4" />
                             <h2 className="text-2xl font-bold mb-2 text-success">Feedback Received!</h2>
                             <p className="text-muted-foreground mb-6">
                                 Thank you for helping us improve. We read every piece of feedback.
@@ -88,7 +89,7 @@ export default function FeedbackClient() {
 
                             <div className="bg-muted border border-border rounded-lg p-4">
                                 <div className="flex gap-3">
-                                    <span className="material-symbols-outlined text-primary text-xl">info</span>
+                                    <Info className="size-5 text-primary" />
                                     <p className="text-sm text-muted-foreground">
                                         We respect your privacy. If you provide an email, we'll only use it to reply to your feedback. We never share your data with third parties.
                                     </p>
@@ -108,15 +109,15 @@ export default function FeedbackClient() {
                         <h2 className="text-xl font-bold mb-4">Other Ways to Reach Us</h2>
                         <div className="space-y-3 text-muted-foreground">
                             <p className="flex items-center gap-2">
-                                <span className="material-symbols-outlined text-primary">mail</span>
+                                <Mail className="size-5 text-primary" />
                                 <span>Email: feedback@jsonpowerhouse.com</span>
                             </p>
                             <p className="flex items-center gap-2">
-                                <span className="material-symbols-outlined text-primary">bug_report</span>
+                                <Bug className="size-5 text-primary" />
                                 <span>Found a bug? Please include steps to reproduce it.</span>
                             </p>
                             <p className="flex items-center gap-2">
-                                <span className="material-symbols-outlined text-primary">lightbulb</span>
+                                <Lightbulb className="size-5 text-primary" />
                                 <span>Have an idea? We're always looking for ways to improve!</span>
                             </p>
                         </div>

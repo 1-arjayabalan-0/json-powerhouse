@@ -1,6 +1,8 @@
 import { JsonIssue } from "@/core/types/diagnostics";
 import { cn } from "@/app/lib/utils";
 import { useState } from "react";
+import { CheckCheck, ChevronLeft, ChevronRight, CircleCheck, CircleX, Construction, Lightbulb } from "lucide-react";
+import { Undo2, Sparkles } from "lucide-react";
 
 interface DiagnosticsPanelProps {
     issues: JsonIssue[];
@@ -34,9 +36,7 @@ export default function DiagnosticsPanel({ issues, appliedFixIds, onApplyFix, on
                 {isExpanded ? (
                     <>
                         <div className="flex items-center gap-3">
-                            <span className="material-symbols-outlined text-muted-foreground !text-lg">
-                                chevron_right
-                            </span>
+                            <ChevronRight className="size-5 text-muted-foreground" />
                             <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Diagnostics</span>
                             <div className="flex gap-2">
                                 {issues.length > 0 && (
@@ -54,16 +54,14 @@ export default function DiagnosticsPanel({ issues, appliedFixIds, onApplyFix, on
                                     className="px-2 py-0.5 text-[10px] font-medium bg-success hover:bg-success/90 text-success-foreground rounded transition-colors flex items-center gap-1"
                                     title="Apply All Safe Fixes"
                                 >
-                                    <span className="material-symbols-outlined !text-[12px]">done_all</span>
+                                    <CheckCheck className="size-3.5" />
                                 </button>
                             )}
                         </div>
                     </>
                 ) : (
                     <>
-                        <span className="material-symbols-outlined text-muted-foreground !text-lg">
-                            chevron_left
-                        </span>
+                        <ChevronLeft className="size-5 text-muted-foreground" />
                         <div
                             className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground sm:rotate-180 whitespace-nowrap sm:[writing-mode:vertical-rl]"
                         >
@@ -96,13 +94,13 @@ export default function DiagnosticsPanel({ issues, appliedFixIds, onApplyFix, on
                             >
                                 <div className="pt-0.5 shrink-0">
                                     {isApplied ? (
-                                        <span className="material-symbols-outlined !text-[16px] text-success">check_circle</span>
+                                        <CircleCheck className="size-4 text-success" />
                                     ) : issue.type === 'SYNTAX_FATAL' ? (
-                                        <span className="material-symbols-outlined !text-[16px] text-destructive">cancel</span>
+                                        <CircleX className="size-4 text-destructive" />
                                     ) : issue.resolution.mode === 'suggestion' ? (
-                                        <span className="material-symbols-outlined !text-[16px] text-warning">lightbulb</span>
+                                        <Lightbulb className="size-4 text-warning" />
                                     ) : (
-                                        <span className="material-symbols-outlined !text-[16px] text-primary">construction</span>
+                                        <Construction className="size-4 text-primary" />
                                     )}
                                 </div>
 
@@ -147,9 +145,7 @@ export default function DiagnosticsPanel({ issues, appliedFixIds, onApplyFix, on
                                             )}
                                             title={isApplied ? "Undo fix" : "Apply fix"}
                                         >
-                                            <span className="material-symbols-outlined !text-[16px]">
-                                                {isApplied ? 'undo' : 'auto_fix'}
-                                            </span>
+                                            {isApplied ? <Undo2 className="size-4" /> : <Sparkles className="size-4" />}
                                         </button>
                                     )}
                                 </div>

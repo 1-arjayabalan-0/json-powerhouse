@@ -10,6 +10,7 @@ import { useAutoRepair } from "@/app/hooks/useAutoRepair";
 import { useJsonWorker } from "@/app/hooks/useJsonWorker";
 import { TextViewerConfig } from "@/core/types/text-viewer-config";
 import { extractTextTable, TableColumn } from "@/core/lib/text-viewer/extractTextTable";
+import { ClipboardPaste, FileText, Sparkles, Trash2 } from "lucide-react";
 
 const TEXT_VIEWER_SAMPLE = JSON.stringify([
     {
@@ -196,7 +197,7 @@ export default function TextViewer() {
                             className="px-2 py-1 text-[11px] bg-primary hover:opacity-90 text-primary-foreground rounded border border-[color-mix(in_srgb,var(--primary)_30%,transparent)] flex items-center gap-1"
                             title="Load Sample JSON"
                         >
-                            <span className="material-symbols-outlined !text-[12px]">auto_fix_high</span>
+                            <Sparkles className="size-3.5" />
                             <span>Sample</span>
                         </button>
                         <button
@@ -209,7 +210,7 @@ export default function TextViewer() {
                             className="px-2 py-1 text-[11px] bg-secondary hover:opacity-80 text-secondary-foreground rounded border border-border flex items-center gap-1"
                             title="Paste from clipboard"
                         >
-                            <span className="material-symbols-outlined !text-[12px]">content_paste</span>
+                            <ClipboardPaste className="size-3.5" />
                             <span>Paste</span>
                         </button>
                         <button
@@ -217,7 +218,7 @@ export default function TextViewer() {
                             className="px-2 py-1 text-[11px] bg-[color-mix(in_srgb,var(--destructive)_10%,transparent)] hover:bg-[color-mix(in_srgb,var(--destructive)_20%,transparent)] text-destructive border border-[color-mix(in_srgb,var(--destructive)_20%,transparent)] rounded flex items-center gap-1"
                             title="Clear Input"
                         >
-                            <span className="material-symbols-outlined !text-[12px]">delete</span>
+                            <Trash2 className="size-3.5" />
                             <span>Clear</span>
                         </button>
                     </div>
@@ -253,7 +254,7 @@ export default function TextViewer() {
                             }`}
                             title={viewerConfig.markdownMode ? "Switch to table view" : "Switch to markdown document view"}
                         >
-                            <span className="material-symbols-outlined !text-[12px]">markdown</span>
+                            <FileText className="size-3.5" />
                             <span>{viewerConfig.markdownMode ? "Document" : "Table"}</span>
                         </button>
                         <span className="text-[10px] text-muted-foreground">

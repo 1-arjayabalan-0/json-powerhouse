@@ -2,6 +2,7 @@
 
 import Footer from "../components/Footer";
 import AppHeader from "@/app/components/shell/AppHeader";
+import { History } from "lucide-react";
 
 export default function PrivacyClient() {
     return (
@@ -15,7 +16,7 @@ export default function PrivacyClient() {
 
                 <div className="mb-8 bg-muted border border-border rounded-lg p-4">
                     <h2 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                        <span className="material-symbols-outlined">history</span>
+                        <History className="size-5" />
                         Update History
                     </h2>
                     <div className="space-y-2 text-sm">

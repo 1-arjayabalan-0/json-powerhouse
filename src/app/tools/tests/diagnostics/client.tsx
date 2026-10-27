@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { TEST_CASES, TestCase } from "@/core/lib/diagnostics/tests/cases";
 import { runDiagnosticsTests, TestResult } from "@/core/lib/diagnostics/tests/runner";
 import { toast } from "sonner";
+import { Play } from "lucide-react";
 
 export default function DiagnosticsTestClient() {
     const [results, setResults] = useState<TestResult[]>([]);
@@ -49,7 +50,7 @@ export default function DiagnosticsTestClient() {
                         disabled={isRunning}
                         className="px-4 py-2 bg-primary hover:opacity-90 text-primary-foreground rounded font-medium flex items-center gap-2"
                     >
-                        <span className="material-symbols-outlined">play_arrow</span>
+                        <Play className="size-5" />
                         Rerun Tests
                     </button>
                 </div>

@@ -12,6 +12,7 @@ import { parseTree, findNodeAtLocation, getLocation, modify, applyEdits } from '
 import { cn } from "@/app/lib/utils";
 import { useAutoRepair } from "@/app/hooks/useAutoRepair";
 import KeyboardShortcuts from "@/app/components/KeyboardShortcuts";
+import { ChevronLeft, ChevronRight, GitCompare, History, Wrench } from "lucide-react";
 
 export default function JsonDiffViewer() {
     const { config, setConfig } = useConfig();
@@ -329,11 +330,11 @@ export default function JsonDiffViewer() {
             <div className="w-1/2 flex flex-col border-r border-border bg-background">
                 <div className="h-10 px-4 border-b border-border flex items-center bg-muted shrink-0 justify-between">
                     <div className="flex items-center gap-2">
-                         <span className="material-symbols-outlined text-primary text-sm">difference</span>
+                         <GitCompare className="size-4 text-primary" />
                          <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Original (Left)</span>
                          {leftRepair.repairCount > 0 && (
                              <span className="text-[9px] bg-[color-mix(in_srgb,var(--warning)_10%,transparent)] text-warning px-1.5 py-0.5 rounded border border-[color-mix(in_srgb,var(--warning)_20%,transparent)] flex items-center gap-1">
-                                 <span className="material-symbols-outlined !text-[10px]">build</span>
+                                 <Wrench className="size-3" />
                                  Repaired {leftRepair.repairCount}
                              </span>
                          )}
@@ -372,7 +373,7 @@ export default function JsonDiffViewer() {
                         <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Modified (Right)</span>
                         {rightRepair.repairCount > 0 && (
                             <span className="text-[9px] bg-[color-mix(in_srgb,var(--warning)_10%,transparent)] text-warning px-1.5 py-0.5 rounded border border-[color-mix(in_srgb,var(--warning)_20%,transparent)] flex items-center gap-1">
-                                <span className="material-symbols-outlined !text-[10px]">build</span>
+                                <Wrench className="size-3" />
                                 Repaired {rightRepair.repairCount}
                             </span>
                         )}
@@ -425,7 +426,7 @@ export default function JsonDiffViewer() {
                                 {isSidebarOpen ? (
                                     <>
                                         <span className="text-xs font-bold flex items-center gap-1">
-                                            <span className="material-symbols-outlined text-[14px]">history</span>
+                                            <History className="size-3.5" />
                                             Changes
                                         </span>
                                         
@@ -461,11 +462,11 @@ export default function JsonDiffViewer() {
                                             </button>
                                         </div>
 
-                                        <span className="material-symbols-outlined text-[14px] text-muted-foreground hover:text-foreground">chevron_right</span>
+                                        <ChevronRight className="size-3.5 text-muted-foreground hover:text-foreground" />
                                     </>
                                 ) : (
                                      <>
-                                        <span className="material-symbols-outlined text-[14px] text-muted-foreground">chevron_left</span>
+                                        <ChevronLeft className="size-3.5 text-muted-foreground" />
                                         <div className="flex-1 flex items-center justify-center">
                                             <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground rotate-180 whitespace-nowrap" style={{ writingMode: 'vertical-rl' }}>
                                                 Changes

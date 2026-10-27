@@ -12,6 +12,7 @@ import KeyboardShortcuts from "@/app/components/KeyboardShortcuts";
 import { COMPLEX_JSON_SAMPLE } from "@/core/config/samples";
 import { useAutoRepair } from "@/app/hooks/useAutoRepair";
 import { useJsonWorker } from "@/app/hooks/useJsonWorker";
+import { Check, CircleAlert, ClipboardPaste, Copy, Gauge, ListTree, LoaderCircle, Sparkles, Tag, Timer, Trash2, Wrench } from "lucide-react";
 
 export default function JsonTreeViewer() {
     const [input, setInput] = useState("");
@@ -74,14 +75,14 @@ export default function JsonTreeViewer() {
                     <div className="ml-auto flex gap-2 items-center">
                         {error && (
                             <span className="text-[10px] bg-[color-mix(in_srgb,var(--destructive)_10%,transparent)] text-destructive px-2 py-0.5 rounded border border-[color-mix(in_srgb,var(--destructive)_20%,transparent)] flex items-center gap-1">
-                                <span className="material-symbols-outlined !text-[10px]">error</span>
+                                <CircleAlert className="size-3" />
                                 <span className="hidden sm:inline">Invalid JSON</span>
                                 <span className="sm:hidden">Error</span>
                             </span>
                         )}
                         {!error && input.trim() && (
                             <span className="text-[10px] bg-[color-mix(in_srgb,var(--success)_10%,transparent)] text-success px-2 py-0.5 rounded border border-[color-mix(in_srgb,var(--success)_20%,transparent)] flex items-center gap-1">
-                                <span className="material-symbols-outlined !text-[10px]">check</span>
+                                <Check className="size-3" />
                                 Valid
                             </span>
                         )}
@@ -95,7 +96,7 @@ export default function JsonTreeViewer() {
                                 border-[color-mix(in_srgb,var(--primary)_30%,transparent)] flex items-center gap-1 transition-colors"
                                 title="Load Sample JSON"
                             >
-                                <span className="material-symbols-outlined !text-[12px]">auto_fix_high</span>
+                                <Sparkles className="size-3.5" />
                                 <span>Sample</span>
                             </button>
                             <button
@@ -114,7 +115,7 @@ export default function JsonTreeViewer() {
                                 border-border flex items-center gap-1 transition-colors"
                                 title="Paste from clipboard"
                             >
-                                <span className="material-symbols-outlined !text-[12px]">content_paste</span>
+                                <ClipboardPaste className="size-3.5" />
                                 <span>Paste</span>
                             </button>
                             <button
@@ -125,7 +126,7 @@ export default function JsonTreeViewer() {
                                 flex items-center justify-center gap-1"
                                 title="Clear Input"
                             >
-                                <span className="material-symbols-outlined !text-[12px]">delete</span>
+                                <Trash2 className="size-3.5" />
                                 <span>Clear</span>
                             </button>
 
@@ -151,7 +152,7 @@ export default function JsonTreeViewer() {
                         <div className="flex items-center gap-3">
                             {repairCount > 0 && (
                                 <div className="flex items-center gap-1.5 bg-[color-mix(in_srgb,var(--warning)_10%,transparent)] px-2 py-0.5 rounded border border-[color-mix(in_srgb,var(--warning)_20%,transparent)]" title={`${repairCount} auto-repairs applied`}>
-                                    <span className="material-symbols-outlined !text-[12px] text-warning">build</span>
+                                    <Wrench className="size-3.5 text-warning" />
                                     <span className="text-[10px] text-warning font-medium">Repaired {repairCount}</span>
                                 </div>
                             )}
@@ -169,7 +170,7 @@ export default function JsonTreeViewer() {
                                     className="flex items-center gap-1.5 px-3 py-1 text-[11px] sm:text-[12px] font-medium bg-primary hover:opacity-90 text-primary-foreground rounded transition-colors shadow-sm"
                                     title="Copy JSON"
                                 >
-                                    <span className="material-symbols-outlined !text-[12px]">content_copy</span>
+                                    <Copy className="size-3.5" />
                                     <span>Copy</span>
                                 </button>
                             )}
@@ -193,33 +194,33 @@ export default function JsonTreeViewer() {
                             {/* File size + stats bar */}
                             <div className="flex items-center gap-4 mb-3 px-2 py-1.5 bg-muted/30 rounded text-[10px] text-muted-foreground border border-border">
                                 <span className="flex items-center gap-1">
-                                    <span className="material-symbols-outlined !text-[12px]">data_usage</span>
+                                    <Gauge className="size-3.5" />
                                     Size: {formatBytes(sizeBytes || new Blob([input]).size)}
                                 </span>
                                 <span className="flex items-center gap-1">
-                                    <span className="material-symbols-outlined !text-[12px]">account_tree</span>
+                                    <ListTree className="size-3.5" />
                                     Depth: {getJsonDepth(parsedJson)}
                                 </span>
                                 <span className="flex items-center gap-1">
-                                    <span className="material-symbols-outlined !text-[12px]">tag</span>
+                                    <Tag className="size-3.5" />
                                     Type: {Array.isArray(parsedJson) ? `Array[${parsedJson.length}]` : `Object{${Object.keys(parsedJson).length}}`}
                                 </span>
                                 {parseTimeMs > 0 && (
                                     <span className="flex items-center gap-1">
-                                        <span className="material-symbols-outlined !text-[12px]">timer</span>
+                                        <Timer className="size-3.5" />
                                         {parseTimeMs < 1 ? '<1ms' : `${Math.round(parseTimeMs)}ms`}
                                         {usedWorker && <span className="text-primary ml-1">(worker)</span>}
                                     </span>
                                 )}
                                 {isParsing && (
                                     <span className="flex items-center gap-1 text-primary">
-                                        <span className="material-symbols-outlined !text-[12px] animate-spin">progress_activity</span>
+                                        <LoaderCircle className="size-3.5 animate-spin" />
                                         Parsing...
                                     </span>
                                 )}
                                 {repairCount > 0 && (
                                     <span className="flex items-center gap-1 text-warning">
-                                        <span className="material-symbols-outlined !text-[12px]">build</span>
+                                        <Wrench className="size-3.5" />
                                         {repairCount} repaired
                                     </span>
                                 )}

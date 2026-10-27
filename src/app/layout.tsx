@@ -72,10 +72,6 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="manifest" href="/site.webmanifest" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
-          rel="stylesheet"
-        />
         <JsonLd
           data={{
             "@context": "https://schema.org",
