@@ -33,7 +33,7 @@ export default function FormatterSettings({ config, update }: SettingsProps<JSON
                     options={[{ value: 'double', label: 'Double (")' }, { value: 'single', label: "Single (')" }]} />
             </SettingsSection>
             <SettingsSection title="Output">
-                <SwitchField id="fmt-comments" label="Keep comments" checked={config.stripComments}
+                <SwitchField id="fmt-comments" label="Strip comments" checked={config.stripComments}
                     onChange={(v) => update('stripComments', v)} disabled hint="Comment handling follows the input format." />
                 <SwitchField id="fmt-nulls" label="Remove null values" checked={config.removeNull}
                     onChange={(v) => update('removeNull', v)} />

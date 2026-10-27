@@ -81,7 +81,9 @@ export function NumberField({ id, label, value, min, max, onChange }: {
             <Input
                 id={id} type="number" value={value} min={min} max={max}
                 onChange={(e) => {
-                    const n = Number(e.target.value);
+                    const raw = e.target.value;
+                    if (raw.trim() === '') return;
+                    const n = Number(raw);
                     if (Number.isFinite(n)) onChange(n);
                 }}
                 className="h-8 text-xs bg-background border-input"
