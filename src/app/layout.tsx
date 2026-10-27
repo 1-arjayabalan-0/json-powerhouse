@@ -1,13 +1,13 @@
-import { Poppins, Geist_Mono } from "next/font/google";
+import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "./components/ThemeProvider";
 import AlertService from "./components/alert-service";
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
-const poppins = Poppins({
-  variable: "--font-poppins",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
 });
 
 const geistMono = Geist_Mono({
@@ -104,7 +104,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${poppins.variable} antialiased bg-background text-foreground`}>
+      <body className={`${inter.variable} ${geistMono.variable} antialiased bg-background text-foreground`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
@@ -114,7 +114,7 @@ export default function RootLayout({
           <ModeProvider>
             <AlertService />
             {children}
-            <Toaster position="bottom-left" richColors theme="dark" />
+            <Toaster position="bottom-right" richColors theme="system" />
 
             {/* Analytics - Only in Production */}
             {process.env.NODE_ENV === 'production' && (
