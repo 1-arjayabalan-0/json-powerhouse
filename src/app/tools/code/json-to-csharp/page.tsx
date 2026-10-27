@@ -1,3 +1,4 @@
+import ToolWorkspace from "@/app/components/shell/ToolWorkspace";
 import type { Metadata } from "next";
 import CSharpGeneratorClient from "./client";
 import SeoAccordion from "@/app/components/SeoAccordion";
@@ -23,8 +24,9 @@ export const metadata: Metadata = {
 export default function CSharpGeneratorPage() {
     return (
         <>
-            <div className="lg:h-[calc(100vh-48px)] md:h-[calc(100vh-130px)] w-full relative flex flex-col">
+            <ToolWorkspace toolId="json-to-csharp">
                 <CSharpGeneratorClient />
+            </ToolWorkspace>
                 <SeoAccordion
                     toolName="JSON to C#"
                     description="Generate C# classes from JSON data. Choose between System.Text.Json or Newtonsoft.Json attributes."
@@ -52,7 +54,6 @@ export default function CSharpGeneratorPage() {
                         { name: "JSON Formatter", path: "/tools/json/formatter" },
                     ]}
                 />
-            </div>
         </>
     );
 }

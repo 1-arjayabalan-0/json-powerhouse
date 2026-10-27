@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import CodeEditor from './CodeEditor';
-import BottomConfigurationPanel from './BottomConfigurationPanel';
 import KeyboardShortcuts from './KeyboardShortcuts';
 import { COMPLEX_JSON_SAMPLE } from '@/core/config/samples';
 import { useAutoRepair } from '@/app/hooks/useAutoRepair';
@@ -87,12 +86,12 @@ export default function CodeGeneratorBase({
     };
 
     return (
-        <main className="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden w-full">
+        <div className="flex h-full min-h-0 w-full flex-col md:flex-row">
             <KeyboardShortcuts
                 onCopyOutput={handleCopy}
             />
             {/* Left Section: Input Editor */}
-            <section className="flex-none lg:flex-1 flex flex-col border-b lg:border-b-0 lg:border-r border-border relative bg-background min-h-[300px] lg:min-h-0">
+            <section className="flex flex-col border-b md:border-b-0 md:border-r border-border relative bg-background md:w-1/2 flex-1 min-h-[45vh] md:min-h-0">
                 <div className="h-10 px-4 border-b border-border flex items-center bg-muted shrink-0 overflow-x-auto whitespace-nowrap scrollbar-none">
                     <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest mr-4">Input Editor</span>
                     <div className="ml-auto flex gap-1.5 sm:gap-2 items-center">
@@ -166,7 +165,7 @@ export default function CodeGeneratorBase({
             </section>
 
             {/* Right Section: Output Workspace */}
-            <section className="flex-none lg:flex-1 flex flex-col bg-background w-full min-h-[400px] lg:min-h-0">
+            <section className="flex flex-col bg-background w-full md:w-1/2 flex-1 min-h-[45vh] md:min-h-0">
                 <div className="flex flex-col border-b border-border shrink-0">
                     <div className="h-10 px-4 flex items-center justify-between bg-card border-b border-border overflow-x-auto whitespace-nowrap scrollbar-none">
                         <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest mr-4">Workspace</span>
@@ -219,8 +218,7 @@ export default function CodeGeneratorBase({
                         className="rounded-none border-none"
                     />
                 </div>
-                <BottomConfigurationPanel />
             </section>
-        </main>
+        </div>
     );
 }

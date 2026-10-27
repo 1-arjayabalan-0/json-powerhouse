@@ -9,7 +9,6 @@ import { Button } from "@/app/components/ui/button";
 import { toast } from "sonner";
 import { useConfig } from "@/app/context/ConfigContext";
 import { parseTree, findNodeAtLocation, getLocation, modify, applyEdits } from 'jsonc-parser';
-import BottomConfigurationPanel from "@/app/components/BottomConfigurationPanel";
 import { cn } from "@/app/lib/utils";
 import { useAutoRepair } from "@/app/hooks/useAutoRepair";
 import KeyboardShortcuts from "@/app/components/KeyboardShortcuts";
@@ -301,7 +300,7 @@ export default function JsonDiffViewer() {
     };
 
     return (
-        <main className="flex-1 flex overflow-hidden h-full">
+        <div className="flex h-full min-h-0 w-full overflow-hidden">
             <KeyboardShortcuts
                 onProcess={handleCompare}
             />
@@ -493,8 +492,7 @@ export default function JsonDiffViewer() {
                 </div>
 
                 {/* Bottom Configuration Panel */}
-                <BottomConfigurationPanel />
             </div>
-        </main>
+        </div>
     );
 }

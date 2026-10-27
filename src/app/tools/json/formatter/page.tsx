@@ -1,3 +1,4 @@
+import ToolWorkspace from "@/app/components/shell/ToolWorkspace";
 import JSONToolPage from "@/app/components/JSONToolPage";
 import JsonLd from "@/app/components/JsonLd";
 import SeoAccordion from "@/app/components/SeoAccordion";
@@ -38,8 +39,10 @@ export default function JSONFormatterPage() {
                     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
                 }}
             />
-            <div className="lg:h-[calc(100vh-48px)] md:h-[calc(100vh-130px)] w-full relative flex flex-col">
-                <JSONToolPage toolId="json-formatter" />
+            <>
+                <ToolWorkspace toolId="json-formatter">
+                    <JSONToolPage toolId="json-formatter" />
+                </ToolWorkspace>
                 <SeoAccordion
                     toolName="JSON Formatter"
                     description="JSON PowerHouse Formatter instantly formats and beautifies your JSON data. Paste raw, minified, or messy JSON and get properly indented, readable output. All processing happens in your browser — your data never leaves your device."
@@ -69,7 +72,7 @@ export default function JSONFormatterPage() {
                         { name: "JSON to TypeScript", path: "/tools/code/json-to-typescript" },
                     ]}
                 />
-            </div>
+            </>
         </>
     );
 }

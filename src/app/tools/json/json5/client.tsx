@@ -2,11 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { useConfig } from "@/app/context/ConfigContext";
-import { JSON5ConverterConfig, defaultJSON5Config } from "@/core/types/json5-converter-config";
+import { JSON5ConverterConfig } from "@/core/types/json5-converter-config";
 import JSON5 from "json5";
 import { toast } from "sonner";
 import CodeEditor from "@/app/components/CodeEditor";
-import BottomConfigurationPanel from "@/app/components/BottomConfigurationPanel";
 import { usePersistentState } from "@/app/hooks/usePersistentState";
 import { COMPLEX_JSON_SAMPLE } from "@/core/config/samples";
 import { useAutoRepair } from "@/app/hooks/useAutoRepair";
@@ -15,7 +14,7 @@ import KeyboardShortcuts from "@/app/components/KeyboardShortcuts";
 type ConversionDirection = 'json-to-json5' | 'json5-to-json';
 
 export default function JSON5ConverterClient() {
-    const { config, setConfig } = useConfig();
+    const { config } = useConfig();
     // Use persistent state for input, just like other tools
     const [input, setInput] = usePersistentState("json-powerhouse-input", "");
     const [output, setOutput] = useState("");
@@ -24,13 +23,6 @@ export default function JSON5ConverterClient() {
 
     // Auto-repair broken JSON before JSON5 conversion
     const { repaired, repairCount } = useAutoRepair(input, { allowComments: true });
-
-    // Initialize config
-    useEffect(() => {
-        if (!('useJSON5' in config)) {
-            setConfig(defaultJSON5Config);
-        }
-    }, []);
 
     const converterConfig = config as JSON5ConverterConfig;
 
@@ -247,7 +239,7 @@ export default function JSON5ConverterClient() {
     };
 
     return (
-        <main className="flex-1 flex overflow-hidden w-full">
+        <div className="flex h-full min-h-0 w-full overflow-hidden">
             <KeyboardShortcuts
                 onCopyOutput={handleCopy}
             />
@@ -383,8 +375,7 @@ export default function JSON5ConverterClient() {
                         className="rounded-none border-none bg-transparent"
                     />
                 </div>
-                <BottomConfigurationPanel />
             </section>
-        </main>
+        </div>
     );
 }

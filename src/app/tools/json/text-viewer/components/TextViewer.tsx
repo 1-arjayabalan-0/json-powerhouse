@@ -8,7 +8,7 @@ import { useConfig } from "@/app/context/ConfigContext";
 import { usePersistentState } from "@/app/hooks/usePersistentState";
 import { useAutoRepair } from "@/app/hooks/useAutoRepair";
 import { useJsonWorker } from "@/app/hooks/useJsonWorker";
-import { defaultTextViewerConfig, TextViewerConfig } from "@/core/types/text-viewer-config";
+import { TextViewerConfig } from "@/core/types/text-viewer-config";
 import { extractTextTable, TableColumn } from "@/core/lib/text-viewer/extractTextTable";
 
 const TEXT_VIEWER_SAMPLE = JSON.stringify([
@@ -168,7 +168,7 @@ export default function TextViewer() {
     const { repaired, error: repairError } = useAutoRepair(input);
     const { data: parsedJson, error: parseError } = useJsonWorker(repaired);
 
-    const viewerConfig = ('textThreshold' in config ? config : defaultTextViewerConfig) as TextViewerConfig;
+    const viewerConfig = config as TextViewerConfig;
 
     const error = parseError || repairError;
 
@@ -180,7 +180,7 @@ export default function TextViewer() {
     }, [parsedJson, error, viewerConfig]);
 
     return (
-        <main className="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden w-full">
+        <div className="flex h-full min-h-0 w-full flex-col overflow-y-auto lg:flex-row lg:overflow-hidden">
             {/* Left: Input */}
             <section className="flex-none lg:flex-1 flex flex-col border-b lg:border-b-0 lg:border-r border-border relative bg-background h-[45vh] lg:h-full min-h-[300px] lg:min-h-0">
                 <div className="h-10 px-4 border-b border-border flex items-center bg-[color-mix(in_srgb,var(--muted)_50%,transparent)] shrink-0">
@@ -338,6 +338,6 @@ export default function TextViewer() {
                     )}
                 </div>
             </section>
-        </main>
+        </div>
     );
 }

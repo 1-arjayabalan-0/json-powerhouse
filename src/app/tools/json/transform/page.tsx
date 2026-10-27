@@ -1,3 +1,4 @@
+import ToolWorkspace from "@/app/components/shell/ToolWorkspace";
 import JSONToolPage from "@/app/components/JSONToolPage";
 import SeoAccordion from "@/app/components/SeoAccordion";
 import { Metadata } from "next";
@@ -23,8 +24,9 @@ export const metadata: Metadata = {
 export default function JSONTransformPage() {
     return (
         <>
-            <div className="lg:h-[calc(100vh-48px)] md:h-[calc(100vh-130px)] w-full relative flex flex-col">
+            <ToolWorkspace toolId="json-transform">
                 <JSONToolPage toolId="json-transform" />
+            </ToolWorkspace>
                 <SeoAccordion
                     toolName="JSON Transform"
                     description="Visually transform your JSON data without writing code. Rename keys, remove fields, convert between camelCase and snake_case, flatten or nest structures."
@@ -52,7 +54,6 @@ export default function JSONTransformPage() {
                         { name: "JSON Diff", path: "/tools/json/diff" },
                     ]}
                 />
-            </div>
         </>
     );
 }

@@ -1,3 +1,4 @@
+import ToolWorkspace from "@/app/components/shell/ToolWorkspace";
 import JSONToolPage from "@/app/components/JSONToolPage";
 import JsonLd from "@/app/components/JsonLd";
 import SeoAccordion from "@/app/components/SeoAccordion";
@@ -36,8 +37,10 @@ export default function JSONValidatorPage() {
                     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
                 }}
             />
-            <div className="lg:h-[calc(100vh-48px)] md:h-[calc(100vh-130px)] w-full relative flex flex-col">
-                <JSONToolPage toolId="json-validator" />
+            <>
+                <ToolWorkspace toolId="json-validator">
+                    <JSONToolPage toolId="json-validator" />
+                </ToolWorkspace>
                 <SeoAccordion
                     toolName="JSON Validator"
                     description="Instantly validate your JSON data. Paste any JSON string and get immediate feedback on syntax errors, missing commas, unmatched brackets, and more."
@@ -65,7 +68,7 @@ export default function JSONValidatorPage() {
                         { name: "JSON to TypeScript", path: "/tools/code/json-to-typescript" },
                     ]}
                 />
-            </div>
+            </>
         </>
     );
 }

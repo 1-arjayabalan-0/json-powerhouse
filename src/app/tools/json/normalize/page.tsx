@@ -1,3 +1,4 @@
+import ToolWorkspace from "@/app/components/shell/ToolWorkspace";
 import { Metadata } from "next";
 import JSONNormalizeClient from "./client";
 import SeoAccordion from "@/app/components/SeoAccordion";
@@ -23,8 +24,9 @@ export const metadata: Metadata = {
 export default function JSONNormalizePage() {
     return (
         <>
-            <div className="lg:h-[calc(100vh-48px)] md:h-[calc(100vh-130px)] w-full relative flex flex-col">
+            <ToolWorkspace toolId="json-normalize">
                 <JSONNormalizeClient />
+            </ToolWorkspace>
                 <SeoAccordion
                     toolName="JSON Normalize"
                     description="Standardize your JSON structure. Sort keys alphabetically, remove unnecessary whitespace, and produce consistent output every time."
@@ -52,7 +54,6 @@ export default function JSONNormalizePage() {
                         { name: "JSON Viewer", path: "/tools/json/viewer" },
                     ]}
                 />
-            </div>
         </>
     );
 }

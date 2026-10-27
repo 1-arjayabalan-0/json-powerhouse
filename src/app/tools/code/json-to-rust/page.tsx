@@ -1,3 +1,4 @@
+import ToolWorkspace from "@/app/components/shell/ToolWorkspace";
 import { Metadata } from "next";
 import RustGeneratorClient from "./client";
 import SeoAccordion from "@/app/components/SeoAccordion";
@@ -23,8 +24,9 @@ export const metadata: Metadata = {
 export default function RustGeneratorPage() {
     return (
         <>
-            <div className="lg:h-[calc(100vh-48px)] md:h-[calc(100vh-130px)] w-full relative flex flex-col">
+            <ToolWorkspace toolId="json-to-rust">
                 <RustGeneratorClient />
+            </ToolWorkspace>
                 <SeoAccordion
                     toolName="JSON to Rust"
                     description="Generate Rust structs from JSON data with serde Serialize and Deserialize derives."
@@ -52,7 +54,6 @@ export default function RustGeneratorPage() {
                         { name: "JSON Formatter", path: "/tools/json/formatter" },
                     ]}
                 />
-            </div>
         </>
     );
 }

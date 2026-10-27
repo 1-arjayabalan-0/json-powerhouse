@@ -1,3 +1,4 @@
+import ToolWorkspace from "@/app/components/shell/ToolWorkspace";
 import { Metadata } from "next";
 import PythonGeneratorClient from "./client";
 import SeoAccordion from "@/app/components/SeoAccordion";
@@ -23,8 +24,9 @@ export const metadata: Metadata = {
 export default function PythonGeneratorPage() {
     return (
         <>
-            <div className="lg:h-[calc(100vh-48px)] md:h-[calc(100vh-130px)] w-full relative flex flex-col">
+            <ToolWorkspace toolId="json-to-python">
                 <PythonGeneratorClient />
+            </ToolWorkspace>
                 <SeoAccordion
                     toolName="JSON to Python"
                     description="Generate Python code from JSON data. Choose between plain dictionaries, TypedDict, or Python dataclasses with type hints."
@@ -52,7 +54,6 @@ export default function PythonGeneratorPage() {
                         { name: "JSON Formatter", path: "/tools/json/formatter" },
                     ]}
                 />
-            </div>
         </>
     );
 }

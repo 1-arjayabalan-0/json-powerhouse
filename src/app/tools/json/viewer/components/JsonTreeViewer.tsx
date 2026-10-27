@@ -1,14 +1,13 @@
 "use client"
 
-import { useState, useEffect } from "react";
-import { JsonTreeViewerConfig, defaultViewerConfig } from "@/core/types/json-viewer-config";
+import { useState } from "react";
+import { JsonTreeViewerConfig } from "@/core/types/json-viewer-config";
 import { useConfig } from "@/app/context/ConfigContext";
 import { toast } from "sonner";
 import JsonTreeNode from "./JsonTreeNode";
 import TreeControls from "./TreeControls";
 import { Button } from "@/app/components/ui/button";
 import CodeEditor from "@/app/components/CodeEditor";
-import BottomConfigurationPanel from "@/app/components/BottomConfigurationPanel";
 import KeyboardShortcuts from "@/app/components/KeyboardShortcuts";
 import { COMPLEX_JSON_SAMPLE } from "@/core/config/samples";
 import { useAutoRepair } from "@/app/hooks/useAutoRepair";
@@ -35,13 +34,6 @@ export default function JsonTreeViewer() {
 
     const error = parseError || repairError;
 
-    // Initialize config if needed
-    useEffect(() => {
-        if (!('showDataTypes' in config)) {
-            setConfig(defaultViewerConfig);
-        }
-    }, []);
-
     const handlePaste = async () => {
         try {
             const text = await navigator.clipboard.readText();
@@ -66,7 +58,7 @@ export default function JsonTreeViewer() {
     const viewerConfig = config as JsonTreeViewerConfig;
 
     return (
-        <main className="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden w-full">
+        <div className="flex h-full min-h-0 w-full flex-col overflow-y-auto lg:flex-row lg:overflow-hidden">
             <KeyboardShortcuts
                 onCopyOutput={() => {
                     if (parsedJson) {
@@ -248,9 +240,8 @@ export default function JsonTreeViewer() {
                         </div>
                     )}
                 </div>
-                <BottomConfigurationPanel />
             </section>
-        </main>
+        </div>
     );
 }
 

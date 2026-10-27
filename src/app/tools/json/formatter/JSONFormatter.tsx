@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { JSONFormatterConfig } from "@/core/types/json-formatter-config";
 import CodeEditor from "../../../components/CodeEditor";
 import { toast } from "sonner";
-import BottomConfigurationPanel from "@/app/components/BottomConfigurationPanel";
 import { diagnoseJson } from "@/core/lib/diagnostics/engine";
 import { JsonIssue } from "@/core/types/diagnostics";
 import DiagnosticsPanel from "@/app/components/DiagnosticsPanel";
@@ -160,7 +159,7 @@ export default function JSONFormatter({ config, input, setInput, formatted, setF
     };
 
     return (
-        <main className="flex-1 flex flex-col lg:flex-row overflow-hidden w-full">
+        <div className="flex h-full min-h-0 w-full flex-col md:flex-row">
             <KeyboardShortcuts
                 onProcess={() => {
                     // Ctrl+Enter: Apply all fixes + reformat
@@ -169,7 +168,7 @@ export default function JSONFormatter({ config, input, setInput, formatted, setF
                 onCopyOutput={handleCopy}
             />
             {/* Left Section: Input Editor */}
-            <section className="flex flex-col border-b lg:border-b-0 lg:border-r border-border relative bg-background flex-1 min-h-[40vh] lg:w-[40%] lg:flex-[0.7] lg:min-h-0">
+            <section className="flex flex-col border-b md:border-b-0 md:border-r border-border relative bg-background md:w-1/2 flex-1 min-h-[45vh] md:min-h-0">
                 <div className="h-10 px-4 border-b border-border flex items-center bg-muted shrink-0 overflow-x-auto whitespace-nowrap scrollbar-none">
                     <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest mr-4">Input Editor</span>
 
@@ -252,7 +251,7 @@ export default function JSONFormatter({ config, input, setInput, formatted, setF
             </section>
 
             {/* Right Section: Output Workspace */}
-            <section className="flex flex-col bg-background w-full flex-1 min-h-[40vh] lg:w-[60%] lg:flex-[1.3] lg:min-h-0">
+            <section className="flex flex-col bg-background w-full md:w-1/2 flex-1 min-h-[45vh] md:min-h-0">
                 <div className="flex flex-col border-b border-border shrink-0">
                     <div className="h-10 px-4 flex items-center justify-between bg-card border-b border-border overflow-x-auto whitespace-nowrap scrollbar-none">
                         <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest mr-4">Workspace</span>
@@ -306,8 +305,7 @@ export default function JSONFormatter({ config, input, setInput, formatted, setF
                         onSelectIssue={handleSelectIssue}
                     />
                 </div>
-                <BottomConfigurationPanel />
             </section>
-        </main>
+        </div>
     )
 }

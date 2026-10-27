@@ -1,3 +1,4 @@
+import ToolWorkspace from "@/app/components/shell/ToolWorkspace";
 import JSONToolPage from "@/app/components/JSONToolPage";
 import SeoAccordion from "@/app/components/SeoAccordion";
 import { Metadata } from "next";
@@ -23,8 +24,9 @@ export const metadata: Metadata = {
 export default function JSONMinifierPage() {
     return (
         <>
-            <div className="lg:h-[calc(100vh-48px)] md:h-[calc(100vh-130px)] w-full relative flex flex-col">
+            <ToolWorkspace toolId="json-minifier">
                 <JSONToolPage toolId="json-minifier" />
+            </ToolWorkspace>
                 <SeoAccordion
                     toolName="JSON Minifier"
                     description="Reduce your JSON file size instantly. Remove all unnecessary whitespace, line breaks, and indentation to produce the smallest possible JSON output."
@@ -52,7 +54,6 @@ export default function JSONMinifierPage() {
                         { name: "JSON Viewer", path: "/tools/json/viewer" },
                     ]}
                 />
-            </div>
         </>
     );
 }

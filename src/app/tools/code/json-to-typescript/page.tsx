@@ -1,3 +1,4 @@
+import ToolWorkspace from "@/app/components/shell/ToolWorkspace";
 import type { Metadata } from "next";
 import TypeScriptGeneratorClient from "./client";
 import JsonLd from "@/app/components/JsonLd";
@@ -36,8 +37,10 @@ export default function TypeScriptGeneratorPage() {
                     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
                 }}
             />
-            <div className="lg:h-[calc(100vh-48px)] md:h-[calc(100vh-130px)] w-full relative flex flex-col">
-                <TypeScriptGeneratorClient />
+            <>
+                <ToolWorkspace toolId="json-to-typescript">
+                    <TypeScriptGeneratorClient />
+                </ToolWorkspace>
                 <SeoAccordion
                     toolName="JSON to TypeScript"
                     description="Automatically generate TypeScript interfaces from your JSON data. Paste any JSON object and get properly typed TypeScript definitions."
@@ -65,7 +68,7 @@ export default function TypeScriptGeneratorPage() {
                         { name: "JSON Formatter", path: "/tools/json/formatter" },
                     ]}
                 />
-            </div>
+            </>
         </>
     );
 }

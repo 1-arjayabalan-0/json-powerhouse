@@ -1,3 +1,4 @@
+import ToolWorkspace from "@/app/components/shell/ToolWorkspace";
 import { Metadata } from "next";
 import JsonViewerClient from "./client";
 import SeoAccordion from "@/app/components/SeoAccordion";
@@ -23,8 +24,9 @@ export const metadata: Metadata = {
 export default function JsonViewerPage() {
     return (
         <>
-            <div className="lg:h-[calc(100vh-48px)] md:h-[calc(100vh-130px)] w-full relative flex flex-col">
+            <ToolWorkspace toolId="json-viewer">
                 <JsonViewerClient />
+            </ToolWorkspace>
                 <SeoAccordion
                     toolName="JSON Viewer"
                     description="Explore your JSON data with an interactive tree view. Expand and collapse nodes, search for specific keys or values, copy paths, and switch between tree and raw JSON views."
@@ -52,7 +54,6 @@ export default function JsonViewerPage() {
                         { name: "JSON to TypeScript", path: "/tools/code/json-to-typescript" },
                     ]}
                 />
-            </div>
         </>
     );
 }

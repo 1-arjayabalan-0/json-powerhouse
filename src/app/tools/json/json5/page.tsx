@@ -1,3 +1,4 @@
+import ToolWorkspace from "@/app/components/shell/ToolWorkspace";
 import SeoAccordion from "@/app/components/SeoAccordion";
 import type { Metadata } from "next";
 import JSON5ConverterClient from "./client";
@@ -22,8 +23,10 @@ export const metadata: Metadata = {
 
 export default function JSON5ConverterPage() {
     return (
-        <div className="lg:h-[calc(100vh-48px)] md:h-[calc(100vh-130px)] w-full relative flex flex-col">
-            <JSON5ConverterClient />
+        <>
+            <ToolWorkspace toolId="json-json5">
+                <JSON5ConverterClient />
+            </ToolWorkspace>
             <SeoAccordion
                 toolName="JSON5 Converter"
                 description="Convert between standard JSON and JSON5 format instantly. JSON5 supports comments, trailing commas, unquoted keys, single quotes, and more."
@@ -51,6 +54,6 @@ export default function JSON5ConverterPage() {
                     { name: "JSON Normalize", path: "/tools/json/normalize" },
                 ]}
             />
-        </div>
+        </>
     );
 }

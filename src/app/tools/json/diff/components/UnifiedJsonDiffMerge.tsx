@@ -35,7 +35,6 @@ import { JsonDiffConfig, DiffNode } from "@/core/types/diff-config"
 import { DiffStrategy } from "@/core/lib/diff/types"
 import { parseAndDiff, DiffResult } from "@/core/lib/diff/engine"
 import { Button } from "@/app/components/ui/button"
-import BottomConfigurationPanel from "@/app/components/BottomConfigurationPanel"
 import { useConfig } from "@/app/context/ConfigContext"
 import { DIFF_SAMPLES } from "@/core/config/samples"
 import DiffNodeRenderer from "./DiffNodeRenderer"
@@ -835,7 +834,7 @@ export function UnifiedJsonDiffMerge() {
     }
 
     return (
-        <main className="flex-1 flex flex-col overflow-hidden w-full bg-background h-full pb-12 lg:pb-0">
+        <div className="flex h-full min-h-0 w-full flex-col overflow-hidden bg-background">
             <style jsx global>{`
                 .diff-removed-line { background-color: color-mix(in srgb, var(--destructive), transparent 85%); }
                 .diff-added-line { background-color: color-mix(in srgb, var(--success), transparent 85%); }
@@ -1252,7 +1251,6 @@ export function UnifiedJsonDiffMerge() {
                 </div>
             </div>
 
-            <BottomConfigurationPanel />
-        </main >
+        </div>
     )
 }

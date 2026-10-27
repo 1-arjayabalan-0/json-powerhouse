@@ -1,3 +1,4 @@
+import ToolWorkspace from "@/app/components/shell/ToolWorkspace";
 import type { Metadata } from "next";
 import KotlinGeneratorClient from "./client";
 import SeoAccordion from "@/app/components/SeoAccordion";
@@ -23,8 +24,9 @@ export const metadata: Metadata = {
 export default function KotlinGeneratorPage() {
     return (
         <>
-            <div className="lg:h-[calc(100vh-48px)] md:h-[calc(100vh-130px)] w-full relative flex flex-col">
+            <ToolWorkspace toolId="json-to-kotlin">
                 <KotlinGeneratorClient />
+            </ToolWorkspace>
                 <SeoAccordion
                     toolName="JSON to Kotlin"
                     description="Generate Kotlin data classes from JSON data instantly. Choose between Kotlinx Serialization, Jackson, or Moshi annotations."
@@ -52,7 +54,6 @@ export default function KotlinGeneratorPage() {
                         { name: "JSON Formatter", path: "/tools/json/formatter" },
                     ]}
                 />
-            </div>
         </>
     );
 }

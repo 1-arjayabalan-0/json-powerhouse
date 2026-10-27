@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import CodeEditor from "@/app/components/CodeEditor";
-import BottomConfigurationPanel from "@/app/components/BottomConfigurationPanel";
 import KeyboardShortcuts from "@/app/components/KeyboardShortcuts";
 import { usePersistentState } from "@/app/hooks/usePersistentState";
 import { useAutoRepair } from "@/app/hooks/useAutoRepair";
@@ -122,7 +121,7 @@ export default function JSONTransformClient() {
     };
 
     return (
-        <main className="flex-1 flex flex-col lg:flex-row overflow-hidden w-full">
+        <div className="flex h-full min-h-0 w-full flex-col overflow-hidden lg:flex-row">
             <KeyboardShortcuts onCopyOutput={handleCopy} />
 
             {/* Left: Input Editor */}
@@ -250,9 +249,8 @@ export default function JSONTransformClient() {
                         className="rounded-none border-none"
                     />
                 </div>
-                <BottomConfigurationPanel />
             </section>
-        </main>
+        </div>
     );
 }
 

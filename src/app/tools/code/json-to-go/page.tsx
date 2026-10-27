@@ -1,3 +1,4 @@
+import ToolWorkspace from "@/app/components/shell/ToolWorkspace";
 import { Metadata } from "next";
 import GoGeneratorClient from "./client";
 import SeoAccordion from "@/app/components/SeoAccordion";
@@ -23,8 +24,9 @@ export const metadata: Metadata = {
 export default function GoGeneratorPage() {
     return (
         <>
-            <div className="lg:h-[calc(100vh-48px)] md:h-[calc(100vh-130px)] w-full relative flex flex-col">
+            <ToolWorkspace toolId="json-to-go">
                 <GoGeneratorClient />
+            </ToolWorkspace>
                 <SeoAccordion
                     toolName="JSON to Go"
                     description="Generate Go structs from JSON data with proper json struct tags."
@@ -52,7 +54,6 @@ export default function GoGeneratorPage() {
                         { name: "JSON Formatter", path: "/tools/json/formatter" },
                     ]}
                 />
-            </div>
         </>
     );
 }

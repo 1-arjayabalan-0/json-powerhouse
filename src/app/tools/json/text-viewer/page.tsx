@@ -1,3 +1,4 @@
+import ToolWorkspace from "@/app/components/shell/ToolWorkspace";
 import { Metadata } from "next";
 import TextViewerClient from "./client";
 import SeoAccordion from "@/app/components/SeoAccordion";
@@ -22,8 +23,10 @@ export const metadata: Metadata = {
 
 export default function TextViewerPage() {
     return (
-        <div className="lg:h-[calc(100vh-48px)] md:h-[calc(100vh-130px)] w-full relative flex flex-col">
-            <TextViewerClient />
+        <>
+            <ToolWorkspace toolId="json-text-viewer">
+                <TextViewerClient />
+            </ToolWorkspace>
             <SeoAccordion
                 toolName="JSON Text Viewer"
                 description="Turn JSON arrays into a readable table. Long string fields wrap inside cells so you read top-to-bottom instead of scrolling sideways. Toggle Markdown preview for bold text, lists, and links."
@@ -50,6 +53,6 @@ export default function TextViewerPage() {
                     { name: "JSON Diff", path: "/tools/json/diff" },
                 ]}
             />
-        </div>
+        </>
     );
 }

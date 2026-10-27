@@ -1,3 +1,4 @@
+import ToolWorkspace from "@/app/components/shell/ToolWorkspace";
 
 import { Metadata } from "next";
 import { UnifiedJsonDiffMerge } from "./components/UnifiedJsonDiffMerge";
@@ -24,8 +25,9 @@ export const metadata: Metadata = {
 export default function JsonDiffPage() {
     return (
         <>
-            <div className="lg:h-[calc(100vh-48px)] md:h-[calc(100vh-130px)] w-full relative flex flex-col">
+            <ToolWorkspace toolId="json-diff">
                 <UnifiedJsonDiffMerge />
+            </ToolWorkspace>
                 <SeoAccordion
                     toolName="JSON Diff & Merge"
                     description="Compare two or three JSON documents side-by-side and see exactly what changed. Color-coded output highlights additions, deletions, and modifications."
@@ -53,7 +55,6 @@ export default function JsonDiffPage() {
                         { name: "JSON Viewer", path: "/tools/json/viewer" },
                     ]}
                 />
-            </div>
         </>
     );
 }

@@ -1,3 +1,4 @@
+import ToolWorkspace from "@/app/components/shell/ToolWorkspace";
 import type { Metadata } from "next";
 import DartGeneratorClient from "./client";
 import SeoAccordion from "@/app/components/SeoAccordion";
@@ -23,8 +24,9 @@ export const metadata: Metadata = {
 export default function DartGeneratorPage() {
     return (
         <>
-            <div className="lg:h-[calc(100vh-48px)] md:h-[calc(100vh-130px)] w-full relative flex flex-col">
+            <ToolWorkspace toolId="json-to-dart">
                 <DartGeneratorClient />
+            </ToolWorkspace>
                 <SeoAccordion
                     toolName="JSON to Dart"
                     description="Generate Dart model classes from JSON data with json_serializable and Freezed support."
@@ -52,7 +54,6 @@ export default function DartGeneratorPage() {
                         { name: "JSON Formatter", path: "/tools/json/formatter" },
                     ]}
                 />
-            </div>
         </>
     );
 }

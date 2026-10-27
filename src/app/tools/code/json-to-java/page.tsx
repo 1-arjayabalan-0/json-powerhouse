@@ -1,3 +1,4 @@
+import ToolWorkspace from "@/app/components/shell/ToolWorkspace";
 import type { Metadata } from "next";
 import JavaGeneratorClient from "./client";
 import SeoAccordion from "@/app/components/SeoAccordion";
@@ -23,8 +24,9 @@ export const metadata: Metadata = {
 export default function JavaGeneratorPage() {
     return (
         <>
-            <div className="lg:h-[calc(100vh-48px)] md:h-[calc(100vh-130px)] w-full relative flex flex-col">
+            <ToolWorkspace toolId="json-to-java">
                 <JavaGeneratorClient />
+            </ToolWorkspace>
                 <SeoAccordion
                     toolName="JSON to Java"
                     description="Generate Java POJO classes from JSON data instantly. Choose between Jackson, Gson, or Lombok annotations."
@@ -52,7 +54,6 @@ export default function JavaGeneratorPage() {
                         { name: "JSON Formatter", path: "/tools/json/formatter" },
                     ]}
                 />
-            </div>
         </>
     );
 }

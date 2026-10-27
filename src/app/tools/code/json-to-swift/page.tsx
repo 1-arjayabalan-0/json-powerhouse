@@ -1,3 +1,4 @@
+import ToolWorkspace from "@/app/components/shell/ToolWorkspace";
 import type { Metadata } from "next";
 import SwiftGeneratorClient from "./client";
 import SeoAccordion from "@/app/components/SeoAccordion";
@@ -23,8 +24,9 @@ export const metadata: Metadata = {
 export default function SwiftGeneratorPage() {
     return (
         <>
-            <div className="lg:h-[calc(100vh-48px)] md:h-[calc(100vh-130px)] w-full relative flex flex-col">
+            <ToolWorkspace toolId="json-to-swift">
                 <SwiftGeneratorClient />
+            </ToolWorkspace>
                 <SeoAccordion
                     toolName="JSON to Swift"
                     description="Generate Swift structs with Codable protocol support. Get properly typed Swift models with CodingKeys."
@@ -52,7 +54,6 @@ export default function SwiftGeneratorPage() {
                         { name: "JSON Formatter", path: "/tools/json/formatter" },
                     ]}
                 />
-            </div>
         </>
     );
 }
