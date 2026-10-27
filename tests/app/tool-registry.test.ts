@@ -1,4 +1,5 @@
 import { tools, toolGroups, getToolById, getToolByPath, getVisibleTools } from '@/app/config/tool-registry';
+import { toolDefaults, getToolDefaults } from '@/app/config/tool-defaults';
 
 describe('tool registry', () => {
     it('has unique ids and paths', () => {
@@ -32,5 +33,25 @@ describe('tool registry', () => {
         expect(getVisibleTools('json').every(t => t.group === 'json')).toBe(true);
         expect(getVisibleTools('code')).toHaveLength(9);
         expect(getVisibleTools('json')).toHaveLength(8);
+    });
+});
+
+describe('tool defaults', () => {
+    it('has defaults for every registered tool', () => {
+        for (const t of tools) {
+            expect(toolDefaults[t.id as keyof typeof toolDefaults]).toBeDefined();
+        }
+    });
+
+    it('folds minifier preset into its defaults without touching formatter', () => {
+        const min = getToolDefaults('json-minifier') as { pretty: boolean; indentation: string };
+        const fmt = getToolDefaults('json-formatter') as { pretty: boolean };
+        expect(min.pretty).toBe(false);
+        expect(min.indentation).toBe('0');
+        expect(fmt.pretty).not.toBe(false);
+    });
+
+    it('returns stable objects (same reference per call)', () => {
+        expect(getToolDefaults('json-to-go')).toBe(getToolDefaults('json-to-go'));
     });
 });
