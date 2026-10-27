@@ -2,15 +2,27 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useSyncExternalStore } from "react";
 import { PanelLeftClose, PanelLeftOpen, X } from "lucide-react";
 import { getVisibleTools, toolGroups, getToolByPath } from "@/app/config/tool-registry";
 import { useShell } from "./ShellContext";
+import { trapTab } from "./focusTrap";
 
 const COLLAPSE_KEY = "jph:sidebar-collapsed";
 
 function readCollapsed(): boolean {
     try { return localStorage.getItem(COLLAPSE_KEY) === "1"; } catch { return false; }
+}
+
+const collapseListeners = new Set<() => void>();
+function subscribeCollapsed(cb: () => void) {
+    collapseListeners.add(cb);
+    window.addEventListener("storage", cb);
+    return () => { collapseListeners.delete(cb); window.removeEventListener("storage", cb); };
+}
+function writeCollapsed(v: boolean) {
+    try { localStorage.setItem(COLLAPSE_KEY, v ? "1" : "0"); } catch { /* ignore */ }
+    collapseListeners.forEach(l => l());
 }
 
 function ToolNav({ collapsed, onNavigate }: { collapsed: boolean; onNavigate?: () => void }) {
@@ -52,18 +64,19 @@ function ToolNav({ collapsed, onNavigate }: { collapsed: boolean; onNavigate?: (
 
 export default function ToolSidebar() {
     const { drawerOpen, setDrawerOpen } = useShell();
-    const [collapsed, setCollapsed] = useState(false);
-    const pathname = usePathname();
+    const collapsed = useSyncExternalStore(subscribeCollapsed, readCollapsed, () => false);
+    const drawerRef = useRef<HTMLDivElement>(null);
+    const closeRef = useRef<HTMLButtonElement>(null);
 
-    useEffect(() => setCollapsed(readCollapsed()), []);
-    useEffect(() => setDrawerOpen(false), [pathname, setDrawerOpen]);
+    // Move focus into the drawer on open; restore it to the opener on close.
+    useEffect(() => {
+        if (!drawerOpen) return;
+        const opener = document.activeElement as HTMLElement | null;
+        closeRef.current?.focus();
+        return () => { opener?.focus?.(); };
+    }, [drawerOpen]);
 
-    const toggle = () => {
-        setCollapsed(c => {
-            try { localStorage.setItem(COLLAPSE_KEY, c ? "0" : "1"); } catch { /* ignore */ }
-            return !c;
-        });
-    };
+    const toggle = () => writeCollapsed(!collapsed);
 
     return (
         <>
@@ -86,12 +99,22 @@ export default function ToolSidebar() {
 
             {/* Mobile drawer */}
             {drawerOpen && (
-                <div className="fixed inset-0 z-[55] lg:hidden" role="dialog" aria-label="Tools">
+                <div
+                    ref={drawerRef}
+                    className="fixed inset-0 z-[55] lg:hidden"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label="Tools"
+                    onKeyDown={(e) => {
+                        if (e.key === 'Escape') { e.preventDefault(); setDrawerOpen(false); return; }
+                        trapTab(e, drawerRef.current);
+                    }}
+                >
                     <div className="absolute inset-0 bg-black/50" onClick={() => setDrawerOpen(false)} />
                     <aside className="absolute inset-y-0 left-0 flex w-72 max-w-[85vw] flex-col bg-sidebar shadow-2xl">
                         <div className="flex h-12 items-center justify-between border-b border-sidebar-border px-4">
                             <span className="text-sm font-semibold">Tools</span>
-                            <button type="button" onClick={() => setDrawerOpen(false)} className="rounded-md p-1.5 text-muted-foreground hover:bg-accent" aria-label="Close tool menu">
+                            <button ref={closeRef} type="button" onClick={() => setDrawerOpen(false)} className="rounded-md p-1.5 text-muted-foreground hover:bg-accent" aria-label="Close tool menu">
                                 <X className="size-4" />
                             </button>
                         </div>

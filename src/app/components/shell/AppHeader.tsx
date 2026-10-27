@@ -3,18 +3,20 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import { Menu, Moon, Sun, BookOpen } from "lucide-react";
 import ToolSearch from "./ToolSearch";
 import { useShell } from "./ShellContext";
 
 const VSCODE_URL = "https://marketplace.visualstudio.com/items?itemName=arjayabalan.json-powerhouse-vscode";
 
+const subscribeNoop = () => () => {};
+
 export default function AppHeader({ showMenuButton = false }: { showMenuButton?: boolean }) {
     const { resolvedTheme, setTheme } = useTheme();
     const { setDrawerOpen } = useShell();
-    const [mounted, setMounted] = useState(false);
-    useEffect(() => setMounted(true), []);
+    // false on the server / during hydration, true afterwards.
+    const mounted = useSyncExternalStore(subscribeNoop, () => true, () => false);
 
     return (
         <header className="sticky top-0 z-50 flex h-12 shrink-0 items-center gap-3 border-b border-border bg-background/90 px-3 backdrop-blur supports-[backdrop-filter]:bg-background/75 sm:px-4">
@@ -24,7 +26,7 @@ export default function AppHeader({ showMenuButton = false }: { showMenuButton?:
                 </button>
             )}
             <Link href="/" className="flex shrink-0 items-center gap-2" aria-label="JSON PowerHouse home">
-                <Image src="/JSON-PowerHouse-Logo.png" alt="" width={84} height={28} className="h-7 w-auto" priority />
+                <Image src="/JSON-PowerHouse-Logo.png" alt="" width={128} height={128} className="size-9 rounded-md" preload />
             </Link>
             <div className="flex flex-1 justify-center px-2">
                 <ToolSearch />
