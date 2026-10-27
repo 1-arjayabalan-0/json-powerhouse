@@ -8,6 +8,7 @@ import {
 } from "@/core/types/json-formatter-config";
 import { JsonTreeViewerConfig, defaultViewerConfig } from "@/core/types/json-viewer-config";
 import { JSON5ConverterConfig, defaultJSON5Config } from "@/core/types/json5-converter-config";
+import { defaultTextViewerConfig } from "@/core/types/text-viewer-config";
 import { JsonDiffConfig, defaultDiffConfig } from "@/core/types/diff-config";
 import {
     TypeScriptConfig, JavaConfig, KotlinConfig, DartConfig, SwiftConfig,
@@ -623,6 +624,7 @@ export default function BottomConfigurationPanel() {
         else if (pathname === '/tools/code/json-to-php') setConfig(defaultPHPConfig);
         else if (pathname === '/tools/code/json-to-go') setConfig(defaultGoConfig);
         else if (pathname === '/tools/json/viewer') setConfig(defaultViewerConfig);
+        else if (pathname === '/tools/json/text-viewer') setConfig(defaultTextViewerConfig);
         else if (['/tools/json/formatter', '/tools/json/minifier', '/tools/json/validator', '/tools/json/normalize'].includes(pathname)) setConfig(defaultFormatterConfig);
         else if (pathname === '/tools/json/json5') setConfig(defaultJSON5Config);
         else if (pathname === '/tools/json/diff') setConfig({ ...defaultDiffConfig, diffStrategy: 'json-patch-6902' });

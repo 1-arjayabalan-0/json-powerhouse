@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { defaultConfig as defaultFormatterConfig } from '@/core/types/json-formatter-config';
 import { defaultViewerConfig } from '@/core/types/json-viewer-config';
 import { defaultJSON5Config } from '@/core/types/json5-converter-config';
+import { defaultTextViewerConfig } from '@/core/types/text-viewer-config';
 import {
     defaultTypeScriptConfig,
     defaultJavaConfig,
@@ -36,6 +37,8 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
             setConfig(defaultViewerConfig);
         } else if (pathname === '/tools/json/json5') {
             setConfig(defaultJSON5Config);
+        } else if (pathname === '/tools/json/text-viewer') {
+            setConfig(defaultTextViewerConfig);
         } else if (pathname === '/tools/code/json-to-typescript') {
             setConfig(defaultTypeScriptConfig);
         } else if (pathname === '/tools/code/json-to-java') {

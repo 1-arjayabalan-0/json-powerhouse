@@ -18,6 +18,7 @@ const routes: RouteConfig[] = [
   { path: '/tools/json/minifier', priority: 0.8, changeFrequency: 'weekly' },
   { path: '/tools/json/normalize', priority: 0.8, changeFrequency: 'weekly' },
   { path: '/tools/json/viewer', priority: 0.8, changeFrequency: 'weekly' },
+  { path: '/tools/json/text-viewer', priority: 0.8, changeFrequency: 'weekly' },
   { path: '/tools/json/transform', priority: 0.8, changeFrequency: 'weekly' },
   { path: '/tools/json/diff', priority: 0.8, changeFrequency: 'weekly' },
   { path: '/tools/json/json5', priority: 0.7, changeFrequency: 'monthly' },

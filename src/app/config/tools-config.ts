@@ -23,6 +23,7 @@ export const toolsConfig: ToolCategory[] = [
             { id: 'json-minifier', name: 'JSON Minifier', path: '/tools/json/minifier', icon: 'compress' },
             { id: 'json-validator', name: 'JSON Validator', path: '/tools/json/validator', icon: 'task_alt' },
             { id: 'json-viewer', name: 'JSON Viewer (Tree)', path: '/tools/json/viewer', icon: 'account_tree' },
+            { id: 'json-text-viewer', name: 'JSON Text Viewer', path: '/tools/json/text-viewer', icon: 'wrap_text' },
             { id: 'json-json5', name: 'JSON ↔ JSON5', path: '/tools/json/json5', icon: 'swap_horiz' },
             { id: 'json-diff', name: 'JSON Diff Checker', path: '/tools/json/diff', icon: 'difference' },
             { id: 'json-transform', name: 'JSON Transform', path: '/tools/json/transform', icon: 'transform' },
