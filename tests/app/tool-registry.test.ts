@@ -1,4 +1,5 @@
 import { tools, toolGroups, getToolById, getToolByPath, getVisibleTools } from '@/app/config/tool-registry';
+import { toolContent } from '@/content/tools';
 import { toolDefaults, getToolDefaults } from '@/app/config/tool-defaults';
 
 describe('tool registry', () => {
@@ -53,5 +54,19 @@ describe('tool defaults', () => {
 
     it('returns stable objects (same reference per call)', () => {
         expect(getToolDefaults('json-to-go')).toBe(getToolDefaults('json-to-go'));
+    });
+});
+
+describe('tool content', () => {
+    it('has complete content for every tool', () => {
+        for (const t of tools) {
+            const c = toolContent[t.id as keyof typeof toolContent];
+            expect(c).toBeDefined();
+            expect(c.intro.length).toBeGreaterThan(0);
+            expect(c.howTo.length).toBeGreaterThanOrEqual(3);
+            expect(c.faq.length).toBeGreaterThanOrEqual(2);
+            expect(c.examples.length).toBeGreaterThanOrEqual(1);
+            for (const r of c.related) expect(getToolById(r)).toBeDefined();
+        }
     });
 });

@@ -2,7 +2,7 @@ import ToolWorkspace from "@/app/components/shell/ToolWorkspace";
 
 import { Metadata } from "next";
 import { UnifiedJsonDiffMerge } from "./components/UnifiedJsonDiffMerge";
-import SeoAccordion from "@/app/components/SeoAccordion";
+import ToolArticle from "@/app/components/ToolArticle";
 
 export const metadata: Metadata = {
     title: "JSON Diff Checker & Merge Tool | JSON PowerHouse",
@@ -28,33 +28,7 @@ export default function JsonDiffPage() {
             <ToolWorkspace toolId="json-diff">
                 <UnifiedJsonDiffMerge />
             </ToolWorkspace>
-                <SeoAccordion
-                    toolName="JSON Diff & Merge"
-                    description="Compare two or three JSON documents side-by-side and see exactly what changed. Color-coded output highlights additions, deletions, and modifications."
-                    features={[
-                        "Side-by-side JSON comparison",
-                        "Color-coded additions, deletions, and modifications",
-                        "3-way merge for conflict resolution",
-                        "RFC 6902 JSON Patch generation",
-                        "JSON5 support",
-                        "Copy diff results or export as patch file",
-                    ]}
-                    howToSteps={[
-                        { title: "Paste two JSON documents", description: "Enter the original JSON in the left panel and the modified JSON in the right panel." },
-                        { title: "View differences", description: "See highlighted changes showing additions, deletions, and modifications." },
-                        { title: "Export or merge", description: "Copy the diff results or generate a JSON Patch file." },
-                    ]}
-                    faq={[
-                        { question: "What is JSON diff?", answer: "It compares two JSON documents and identifies differences — what was added, removed, or changed." },
-                        { question: "What is RFC 6902?", answer: "A standard format for describing changes between JSON documents as a series of operations (add, remove, replace, move, copy, test)." },
-                    ]}
-                    relatedTools={[
-                        { name: "JSON Formatter", path: "/tools/json/formatter" },
-                        { name: "JSON Validator", path: "/tools/json/validator" },
-                        { name: "JSON Normalize", path: "/tools/json/normalize" },
-                        { name: "JSON Viewer", path: "/tools/json/viewer" },
-                    ]}
-                />
+                <ToolArticle toolId="json-diff" />
         </>
     );
 }

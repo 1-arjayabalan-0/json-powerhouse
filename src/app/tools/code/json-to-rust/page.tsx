@@ -1,7 +1,7 @@
 import ToolWorkspace from "@/app/components/shell/ToolWorkspace";
 import { Metadata } from "next";
 import RustGeneratorClient from "./client";
-import SeoAccordion from "@/app/components/SeoAccordion";
+import ToolArticle from "@/app/components/ToolArticle";
 
 export const metadata: Metadata = {
     title: "JSON to Rust Converter – Free Online Tool | JSON PowerHouse",
@@ -27,33 +27,7 @@ export default function RustGeneratorPage() {
             <ToolWorkspace toolId="json-to-rust">
                 <RustGeneratorClient />
             </ToolWorkspace>
-                <SeoAccordion
-                    toolName="JSON to Rust"
-                    description="Generate Rust structs from JSON data with serde Serialize and Deserialize derives."
-                    features={[
-                        "Generate Rust structs from JSON",
-                        "serde Serialize/Deserialize derives",
-                        "Option types for nullable fields",
-                        "Nested struct generation",
-                        "snake_case field naming",
-                        "Copy generated code to clipboard",
-                    ]}
-                    howToSteps={[
-                        { title: "Paste your JSON", description: "Enter a sample JSON object." },
-                        { title: "Generate Rust code", description: "Get Rust structs with serde derives." },
-                        { title: "Copy and compile", description: "Paste the generated structs into your Rust project." },
-                    ]}
-                    faq={[
-                        { question: "Does it support serde?", answer: "Yes. Generated structs include #[derive(Serialize, Deserialize)] and #[serde(rename)] attributes." },
-                        { question: "Can I use this with Axum or Actix?", answer: "Yes. Works with any Rust web framework using serde for JSON serialization." },
-                    ]}
-                    relatedTools={[
-                        { name: "JSON to Go", path: "/tools/code/json-to-go" },
-                        { name: "JSON to TypeScript", path: "/tools/code/json-to-typescript" },
-                        { name: "JSON to Java", path: "/tools/code/json-to-java" },
-                        { name: "JSON Formatter", path: "/tools/json/formatter" },
-                    ]}
-                />
+                <ToolArticle toolId="json-to-rust" />
         </>
     );
 }
