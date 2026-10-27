@@ -1,6 +1,6 @@
 import type { KeyboardEvent } from "react";
 
-const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])';
+const FOCUSABLE = 'a[href]:not([tabindex="-1"]), button:not([disabled]):not([tabindex="-1"]), input:not([disabled]):not([tabindex="-1"]), select:not([disabled]):not([tabindex="-1"]), textarea:not([disabled]):not([tabindex="-1"]), [tabindex]:not([tabindex="-1"])';
 
 /** Keeps Tab / Shift+Tab inside `container` by wrapping at the edges. */
 export function trapTab(e: KeyboardEvent, container: HTMLElement | null) {
