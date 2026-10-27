@@ -22,13 +22,12 @@ import { Input } from "@/app/components/ui/input";
 import { Label } from "@/app/components/ui/label";
 import { Button } from "@/app/components/ui/button";
 import { useEffect, useState } from "react";
-import { useMode } from "@/app/context/ModeContext";
 
 export default function BottomConfigurationPanel() {
     const pathname = usePathname();
     const router = useRouter();
     const { config, setConfig } = useConfig();
-    const { mode } = useMode();
+    const mode = 'all' as string;
     const [isExpanded, setIsExpanded] = useState(true);
 
     // Find current tool and flatten tools list for dropdown

@@ -60,8 +60,7 @@ export const metadata = {
   },
 }
 
-import { Toaster } from "sonner";
-import { ModeProvider } from "@/app/context/ModeContext";
+import ThemedToaster from "./components/ThemedToaster";
 import JsonLd from "./components/JsonLd";
 
 export default function RootLayout({
@@ -111,10 +110,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <ModeProvider>
             <AlertService />
             {children}
-            <Toaster position="bottom-right" richColors theme="system" />
+            <ThemedToaster />
 
             {/* Analytics - Only in Production */}
             {process.env.NODE_ENV === 'production' && (
@@ -122,7 +120,6 @@ export default function RootLayout({
                 <Analytics />
                 <SpeedInsights />
               </>)}
-          </ModeProvider>
         </ThemeProvider>
       </body>
     </html>

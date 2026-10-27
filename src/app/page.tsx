@@ -1,13 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import Header from "@/app/components/Header";
+import AppHeader from "@/app/components/shell/AppHeader";
 import Footer from "@/app/components/Footer";
 
 export default function HomePage() {
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
-      <Header />
+      <AppHeader />
       <div className="flex-1">
         {/* Hero Section */}
         <section className="border-b border-border">

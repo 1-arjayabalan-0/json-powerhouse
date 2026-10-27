@@ -1,12 +1,12 @@
 "use client"
 
-import Header from "@/app/components/Header";
+import AppHeader from "@/app/components/shell/AppHeader";
 import Footer from "@/app/components/Footer";
 
 export default function AboutClient() {
     return (
         <div className="flex flex-col min-h-screen bg-background text-foreground">
-            <Header />
+            <AppHeader />
             <div className="flex-1">
                 <div className="max-w-4xl mx-auto px-6 py-12">
                     <div className="mb-12">
