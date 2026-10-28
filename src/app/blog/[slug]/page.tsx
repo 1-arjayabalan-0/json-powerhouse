@@ -11,6 +11,7 @@ import ToolLink from "@/app/components/mdx/ToolLink";
 import JsonLd from "@/app/components/JsonLd";
 
 const BASE_URL = "https://json-powerhouse.codarivu.com";
+const OG_IMAGE = "https://json-powerhouse.codarivu.com/JSON-PowerHouse-Logo.png";
 
 export const dynamicParams = false;
 
@@ -34,8 +35,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
             publishedTime: post.date,
             modifiedTime: post.updated ?? post.date,
             tags: post.tags,
+            images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: post.title }],
         },
-        twitter: { card: "summary_large_image", title: post.title, description: post.description },
+        twitter: { card: "summary_large_image", title: post.title, description: post.description, images: [OG_IMAGE] },
     };
 }
 
@@ -73,6 +75,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 datePublished: post.date,
                 dateModified: post.updated ?? post.date,
                 url: `${BASE_URL}/blog/${post.slug}`,
+                image: OG_IMAGE,
+                mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/blog/${post.slug}` },
                 author: { "@type": "Organization", name: "JSON PowerHouse" },
                 publisher: { "@type": "Organization", name: "JSON PowerHouse" },
                 keywords: post.tags.join(", "),
