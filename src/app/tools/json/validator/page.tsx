@@ -37,12 +37,10 @@ export default function JSONValidatorPage() {
                     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
                 }}
             />
-            <>
-                <ToolWorkspace toolId="json-validator">
-                    <JSONToolPage toolId="json-validator" />
-                </ToolWorkspace>
-                <ToolArticle toolId="json-validator" />
-            </>
+            <ToolWorkspace toolId="json-validator">
+                <JSONToolPage toolId="json-validator" />
+            </ToolWorkspace>
+            <ToolArticle toolId="json-validator" />
         </>
     );
 }

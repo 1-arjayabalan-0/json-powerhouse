@@ -37,12 +37,10 @@ export default function TypeScriptGeneratorPage() {
                     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
                 }}
             />
-            <>
-                <ToolWorkspace toolId="json-to-typescript">
-                    <TypeScriptGeneratorClient />
-                </ToolWorkspace>
-                <ToolArticle toolId="json-to-typescript" />
-            </>
+            <ToolWorkspace toolId="json-to-typescript">
+                <TypeScriptGeneratorClient />
+            </ToolWorkspace>
+            <ToolArticle toolId="json-to-typescript" />
         </>
     );
 }

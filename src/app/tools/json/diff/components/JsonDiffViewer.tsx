@@ -492,7 +492,6 @@ export default function JsonDiffViewer() {
                     )}
                 </div>
 
-                {/* Bottom Configuration Panel */}
             </div>
         </div>
     );

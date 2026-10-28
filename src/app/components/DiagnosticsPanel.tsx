@@ -1,8 +1,7 @@
 import { JsonIssue } from "@/core/types/diagnostics";
 import { cn } from "@/app/lib/utils";
 import { useState } from "react";
-import { CheckCheck, ChevronLeft, ChevronRight, CircleCheck, CircleX, Construction, Lightbulb } from "lucide-react";
-import { Undo2, Sparkles } from "lucide-react";
+import { CheckCheck, ChevronLeft, ChevronRight, CircleCheck, CircleX, Construction, Lightbulb, Sparkles, Undo2 } from "lucide-react";
 
 interface DiagnosticsPanelProps {
     issues: JsonIssue[];

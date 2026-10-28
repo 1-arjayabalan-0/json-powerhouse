@@ -15,8 +15,7 @@ import {
     generateOpId,
 } from "@/core/lib/transformations/types";
 import { transformJson } from "@/core/lib/transformations/engine";
-import { ArrowDown, ArrowRight, ArrowUp, CircleAlert, ClipboardPaste, Copy, Sparkles, Trash2, Undo2, Wrench, X } from "lucide-react";
-import { Pencil, CaseSensitive, Scissors, Layers, ListTree, CircleCheck, CircleX } from "lucide-react";
+import { ArrowDown, ArrowRight, ArrowUp, CaseSensitive, CircleAlert, CircleCheck, CircleX, ClipboardPaste, Copy, Layers, ListTree, Pencil, Scissors, Sparkles, Trash2, Undo2, Wrench, X } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 const OPERATION_LABELS: Record<TransformOperationType, string> = {

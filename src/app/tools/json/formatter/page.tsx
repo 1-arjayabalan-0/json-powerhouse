@@ -39,12 +39,10 @@ export default function JSONFormatterPage() {
                     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
                 }}
             />
-            <>
-                <ToolWorkspace toolId="json-formatter">
-                    <JSONToolPage toolId="json-formatter" />
-                </ToolWorkspace>
-                <ToolArticle toolId="json-formatter" />
-            </>
+            <ToolWorkspace toolId="json-formatter">
+                <JSONToolPage toolId="json-formatter" />
+            </ToolWorkspace>
+            <ToolArticle toolId="json-formatter" />
         </>
     );
 }

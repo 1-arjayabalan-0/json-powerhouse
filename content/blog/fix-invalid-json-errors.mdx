@@ -116,11 +116,11 @@ Here `\uFEFF` stands for the invisible byte order mark (BOM) that some editors p
 
 Our own checks of the [JSON Formatter](/tools/json/formatter) show which of these it repairs on paste, using its default settings:
 
-- **Repaired automatically:** trailing commas (1), single quotes (2), unquoted keys (3) and comments (4). These are mechanical fixes with one unambiguous result, so the formatter applies them and prints the cleaned, indented output.
+- **Repaired automatically:** trailing commas (1), single quotes (2), unquoted keys (3) and comments (4). Trailing commas and comments are classed as safe fixes. Single quotes and unquoted keys are also repaired automatically, but the formatter marks them as needing review, because converting quotes or wrapping a bare word can change what you meant. Either way it prints the cleaned, indented output.
 - **Reported, not repaired:** a raw line break inside a string (5) is flagged as a fatal error. An invalid escape such as `\U` is detected, but the formatter did not produce usable output for it in our test, so fix it by hand. Missing commas and brackets (6) are reported as fatal because the formatter will not guess your intent.
 - **Not repaired in our test:** a leading byte order mark (7) still left the formatter without output, so re-save the file without a BOM. A leading zero-width space was recovered.
 
-Comma, comment and quote fixes do not change your data. Riskier repairs, such as closing truncated input or converting values like hex numbers, `Infinity` and `NaN`, can change the result, so check anything the formatter marks for review.
+Removing a trailing comma or a comment does not change your data. Quote and key repairs usually do not either, but the formatter flags them for review, as it does riskier repairs such as closing truncated input or converting values like hex numbers, `Infinity` and `NaN`. Check anything it marks for review before you rely on the output.
 
 <Callout type="tip">
 Validate configuration files in CI or a pre-commit hook before shipping them. A trailing comma that survives to production can take down a service at startup, and a validator catches it in milliseconds.
@@ -133,5 +133,5 @@ Validate configuration files in CI or a pre-commit hook before shipping them. A 
 - JSON allows double quotes only, no comments, no trailing commas and no unquoted keys.
 - Read the position in the parser error and look at the character just before it; the real mistake is usually there.
 - Backslashes and raw line breaks inside strings must be escaped.
-- Mechanical problems (commas, quotes, comments, bare keys) can be repaired automatically; structural problems need a human.
+- Mechanical problems (commas, quotes, comments, bare keys) can be repaired automatically, with quote and key fixes flagged for review; structural problems need a human.
 - Check a file for hidden characters when the error points at a place that looks correct.
