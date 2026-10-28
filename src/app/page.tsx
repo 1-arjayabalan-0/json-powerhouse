@@ -189,14 +189,13 @@ export default function HomePage() {
           </section>
         )}
 
-
-        {/* Tutorials */}
+        {/* Tips by tool */}
         <section className="border-b border-border">
           <div className="max-w-6xl mx-auto px-6 py-16">
-            <h2 className="text-3xl font-bold text-center mb-12">Tutorials & Guides</h2>
+            <h2 className="text-3xl font-bold text-center mb-12">Tips by tool</h2>
             <div className="grid md:grid-cols-2 gap-6">
               <div className="bg-card rounded-lg p-6 border border-border">
-                <h3 className="text-xl font-semibold mb-3">How to Format JSON</h3>
+                <h3 className="text-xl font-semibold mb-3"><Link href="/tools/json/formatter" className="hover:text-primary">How to Format JSON</Link></h3>
                 <p className="text-muted-foreground text-sm mb-4">
                   Learn how to use the JSON Formatter to beautify messy JSON data with proper indentation
                   and spacing. Customize quote styles, key sorting, and more.
@@ -218,7 +217,7 @@ export default function HomePage() {
               </div>
 
               <div className="bg-card rounded-lg p-6 border border-border">
-                <h3 className="text-xl font-semibold mb-3">Working with JSON5</h3>
+                <h3 className="text-xl font-semibold mb-3"><Link href="/tools/json/json5" className="hover:text-primary">Working with JSON5</Link></h3>
                 <p className="text-muted-foreground text-sm mb-4">
                   JSON5 is a more human-friendly JSON format. Learn how to convert between JSON and JSON5,
                   and take advantage of features like unquoted keys and trailing commas.
@@ -240,7 +239,7 @@ export default function HomePage() {
               </div>
 
               <div className="bg-card rounded-lg p-6 border border-border">
-                <h3 className="text-xl font-semibold mb-3">Using the Tree Viewer</h3>
+                <h3 className="text-xl font-semibold mb-3"><Link href="/tools/json/viewer" className="hover:text-primary">Using the Tree Viewer</Link></h3>
                 <p className="text-muted-foreground text-sm mb-4">
                   The JSON Tree Viewer helps you visualize complex JSON structures. Navigate through nested
                   objects and arrays with ease, search for specific keys or values.
@@ -262,7 +261,7 @@ export default function HomePage() {
               </div>
 
               <div className="bg-card rounded-lg p-6 border border-border">
-                <h3 className="text-xl font-semibold mb-3">Privacy & Security Tips</h3>
+                <h3 className="text-xl font-semibold mb-3"><Link href="/privacy" className="hover:text-primary">Privacy & Security Tips</Link></h3>
                 <p className="text-muted-foreground text-sm mb-4">
                   JSON PowerHouse processes everything client-side, but here are some additional tips
                   for working with sensitive data.
