@@ -10,7 +10,7 @@ You paste a payload into your app, hit run, and the parser answers with `Unexpec
 
 ## Why JSON is so strict
 
-JSON is a data interchange format, not a programming language. The specification (RFC 8259) allows exactly six kinds of value, double-quoted strings, and no comments. That strictness is the point: every language can read a JSON document the same way, with no dialect differences to negotiate.
+JSON is a data interchange format, not a programming language. The specification (RFC 8259) allows objects, arrays, numbers, strings, and the literals `true`, `false` and `null`, requires double-quoted strings, and has no comments. That strictness is the point: every language can read a JSON document the same way, with no dialect differences to negotiate.
 
 The trade-off is that habits from JavaScript, Python or hand-edited config files break parsing. Most errors come from writing something a JavaScript engine would accept but the JSON grammar does not.
 
@@ -83,7 +83,7 @@ line two"}
 Two separate problems hide here. A backslash starts an escape sequence, and `\U` is not one, so V8 reports `Bad escaped character`. A raw line break inside a string is also illegal and produces `Bad control character in string literal`. Double the backslash and write line breaks as `\n`.
 
 ```json
-{"path": "C:\Users\ada", "note": "line one\nline two"}
+{"path": "C:\\Users\\ada", "note": "line one\nline two"}
 ```
 
 ## 6. Missing commas or brackets
@@ -106,11 +106,11 @@ Without a comma between members, V8 says `Expected ',' or '}' after property val
 
 ## 7. A BOM or invisible characters at the start
 
-```json
-{"name": "Ada"}
+```text
+\uFEFF{"name": "Ada"}
 ```
 
-The snippet above looks fine, but if the file starts with a byte order mark (U+FEFF), `JSON.parse` fails with an `Unexpected token` message that quotes an apparently empty character. Editors on Windows sometimes save "UTF-8 with BOM". Re-save the file as plain UTF-8, or strip the first character in code before parsing. Non-breaking spaces copied from web pages cause the same puzzling error in the middle of a document.
+Here `\uFEFF` stands for the invisible byte order mark (BOM) that some editors put at the start of a file. If the file starts with a BOM, `JSON.parse` fails with an `Unexpected token` message that quotes an apparently empty character. Editors on Windows sometimes save "UTF-8 with BOM". Re-save the file as plain UTF-8, or strip the first character in code before parsing. Non-breaking spaces copied from web pages cause the same puzzling error in the middle of a document.
 
 ## Fixing errors automatically
 
@@ -120,7 +120,7 @@ Our own checks of the [JSON Formatter](/tools/json/formatter) show which of thes
 - **Reported, not repaired:** a raw line break inside a string (5) is flagged as a fatal error. An invalid escape such as `\U` is detected, but the formatter did not produce usable output for it in our test, so fix it by hand. Missing commas and brackets (6) are reported as fatal because the formatter will not guess your intent.
 - **Not repaired in our test:** a leading byte order mark (7) still left the formatter without output, so re-save the file without a BOM. A leading zero-width space was recovered.
 
-The formatter also never alters your values or keys while repairing. If a fix would require inventing data, it stops and shows the error instead.
+Comma, comment and quote fixes do not change your data. Riskier repairs, such as closing truncated input or converting values like hex numbers, `Infinity` and `NaN`, can change the result, so check anything the formatter marks for review.
 
 <Callout type="tip">
 Validate configuration files in CI or a pre-commit hook before shipping them. A trailing comma that survives to production can take down a service at startup, and a validator catches it in milliseconds.
