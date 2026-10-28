@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next';
+import { getAllPosts } from '@/app/lib/blog';
 
 const BASE_URL = 'https://json-powerhouse.codarivu.com';
 
@@ -10,6 +11,7 @@ type RouteConfig = {
 
 const routes: RouteConfig[] = [
   { path: '', priority: 1.0, changeFrequency: 'weekly' },
+  { path: '/blog', priority: 0.7, changeFrequency: 'weekly' },
   { path: '/about', priority: 0.6, changeFrequency: 'monthly' },
   { path: '/terms', priority: 0.3, changeFrequency: 'monthly' },
   { path: '/privacy', priority: 0.3, changeFrequency: 'monthly' },
@@ -35,10 +37,17 @@ const routes: RouteConfig[] = [
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  return routes.map((route) => ({
+  const pages = routes.map((route) => ({
     url: `${BASE_URL}${route.path}`,
     lastModified: new Date(),
     changeFrequency: route.changeFrequency,
     priority: route.priority,
   }));
+  const posts = getAllPosts().map((p) => ({
+    url: `${BASE_URL}/blog/${p.slug}`,
+    lastModified: new Date(p.updated ?? p.date),
+    changeFrequency: 'monthly' as const,
+    priority: 0.6,
+  }));
+  return [...pages, ...posts];
 }

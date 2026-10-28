@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getToolById, ToolId } from "@/app/config/tool-registry";
 import { toolContent } from "@/content/tools";
 import JsonLd from "./JsonLd";
+import { getPostsForTool } from "@/app/lib/blog";
 
 export interface GuideLink { slug: string; title: string; description: string }
 
@@ -14,7 +15,8 @@ const sections = [
     { id: "related", label: () => "Related tools" },
 ];
 
-export default function ToolArticle({ toolId, guides = [] }: { toolId: ToolId; guides?: GuideLink[] }) {
+export default function ToolArticle({ toolId }: { toolId: ToolId }) {
+    const guides: GuideLink[] = getPostsForTool(toolId).map(p => ({ slug: p.slug, title: p.title, description: p.description }));
     const tool = getToolById(toolId);
     const content = toolContent[toolId];
     if (!tool || !content) return null;
