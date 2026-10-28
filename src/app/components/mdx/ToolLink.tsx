@@ -7,7 +7,7 @@ export default function ToolLink({ id }: { id: string }) {
     if (!tool) return null;
     const Icon = tool.icon;
     return (
-        <Link href={tool.path} className="not-prose my-6 flex items-center gap-4 rounded-lg border border-border bg-card p-4 hover:border-primary/50 transition-colors">
+        <Link href={tool.path} className="not-prose no-underline text-foreground my-6 flex items-center gap-4 rounded-lg border border-border bg-card p-4 hover:border-primary/50 transition-colors">
             <Icon className="size-5 text-primary" />
             <span className="flex flex-col">
                 <span className="text-sm font-semibold text-foreground">Try the {tool.name}</span>

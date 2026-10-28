@@ -298,6 +298,7 @@ select option {
 
 /* rehype-pretty-code: dual themes */
 .prose-jph .not-prose a { text-decoration: none; }
+.prose-jph a.not-prose { text-decoration: none; }
 .prose-jph .not-prose { margin-top: 1.25em; }
 .prose-jph pre [data-line] { padding: 0 0.25rem; }
 html.dark .prose-jph pre[data-theme], html.dark .prose-jph pre[data-theme] span {
