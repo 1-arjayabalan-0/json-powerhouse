@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 
 function headingsOf(mdx: string): { id: string; text: string; depth: 2 | 3 }[] {
-    const slugify = (s: string) => s.toLowerCase().trim().replace(/[^\w\s-]/g, "").replace(/\s+/g, "-");
+    const slugify = (s: string) => s.toLowerCase().trim().replace(/[^\w\s-]/g, "").replace(/\s/g, "-");
     const out: { id: string; text: string; depth: 2 | 3 }[] = [];
     let inFence = false;
     for (const line of mdx.split("\n")) {
@@ -84,7 +84,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                     <p className="mt-3 text-lg text-muted-foreground">{post.description}</p>
                     <p className="mt-4 text-xs text-muted-foreground">
                         <time dateTime={post.date}>{new Date(post.date).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric", timeZone: "UTC" })}</time>
-                        {post.updated && <> · Updated <time dateTime={post.updated}>{post.updated}</time></>}
+                        {post.updated && <> · Updated <time dateTime={post.updated}>{new Date(post.updated).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric", timeZone: "UTC" })}</time></>}
                         {" · "}{post.readingMinutes} min read
                     </p>
                 </header>
