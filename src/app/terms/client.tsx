@@ -1,12 +1,13 @@
 "use client"
 
 import Footer from "../components/Footer";
-import Header from "../components/Header"
+import AppHeader from "@/app/components/shell/AppHeader";
+import { History } from "lucide-react";
 
 export default function TermsClient() {
     return (
         <div className="min-h-screen bg-background text-foreground">
-            <Header />
+            <AppHeader />
             <div className="max-w-4xl mx-auto px-6 py-12">
                 <div className="mb-8">
                     <h1 className="text-4xl font-bold mb-4">Terms and Conditions</h1>
@@ -15,7 +16,7 @@ export default function TermsClient() {
 
                 <div className="mb-8 bg-muted border border-border rounded-lg p-4">
                     <h2 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                        <span className="material-symbols-outlined">history</span>
+                        <History className="size-5" />
                         Update History
                     </h2>
                     <div className="space-y-2 text-sm">

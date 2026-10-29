@@ -1,0 +1,72 @@
+import { tools, toolGroups, getToolById, getToolByPath, getVisibleTools } from '@/app/config/tool-registry';
+import { toolContent } from '@/content/tools';
+import { toolDefaults, getToolDefaults } from '@/app/config/tool-defaults';
+
+describe('tool registry', () => {
+    it('has unique ids and paths', () => {
+        const ids = tools.map(t => t.id);
+        const paths = tools.map(t => t.path);
+        expect(new Set(ids).size).toBe(ids.length);
+        expect(new Set(paths).size).toBe(paths.length);
+    });
+
+    it('puts every tool under /tools/ in a known group', () => {
+        const groupIds = toolGroups.map(g => g.id);
+        for (const t of tools) {
+            expect(t.path.startsWith('/tools/')).toBe(true);
+            expect(groupIds).toContain(t.group);
+            expect(t.tagline.length).toBeGreaterThan(10);
+        }
+    });
+
+    it('looks tools up by id and path', () => {
+        expect(getToolById('json-formatter')?.path).toBe('/tools/json/formatter');
+        expect(getToolByPath('/tools/code/json-to-csharp')?.id).toBe('json-to-csharp');
+        expect(getToolByPath('/tools/code/json-to-csharp/')?.id).toBe('json-to-csharp');
+        expect(getToolByPath('/nope')).toBeUndefined();
+        expect(getToolByPath(null)).toBeUndefined();
+    });
+
+    it('hides normalize and php from visible lists', () => {
+        const visible = getVisibleTools().map(t => t.id);
+        expect(visible).not.toContain('json-normalize');
+        expect(visible).not.toContain('json-to-php');
+        expect(getVisibleTools('json').every(t => t.group === 'json')).toBe(true);
+        expect(getVisibleTools('code')).toHaveLength(9);
+        expect(getVisibleTools('json')).toHaveLength(8);
+    });
+});
+
+describe('tool defaults', () => {
+    it('has defaults for every registered tool', () => {
+        for (const t of tools) {
+            expect(toolDefaults[t.id as keyof typeof toolDefaults]).toBeDefined();
+        }
+    });
+
+    it('folds minifier preset into its defaults without touching formatter', () => {
+        const min = getToolDefaults('json-minifier') as { pretty: boolean; indentation: string };
+        const fmt = getToolDefaults('json-formatter') as { pretty: boolean };
+        expect(min.pretty).toBe(false);
+        expect(min.indentation).toBe('0');
+        expect(fmt.pretty).not.toBe(false);
+    });
+
+    it('returns stable objects (same reference per call)', () => {
+        expect(getToolDefaults('json-to-go')).toBe(getToolDefaults('json-to-go'));
+    });
+});
+
+describe('tool content', () => {
+    it('has complete content for every tool', () => {
+        for (const t of tools) {
+            const c = toolContent[t.id as keyof typeof toolContent];
+            expect(c).toBeDefined();
+            expect(c.intro.length).toBeGreaterThan(0);
+            expect(c.howTo.length).toBeGreaterThanOrEqual(3);
+            expect(c.faq.length).toBeGreaterThanOrEqual(2);
+            expect(c.examples.length).toBeGreaterThanOrEqual(1);
+            for (const r of c.related) expect(getToolById(r)).toBeDefined();
+        }
+    });
+});

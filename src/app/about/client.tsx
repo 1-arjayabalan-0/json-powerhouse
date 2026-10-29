@@ -1,12 +1,13 @@
 "use client"
 
-import Header from "@/app/components/Header";
+import AppHeader from "@/app/components/shell/AppHeader";
 import Footer from "@/app/components/Footer";
+import { CircleCheck, MonitorSmartphone, ShieldCheck, Wrench, Zap } from "lucide-react";
 
 export default function AboutClient() {
     return (
         <div className="flex flex-col min-h-screen bg-background text-foreground">
-            <Header />
+            <AppHeader />
             <div className="flex-1">
                 <div className="max-w-4xl mx-auto px-6 py-12">
                     <div className="mb-12">
@@ -33,28 +34,28 @@ export default function AboutClient() {
                             <div className="grid md:grid-cols-2 gap-4">
                                 <div className="bg-card rounded-lg p-4 border border-border">
                                     <div className="flex items-center gap-3 mb-2">
-                                        <span className="material-symbols-outlined text-primary">security</span>
+                                        <ShieldCheck className="size-5 text-primary" />
                                         <h3 className="font-semibold">100% Client-Side Processing</h3>
                                     </div>
                                     <p className="text-muted-foreground text-sm">All operations happen in your browser. No data is sent to any server.</p>
                                 </div>
                                 <div className="bg-card rounded-lg p-4 border border-border">
                                     <div className="flex items-center gap-3 mb-2">
-                                        <span className="material-symbols-outlined text-primary">bolt</span>
+                                        <Zap className="size-5 text-primary" />
                                         <h3 className="font-semibold">Lightning Fast</h3>
                                     </div>
                                     <p className="text-muted-foreground text-sm">Instant processing with no network latency or server delays.</p>
                                 </div>
                                 <div className="bg-card rounded-lg p-4 border border-border">
                                     <div className="flex items-center gap-3 mb-2">
-                                        <span className="material-symbols-outlined text-primary">build</span>
+                                        <Wrench className="size-5 text-primary" />
                                         <h3 className="font-semibold">Comprehensive Toolset</h3>
                                     </div>
                                     <p className="text-muted-foreground text-sm">Format, validate, convert, and transform JSON with ease.</p>
                                 </div>
                                 <div className="bg-card rounded-lg p-4 border border-border">
                                     <div className="flex items-center gap-3 mb-2">
-                                        <span className="material-symbols-outlined text-primary">devices</span>
+                                        <MonitorSmartphone className="size-5 text-primary" />
                                         <h3 className="font-semibold">Works Offline</h3>
                                     </div>
                                     <p className="text-muted-foreground text-sm">Once loaded, use all tools without an internet connection.</p>
@@ -69,19 +70,19 @@ export default function AboutClient() {
                             </p>
                             <ul className="space-y-2 text-muted-foreground">
                                 <li className="flex items-start gap-2">
-                                    <span className="material-symbols-outlined text-success text-xl mt-0.5">check_circle</span>
+                                    <CircleCheck className="size-5 text-success mt-0.5" />
                                     <span>No backend servers - all processing happens in your browser</span>
                                 </li>
                                 <li className="flex items-start gap-2">
-                                    <span className="material-symbols-outlined text-success text-xl mt-0.5">check_circle</span>
+                                    <CircleCheck className="size-5 text-success mt-0.5" />
                                     <span>No data collection or tracking</span>
                                 </li>
                                 <li className="flex items-start gap-2">
-                                    <span className="material-symbols-outlined text-success text-xl mt-0.5">check_circle</span>
+                                    <CircleCheck className="size-5 text-success mt-0.5" />
                                     <span>No user accounts or authentication required</span>
                                 </li>
                                 <li className="flex items-start gap-2">
-                                    <span className="material-symbols-outlined text-success text-xl mt-0.5">check_circle</span>
+                                    <CircleCheck className="size-5 text-success mt-0.5" />
                                     <span>Open source and transparent</span>
                                 </li>
                             </ul>

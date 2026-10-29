@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { JsonTreeViewerConfig } from "@/core/types/json-viewer-config";
 import { toast } from "sonner";
+import { ChevronRight } from "lucide-react";
 
 interface JsonTreeNodeProps {
     name?: string;
@@ -126,9 +127,7 @@ export default function JsonTreeNode({ name, value, path, depth, config, isLast,
 
                 {/* Expander Icon */}
                 {!isEmpty && (
-                    <span className={`material-symbols-outlined text-[16px] text-muted-foreground/40 transition-transform mr-1 ${expanded ? 'rotate-90' : ''}`}>
-                        chevron_right
-                    </span>
+                    <ChevronRight className={`size-4 text-muted-foreground/40 transition-transform mr-1 ${expanded ? 'rotate-90' : ''}`} />
                 )}
                 {isEmpty && <span className="w-5 mr-1" />}
 

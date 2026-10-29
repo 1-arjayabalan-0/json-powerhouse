@@ -1,6 +1,7 @@
+import ToolWorkspace from "@/app/components/shell/ToolWorkspace";
 import { Metadata } from "next";
 import PythonGeneratorClient from "./client";
-import SeoAccordion from "@/app/components/SeoAccordion";
+import ToolArticle from "@/app/components/ToolArticle";
 
 export const metadata: Metadata = {
     title: "JSON to Python Converter – Free Online Tool | JSON PowerHouse",
@@ -23,36 +24,10 @@ export const metadata: Metadata = {
 export default function PythonGeneratorPage() {
     return (
         <>
-            <div className="lg:h-[calc(100vh-48px)] md:h-[calc(100vh-130px)] w-full relative flex flex-col">
+            <ToolWorkspace toolId="json-to-python">
                 <PythonGeneratorClient />
-                <SeoAccordion
-                    toolName="JSON to Python"
-                    description="Generate Python code from JSON data. Choose between plain dictionaries, TypedDict, or Python dataclasses with type hints."
-                    features={[
-                        "Generate Python dicts, TypedDict, or dataclasses",
-                        "Type hint generation for Python 3.6+",
-                        "Handles nested structures and lists",
-                        "Optional field support with defaults",
-                        "Copy generated code to clipboard",
-                        "Client-side processing for privacy",
-                    ]}
-                    howToSteps={[
-                        { title: "Paste your JSON", description: "Enter a sample JSON object." },
-                        { title: "Select format", description: "Choose between plain dict, TypedDict, or dataclass." },
-                        { title: "Copy Python code", description: "Get ready-to-use Python code with proper typing." },
-                    ]}
-                    faq={[
-                        { question: "What output formats are available?", answer: "Plain Python dictionaries, TypedDict (for static type checking), or Python dataclasses with type hints." },
-                        { question: "Can I use this with Flask or Django?", answer: "Yes. Generated code works with Flask, Django, FastAPI, or any Python project." },
-                    ]}
-                    relatedTools={[
-                        { name: "JSON to TypeScript", path: "/tools/code/json-to-typescript" },
-                        { name: "JSON to Java", path: "/tools/code/json-to-java" },
-                        { name: "JSON to C#", path: "/tools/code/json-to-csharp" },
-                        { name: "JSON Formatter", path: "/tools/json/formatter" },
-                    ]}
-                />
-            </div>
+            </ToolWorkspace>
+                <ToolArticle toolId="json-to-python" />
         </>
     );
 }

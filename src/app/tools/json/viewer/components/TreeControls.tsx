@@ -1,6 +1,8 @@
 "use client"
 
 import { JsonTreeViewerConfig } from "@/core/types/json-viewer-config";
+import { ChevronsDownUp, ChevronsUpDown } from "lucide-react";
+import { Search } from "lucide-react";
 
 interface TreeControlsProps {
     config: JsonTreeViewerConfig;
@@ -21,20 +23,20 @@ export default function TreeControls({ config, setConfig, onExpandAll, onCollaps
                     className="h-6 px-1 hover:bg-card rounded text-muted-foreground hover:text-foreground transition-colors"
                     title="Expand All"
                 >
-                    <span className="material-symbols-outlined text-lg">unfold_more</span>
+                    <ChevronsUpDown className="size-5" />
                 </button>
                 <button
                     onClick={onCollapseAll}
                     className="h-6 px-1 hover:bg-card rounded text-muted-foreground hover:text-foreground transition-colors"
                     title="Collapse All"
                 >
-                    <span className="material-symbols-outlined text-lg">unfold_less</span>
+                    <ChevronsDownUp className="size-5" />
                 </button>
             </div>
 
             {/* Search */}
             <div className="relative flex-1 max-w-[300px]">
-                <span className="absolute left-2 top-1/2 -translate-y-1/2 material-symbols-outlined text-muted-foreground opacity-60 text-lg">search</span>
+                <Search className="absolute left-2 top-1/2 size-4 -translate-y-1/2 text-muted-foreground opacity-60" />
                 <input
                     type="text"
                     value={searchTerm}

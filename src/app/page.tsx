@@ -1,14 +1,16 @@
-"use client";
-
 import Link from "next/link";
-import Header from "@/app/components/Header";
+import AppHeader from "@/app/components/shell/AppHeader";
 import Footer from "@/app/components/Footer";
+import { ShieldCheck, Wrench, Zap } from "lucide-react";
+import { getVisibleTools, toolGroups } from "@/app/config/tool-registry";
+import { getAllPosts } from "@/app/lib/blog";
 
 export default function HomePage() {
+  const posts = getAllPosts();
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground">
-      <Header />
-      <div className="flex-1">
+    <div className="flex min-h-dvh flex-col bg-background text-foreground">
+      <AppHeader />
+      <main className="flex-1">
         {/* Hero Section */}
         <section className="border-b border-border">
           <div className="max-w-6xl mx-auto px-6 py-20 text-center">
@@ -46,21 +48,21 @@ export default function HomePage() {
             <div className="grid md:grid-cols-3 gap-8">
               <div className="text-center">
                 <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="material-symbols-outlined text-3xl text-primary">security</span>
+                  <ShieldCheck className="size-8 text-primary" />
                 </div>
                 <h3 className="text-xl font-semibold mb-2">100% Private</h3>
                 <p className="text-muted-foreground">All processing happens in your browser. Your data never leaves your device.</p>
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="material-symbols-outlined text-3xl text-primary">bolt</span>
+                  <Zap className="size-8 text-primary" />
                 </div>
                 <h3 className="text-xl font-semibold mb-2">Lightning Fast</h3>
                 <p className="text-muted-foreground">Instant processing with no network delays or server wait times.</p>
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="material-symbols-outlined text-3xl text-primary">build</span>
+                  <Wrench className="size-8 text-primary" />
                 </div>
                 <h3 className="text-xl font-semibold mb-2">Complete Toolkit</h3>
                 <p className="text-muted-foreground">Dozens of tools for formatting, validation, conversion, and more.</p>
@@ -140,85 +142,60 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Popular Tools */}
+        {/* All tools */}
         <section className="border-b border-border">
-          <div className="max-w-6xl mx-auto px-6 py-16">
-            <h2 className="text-3xl font-bold text-center mb-12">Popular Tools</h2>
-            <div className="grid md:grid-cols-3 gap-6">
-              <Link
-                href="/tools/json/formatter"
-                className="bg-card rounded-lg p-6 border border-border hover:bg-muted transition-colors"
-              >
-                <span className="material-symbols-outlined text-3xl text-primary mb-3">format_align_left</span>
-                <h3 className="text-lg font-semibold mb-2">JSON Formatter</h3>
-                <p className="text-muted-foreground text-sm">Format and beautify your JSON with customizable indentation and styling.</p>
-              </Link>
-
-              <Link
-                href="/tools/json/validator"
-                className="bg-card rounded-lg p-6 border border-border hover:bg-muted transition-colors"
-              >
-                <span className="material-symbols-outlined text-3xl text-primary mb-3">task_alt</span>
-                <h3 className="text-lg font-semibold mb-2">JSON Validator</h3>
-                <p className="text-muted-foreground text-sm">Validate your JSON syntax and get detailed error messages.</p>
-              </Link>
-
-              <Link
-                href="/tools/json/viewer"
-                className="bg-card rounded-lg p-6 border border-border hover:bg-muted transition-colors"
-              >
-                <span className="material-symbols-outlined text-3xl text-primary mb-3">account_tree</span>
-                <h3 className="text-lg font-semibold mb-2">JSON Tree Viewer</h3>
-                <p className="text-muted-foreground text-sm">Visualize JSON structure with an interactive tree view.</p>
-              </Link>
-
-              <Link
-                href="/tools/json/minifier"
-                className="bg-card rounded-lg p-6 border border-border hover:bg-muted transition-colors"
-              >
-                <span className="material-symbols-outlined text-3xl text-primary mb-3">compress</span>
-                <h3 className="text-lg font-semibold mb-2">JSON Minifier</h3>
-                <p className="text-muted-foreground text-sm">Compress JSON by removing whitespace and reducing file size.</p>
-              </Link>
-
-              <Link
-                href="/tools/json/json5"
-                className="bg-card rounded-lg p-6 border border-border hover:bg-muted transition-colors"
-              >
-                <span className="material-symbols-outlined text-3xl text-primary mb-3">swap_horiz</span>
-                <h3 className="text-lg font-semibold mb-2">JSON ↔ JSON5</h3>
-                <p className="text-muted-foreground text-sm">Convert between standard JSON and JSON5 format.</p>
-              </Link>
-
-              <Link
-                href="/tools/json-to-typescript"
-                className="bg-card rounded-lg p-6 border border-border hover:bg-muted transition-colors"
-              >
-                <span className="material-symbols-outlined text-3xl text-primary mb-3">code</span>
-                <h3 className="text-lg font-semibold mb-2">JSON to TypeScript</h3>
-                <p className="text-muted-foreground text-sm">Generate TypeScript interfaces from JSON data.</p>
-              </Link>
-            </div>
-
-            <div className="text-center mt-8">
-              <p className="text-muted-foreground mb-4">And many more tools available...</p>
-              <Link
-                href="/tools/json-formatter"
-                className="text-primary hover:text-primary/80"
-              >
-                Browse All Tools →
-              </Link>
-            </div>
+          <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+            <h2 className="text-2xl font-bold tracking-tight">All tools</h2>
+            {toolGroups.map(group => (
+              <div key={group.id} className="mt-8">
+                <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">{group.name}</h3>
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                  {getVisibleTools(group.id).map(t => {
+                    const Icon = t.icon;
+                    return (
+                      <Link key={t.id} href={t.path} className="flex items-start gap-3 rounded-lg border border-border bg-card p-4 transition-colors hover:border-primary/50">
+                        <Icon className="mt-0.5 size-4 text-primary" />
+                        <span className="flex flex-col">
+                          <span className="text-sm font-medium">{t.name}</span>
+                          <span className="text-xs text-muted-foreground">{t.tagline}</span>
+                        </span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
           </div>
         </section>
 
-        {/* Tutorials */}
+        {/* Latest guides */}
+        {posts.length > 0 && (
+          <section className="border-b border-border">
+            <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+              <div className="flex items-baseline justify-between">
+                <h2 className="text-2xl font-bold tracking-tight">Latest guides</h2>
+                <Link href="/blog" className="text-sm text-primary hover:underline">All guides →</Link>
+              </div>
+              <div className="mt-6 grid gap-4 md:grid-cols-3">
+                {posts.slice(0, 3).map(p => (
+                  <Link key={p.slug} href={`/blog/${p.slug}`} className="flex flex-col gap-2 rounded-lg border border-border bg-card p-5 transition-colors hover:border-primary/50">
+                    <span className="text-xs text-muted-foreground">{p.readingMinutes} min read</span>
+                    <span className="font-semibold leading-snug">{p.title}</span>
+                    <span className="text-sm text-muted-foreground">{p.description}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Tips by tool */}
         <section className="border-b border-border">
           <div className="max-w-6xl mx-auto px-6 py-16">
-            <h2 className="text-3xl font-bold text-center mb-12">Tutorials & Guides</h2>
+            <h2 className="text-3xl font-bold text-center mb-12">Tips by tool</h2>
             <div className="grid md:grid-cols-2 gap-6">
               <div className="bg-card rounded-lg p-6 border border-border">
-                <h3 className="text-xl font-semibold mb-3">How to Format JSON</h3>
+                <h3 className="text-xl font-semibold mb-3"><Link href="/tools/json/formatter" className="hover:text-primary">How to Format JSON</Link></h3>
                 <p className="text-muted-foreground text-sm mb-4">
                   Learn how to use the JSON Formatter to beautify messy JSON data with proper indentation
                   and spacing. Customize quote styles, key sorting, and more.
@@ -240,7 +217,7 @@ export default function HomePage() {
               </div>
 
               <div className="bg-card rounded-lg p-6 border border-border">
-                <h3 className="text-xl font-semibold mb-3">Working with JSON5</h3>
+                <h3 className="text-xl font-semibold mb-3"><Link href="/tools/json/json5" className="hover:text-primary">Working with JSON5</Link></h3>
                 <p className="text-muted-foreground text-sm mb-4">
                   JSON5 is a more human-friendly JSON format. Learn how to convert between JSON and JSON5,
                   and take advantage of features like unquoted keys and trailing commas.
@@ -262,7 +239,7 @@ export default function HomePage() {
               </div>
 
               <div className="bg-card rounded-lg p-6 border border-border">
-                <h3 className="text-xl font-semibold mb-3">Using the Tree Viewer</h3>
+                <h3 className="text-xl font-semibold mb-3"><Link href="/tools/json/viewer" className="hover:text-primary">Using the Tree Viewer</Link></h3>
                 <p className="text-muted-foreground text-sm mb-4">
                   The JSON Tree Viewer helps you visualize complex JSON structures. Navigate through nested
                   objects and arrays with ease, search for specific keys or values.
@@ -284,7 +261,7 @@ export default function HomePage() {
               </div>
 
               <div className="bg-card rounded-lg p-6 border border-border">
-                <h3 className="text-xl font-semibold mb-3">Privacy & Security Tips</h3>
+                <h3 className="text-xl font-semibold mb-3"><Link href="/privacy" className="hover:text-primary">Privacy & Security Tips</Link></h3>
                 <p className="text-muted-foreground text-sm mb-4">
                   JSON PowerHouse processes everything client-side, but here are some additional tips
                   for working with sensitive data.
@@ -323,7 +300,7 @@ export default function HomePage() {
             </Link>
           </div>
         </section>
-      </div>
+      </main>
       <Footer />
     </div>
   );

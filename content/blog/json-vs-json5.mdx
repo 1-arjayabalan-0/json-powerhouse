@@ -1,0 +1,98 @@
+---
+title: "JSON vs JSON5: Differences and When to Use Each"
+description: "Comments, trailing commas, unquoted keys — what JSON5 adds, where it is supported, and when strict JSON is still the right choice."
+date: 2026-10-13
+tags: [json, json5, config]
+relatedTools: [json-json5, json-formatter]
+---
+
+JSON is everywhere because it is small and unambiguous. It is also unforgiving to humans: no comments, no trailing commas, quotes everywhere. JSON5 relaxes those rules for people who edit files by hand. This post compares the two so you can pick the right one for each job.
+
+## What JSON5 is
+
+JSON5 is an extension of JSON that adopts several conveniences from ECMAScript 5. It is a superset: every valid JSON document is also valid JSON5, but not the other way around. The goal is files that are pleasant to write and review, mainly configuration, rather than a new wire format.
+
+The key point is that JSON5 is not understood by `JSON.parse`. You need a JSON5 parser, and that parser has to exist in every program that reads the file.
+
+## Syntax JSON5 allows
+
+The differences are small and easy to list. The table reflects the JSON5 specification, and we confirmed number and string handling with the `json5` library used by our converter.
+
+<table>
+<thead>
+<tr><th>Feature</th><th>JSON</th><th>JSON5</th></tr>
+</thead>
+<tbody>
+<tr><td>Comments</td><td>Not allowed</td><td>Line and block comments</td></tr>
+<tr><td>Trailing commas</td><td>Not allowed</td><td>Allowed in objects and arrays</td></tr>
+<tr><td>Single quotes</td><td>Not allowed</td><td>Allowed for strings</td></tr>
+<tr><td>Unquoted keys</td><td>Not allowed</td><td>Allowed for valid identifiers</td></tr>
+<tr><td>Hexadecimal numbers</td><td>Not allowed</td><td>Allowed, such as 0xFF</td></tr>
+<tr><td>Infinity and NaN</td><td>Not allowed</td><td>Allowed</td></tr>
+<tr><td>Multi-line strings</td><td>Not allowed</td><td>Allowed with a backslash before the line break</td></tr>
+</tbody>
+</table>
+
+Here is the same small configuration in both formats. First strict JSON:
+
+```json
+{
+  "name": "my-service",
+  "port": 8080,
+  "retries": 3,
+  "hosts": ["alpha", "beta"]
+}
+```
+
+And the JSON5 version, with a comment, bare keys, a single-quoted string and trailing commas:
+
+```json5
+{
+  // service settings
+  name: 'my-service',
+  port: 8080,
+  retries: 3,
+  hosts: ['alpha', 'beta',],
+}
+```
+
+Both describe identical data. The JSON5 file is shorter and can explain itself. The unquoted keys follow identifier rules, so a key such as `content-type` still needs quotes in JSON5, because the hyphen is not valid in a bare identifier.
+
+A few details trip people up. JSON5 numbers may start or end with a decimal point and may carry an explicit plus sign, but you will rarely want that in a shared file. Strings can be single or double quoted, and the choice has no effect on the parsed value. None of these additions change what the data means; they only change how comfortable it is to type.
+
+## Where JSON5 is used
+
+JSON5 turns up where humans maintain files and a build step or runtime reads them:
+
+- Tooling configuration, where developers want to leave comments next to options.
+- Hand-edited application settings in projects that bundle a JSON5 parser.
+- Test fixtures and sample data, where comments explain why a value exists.
+
+A practical rule: if a human opens the file weekly and a program reads it at startup, JSON5 can help. If a program writes the file and another program reads it, it adds risk without benefit.
+
+Check each tool's documentation before assuming support. Many tools that allow comments in their config files use their own relaxed parser, not full JSON5, and the exact rules differ from tool to tool.
+
+## When to stay with strict JSON
+
+Strict JSON remains the right default in these situations:
+
+- Anything that crosses a network boundary. Every language, browser and gateway understands JSON.
+- Files read by tools you do not control. If the consumer calls `JSON.parse`, JSON5 syntax will fail.
+- Data produced by programs. Machines do not need comments, and generated output is simple to keep valid.
+- Long-lived formats and public APIs, where predictability matters more than comfort.
+
+<Callout type="info">
+APIs should always send and accept strict JSON. Clients cannot be expected to carry a JSON5 parser, and a response with comments or unquoted keys will break standard tooling.
+</Callout>
+
+## Converting between the two
+
+Moving from JSON to JSON5 is trivial because JSON5 is a superset. Moving the other way is where care is needed, since JSON5-only features have no strict equivalent. Hex numbers become decimal. Comments cannot survive, because JSON has nowhere to put them. Infinity and NaN cannot be represented at all, and JavaScript's `JSON.stringify` writes them as `null`, so check those values before converting.
+
+Our [JSON to JSON5 converter](/tools/json/json5) works in both directions. Converting JSON5 to JSON parses the input with the `json5` library and re-serializes it with `JSON.stringify`, so you get plain JSON with comments removed. In the other direction it can quote or unquote keys, choose quote style and add trailing commas, depending on the options you set in the settings panel.
+
+A sensible migration path is to keep strict JSON as the source of truth for data and use JSON5 only for files people maintain. When you convert, read the output once, because anything that cannot be represented will have been dropped or changed. After converting JSON5 to JSON, run the result through a validator to confirm that the consuming program will accept it.
+
+<ToolLink id="json-json5" />
+
+If a JSON file will not parse and you suspect a JSON5 habit slipped in, the [JSON Formatter](/tools/json/formatter) can clean up comments, trailing commas, single quotes and unquoted keys in one pass.

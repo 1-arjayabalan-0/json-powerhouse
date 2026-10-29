@@ -6,12 +6,14 @@ import { useRouter } from "next/navigation";
 import { JSONFormatterConfig } from "@/core/types/json-formatter-config";
 import CodeEditor from "../../../components/CodeEditor";
 import { toast } from "sonner";
-import BottomConfigurationPanel from "@/app/components/BottomConfigurationPanel";
 import { diagnoseJson } from "@/core/lib/diagnostics/engine";
 import { JsonIssue } from "@/core/types/diagnostics";
 import DiagnosticsPanel from "@/app/components/DiagnosticsPanel";
 import KeyboardShortcuts from "@/app/components/KeyboardShortcuts";
 import { COMPLEX_JSON_SAMPLE } from "@/core/config/samples";
+import EditorPane, { StatusBadge } from "@/app/components/shell/EditorPane";
+import PaneButton from "@/app/components/shell/PaneButton";
+import { CircleAlert, Check, Sparkles, ClipboardPaste, Trash2, Wrench, Copy, Download } from "lucide-react";
 
 interface JSONFormatterProps {
     config: JSONFormatterConfig;
@@ -159,8 +161,19 @@ export default function JSONFormatter({ config, input, setInput, formatted, setF
         }
     };
 
+    const handleDownload = () => {
+        if (!formatted) return;
+        const blob = new Blob([formatted], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'formatted.json';
+        a.click();
+        URL.revokeObjectURL(url);
+    };
+
     return (
-        <main className="flex-1 flex flex-col lg:flex-row overflow-hidden w-full">
+        <div className="flex h-full min-h-0 w-full flex-col md:flex-row">
             <KeyboardShortcuts
                 onProcess={() => {
                     // Ctrl+Enter: Apply all fixes + reformat
@@ -169,122 +182,63 @@ export default function JSONFormatter({ config, input, setInput, formatted, setF
                 onCopyOutput={handleCopy}
             />
             {/* Left Section: Input Editor */}
-            <section className="flex flex-col border-b lg:border-b-0 lg:border-r border-border relative bg-background flex-1 min-h-[40vh] lg:w-[40%] lg:flex-[0.7] lg:min-h-0">
-                <div className="h-10 px-4 border-b border-border flex items-center bg-muted shrink-0 overflow-x-auto whitespace-nowrap scrollbar-none">
-                    <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest mr-4">Input Editor</span>
-
-                    <div className="ml-auto flex gap-2 items-center">
-                        {error && (
-                            <span className="text-[10px] bg-[color-mix(in_srgb,var(--destructive)_10%,transparent)] text-destructive px-2 py-0.5 rounded border border-[color-mix(in_srgb,var(--destructive)_20%,transparent)] flex items-center gap-1">
-                                <span className="material-symbols-outlined !text-[10px]">error</span>
-                                <span className="hidden sm:inline">{error}</span>
-                                <span className="sm:hidden">Error</span>
-                            </span>
-                        )}
-                        {!error && input.trim() && (
-                            <span className="text-[10px] bg-[color-mix(in_srgb,var(--success)_10%,transparent)] text-success px-2 py-0.5 rounded border border-[color-mix(in_srgb,var(--success)_20%,transparent)] flex items-center gap-1">
-                                <span className="material-symbols-outlined !text-[10px]">check</span>
-                                Valid
-                            </span>
-                        )}
-                        <div className="flex items-center gap-1.5 sm:gap-2">
-                            <button
-                                onClick={() => {
-                                    setInput(JSON.stringify(COMPLEX_JSON_SAMPLE, null, 2));
-                                    toast.success('Sample JSON loaded');
-                                }}
-                                className="px-2 py-1 text-[11px] sm:text-[12px] bg-primary hover:opacity-90 text-primary-foreground rounded border 
-                                border-[color-mix(in_srgb,var(--primary)_30%,transparent)] flex items-center gap-1 transition-colors"
-                                title="Load Sample JSON"
-                            >
-                                <span className="material-symbols-outlined !text-[12px]">auto_fix_high</span>
-                                <span>Sample</span>
-                            </button>
-                            <button
-                                onClick={async () => {
-                                    try {
-                                        const text = await navigator.clipboard.readText();
-                                        if (text) {
-                                            setInput(text);
-                                            toast.success('Pasted from clipboard');
-                                        }
-                                    } catch (err) {
-                                        toast.error('Failed to paste');
-                                    }
-                                }}
-                                className="px-2 py-1 text-[11px] sm:text-[12px] bg-secondary hover:opacity-90 text-secondary-foreground rounded border 
-                                border-border flex items-center gap-1 transition-colors"
-                                title="Paste from clipboard"
-                            >
-                                <span className="material-symbols-outlined !text-[12px]">content_paste</span>
-                                <span>Paste</span>
-                            </button>
-                            <button
-                                onClick={() => {
-                                    setInput("");
-                                    setFormatted("");
-                                }}
-                                className="px-2 py-1 text-[11px] sm:text-[12px] bg-[color-mix(in_srgb,var(--destructive)_10%,transparent)] hover:bg-[color-mix(in_srgb,var(--destructive)_20%,transparent)] text-destructive border border-[color-mix(in_srgb,var(--destructive)_20%,transparent)] rounded transition-all 
-                                flex items-center justify-center gap-1"
-                                title="Clear Input"
-                            >
-                                <span className="material-symbols-outlined !text-[12px]">delete</span>
-                                <span>Clear</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div className="flex-1 overflow-hidden relative">
-                    <CodeEditor
-                        value={input}
-                        language={config.useJSON5 ? 'javascript' : 'json'}
-                        onChange={(val) => {
-                            setInput(val || '');
-                        }}
-                        onGenerate={() => { }} // Auto-generated via effect
-                        onFix={handleQuickFix}
-                        selection={inputSelection}
-                        placeholder='{ "paste": "your json here" }'
-                        className="rounded-none border-none bg-transparent"
-                        minimal={true}
-                    />
-                </div>
-            </section>
+            <EditorPane
+                label="Input"
+                className="md:border-r border-border md:w-1/2 min-h-[45vh] md:min-h-0"
+                status={error
+                    ? <StatusBadge tone="error"><CircleAlert className="size-3" /><span className="hidden sm:inline max-w-[240px] truncate">{error}</span><span className="sm:hidden">Error</span></StatusBadge>
+                    : input.trim() ? <StatusBadge tone="ok"><Check className="size-3" />Valid</StatusBadge> : null}
+                actions={<>
+                    <PaneButton icon={Sparkles} label="Sample" onClick={() => {
+                        setInput(JSON.stringify(COMPLEX_JSON_SAMPLE, null, 2));
+                        toast.success('Sample JSON loaded');
+                    }} />
+                    <PaneButton icon={ClipboardPaste} label="Paste" onClick={async () => {
+                        try {
+                            const text = await navigator.clipboard.readText();
+                            if (text) {
+                                setInput(text);
+                                toast.success('Pasted from clipboard');
+                            }
+                        } catch (err) {
+                            toast.error('Failed to paste');
+                        }
+                    }} />
+                    <PaneButton icon={Trash2} label="Clear" variant="danger" onClick={() => {
+                        setInput("");
+                        setFormatted("");
+                    }} />
+                </>}
+            >
+                <CodeEditor
+                    value={input}
+                    language={config.useJSON5 ? 'javascript' : 'json'}
+                    onChange={(val) => {
+                        setInput(val || '');
+                    }}
+                    onGenerate={() => { }} // Auto-generated via effect
+                    onFix={handleQuickFix}
+                    selection={inputSelection}
+                    placeholder='{ "paste": "your json here" }'
+                    className="rounded-none border-none bg-transparent"
+                    minimal={true}
+                />
+            </EditorPane>
 
             {/* Right Section: Output Workspace */}
-            <section className="flex flex-col bg-background w-full flex-1 min-h-[40vh] lg:w-[60%] lg:flex-[1.3] lg:min-h-0">
-                <div className="flex flex-col border-b border-border shrink-0">
-                    <div className="h-10 px-4 flex items-center justify-between bg-card border-b border-border overflow-x-auto whitespace-nowrap scrollbar-none">
-                        <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest mr-4">Workspace</span>
-                        <div className="flex items-center gap-2 sm:gap-3">
-                            {appliedFixIds.size > 0 && (
-                                <div className="hidden sm:flex items-center gap-1.5 bg-[color-mix(in_srgb,var(--warning)_10%,transparent)] px-2 py-0.5 rounded border border-[color-mix(in_srgb,var(--warning)_20%,transparent)]" title={`${appliedFixIds.size} auto-repairs applied`}>
-                                    <span className="material-symbols-outlined !text-[12px] text-warning">build</span>
-                                    <span className="text-[10px] text-warning font-medium">Repaired {appliedFixIds.size}</span>
-                                </div>
-                            )}
-                            <button
-                                onClick={handleCopy}
-                                className="flex items-center gap-1.5 px-3 py-1 text-[11px] sm:text-[12px] font-medium bg-primary hover:opacity-90 text-primary-foreground rounded transition-colors shadow-sm"
-                            >
-                                <span className="material-symbols-outlined !text-[12px] sm:text-sm">content_copy</span>
-                                <span>Copy</span>
-                            </button>
-                            <button
-                                onClick={() => {
-                                    setFormatted("");
-                                }}
-                                className="px-2 py-1 text-[11px] sm:text-[12px] bg-[color-mix(in_srgb,var(--destructive)_10%,transparent)] hover:bg-[color-mix(in_srgb,var(--destructive)_20%,transparent)] text-destructive border border-[color-mix(in_srgb,var(--destructive)_20%,transparent)] rounded transition-all 
-                                flex items-center justify-center gap-1"
-                                title="Clear Output"
-                            >
-                                <span className="material-symbols-outlined !text-[12px]">delete</span>
-                                <span className="hidden xs:inline">Clear</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div className="flex-1 overflow-hidden relative bg-background flex flex-col sm:flex-row">
+            <EditorPane
+                label="Output"
+                className="md:w-1/2 min-h-[45vh] md:min-h-0"
+                status={appliedFixIds.size > 0 ? <StatusBadge tone="warn"><Wrench className="size-3" />Repaired {appliedFixIds.size}</StatusBadge> : null}
+                actions={<>
+                    <PaneButton icon={Copy} label="Copy" variant="primary" onClick={handleCopy} hideLabelOnMobile={false} />
+                    <PaneButton icon={Download} label="Download" onClick={handleDownload} />
+                    <PaneButton icon={Trash2} label="Clear" variant="danger" onClick={() => {
+                        setFormatted("");
+                    }} />
+                </>}
+            >
+                <div className="flex h-full flex-col sm:flex-row">
                     <div className="flex-1 relative overflow-hidden h-full w-full">
                         <CodeEditor
                             value={formatted}
@@ -306,8 +260,7 @@ export default function JSONFormatter({ config, input, setInput, formatted, setF
                         onSelectIssue={handleSelectIssue}
                     />
                 </div>
-                <BottomConfigurationPanel />
-            </section>
-        </main>
+            </EditorPane>
+        </div>
     )
 }

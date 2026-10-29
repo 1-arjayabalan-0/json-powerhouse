@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { DiffNode, DiffChangeType } from "@/core/types/diff-config";
 import { cn } from "@/app/lib/utils";
+import { ArrowLeftRight, ArrowRight, Minus, Pencil, Plus } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 
 interface DiffNodeRendererProps {
     node: DiffNode;
@@ -41,10 +43,10 @@ export default function DiffNodeRenderer({ node, depth = 0, showUnchanged, expan
 
     const getIcon = (type: DiffChangeType) => {
         switch (type) {
-            case 'added': return <span className="material-symbols-outlined text-[14px] text-success">add</span>;
-            case 'removed': return <span className="material-symbols-outlined text-[14px] text-destructive">remove</span>;
-            case 'modified': return <span className="material-symbols-outlined text-[14px] text-warning">edit</span>;
-            case 'type-changed': return <span className="material-symbols-outlined text-[14px] text-warning">sync_alt</span>;
+            case 'added': return <Plus className="size-3.5 text-success" />;
+            case 'removed': return <Minus className="size-3.5 text-destructive" />;
+            case 'modified': return <Pencil className="size-3.5 text-warning" />;
+            case 'type-changed': return <ArrowLeftRight className="size-3.5 text-warning" />;
             default: return null;
         }
     };
@@ -86,12 +88,10 @@ export default function DiffNodeRenderer({ node, depth = 0, showUnchanged, expan
                     onClick={toggleExpand}
                 >
                     {hasChildren ? (
-                        <span className={cn(
-                            "material-symbols-outlined text-[16px] text-muted-foreground transition-transform",
+                        <ChevronRight className={cn(
+                            "size-4 text-muted-foreground transition-transform",
                             isExpanded ? "rotate-90" : ""
-                        )}>
-                            chevron_right
-                        </span>
+                        )} />
                     ) : (
                         <span className="w-4" />
                     )}
@@ -114,7 +114,7 @@ export default function DiffNodeRenderer({ node, depth = 0, showUnchanged, expan
                     {node.changeType === 'modified' || node.changeType === 'type-changed' ? (
                         <span className="flex flex-wrap items-center gap-2">
                             <span className="line-through opacity-50">{formatValue(node.oldValue)}</span>
-                            <span className="material-symbols-outlined text-[12px] text-muted-foreground">arrow_right_alt</span>
+                            <ArrowRight className="size-3.5 text-muted-foreground" />
                             <span>{formatValue(node.newValue)}</span>
                         </span>
                     ) : node.changeType === 'removed' ? (

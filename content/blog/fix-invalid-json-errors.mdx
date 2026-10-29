@@ -1,0 +1,137 @@
+---
+title: "How to Fix the 7 Most Common Invalid JSON Errors"
+description: "Trailing commas, single quotes, unquoted keys and more — what each JSON error means and how to fix it fast."
+date: 2026-10-27
+tags: [json, errors, debugging]
+relatedTools: [json-formatter, json-validator]
+---
+
+You paste a payload into your app, hit run, and the parser answers with `Unexpected token` and a character position. The message is accurate but rarely helpful. This guide walks through the seven mistakes behind most invalid JSON, shows what each one looks like, quotes the error a standard parser such as `JSON.parse` raises, and gives the fix. Error wording below comes from V8 (Chrome and Node.js); other parsers phrase it differently but point at the same spot.
+
+## Why JSON is so strict
+
+JSON is a data interchange format, not a programming language. The specification (RFC 8259) allows objects, arrays, numbers, strings, and the literals `true`, `false` and `null`, requires double-quoted strings, and has no comments. That strictness is the point: every language can read a JSON document the same way, with no dialect differences to negotiate.
+
+The trade-off is that habits from JavaScript, Python or hand-edited config files break parsing. Most errors come from writing something a JavaScript engine would accept but the JSON grammar does not.
+
+## 1. Trailing commas
+
+```json
+{
+  "name": "Ada",
+  "tags": ["math", "code",]
+}
+```
+
+The parser reports something like `Unexpected token ']'` because after a comma it expects another value, not a closing bracket. Remove the last comma in every array and object.
+
+```json
+{
+  "name": "Ada",
+  "tags": ["math", "code"]
+}
+```
+
+## 2. Single quotes instead of double quotes
+
+```json
+{'name': 'Ada'}
+```
+
+V8 answers with `Expected property name or '}'` at position 1. JSON strings and keys must use double quotes, so replace every `'` that delimits a string with `"`. If a string contains an apostrophe, such as `it's`, leave that one alone: it is data, not a delimiter.
+
+```json
+{"name": "Ada"}
+```
+
+## 3. Unquoted keys
+
+```json
+{name: "Ada", age: 36}
+```
+
+The error is the same `Expected property name or '}'`, because a bare word is not a valid key. Wrap every key in double quotes.
+
+```json
+{"name": "Ada", "age": 36}
+```
+
+## 4. Comments in JSON
+
+```json
+{
+  // primary contact
+  "name": "Ada"
+}
+```
+
+Neither `//` nor `/* */` exists in JSON, so parsing stops at the first slash. In a comment placed where a key should start, V8 reports `Expected property name or '}'`. Delete the comment. If you need to annotate data, add a real field such as `"_note": "primary contact"`, or switch to a format that supports comments (see the JSON5 comparison linked at the end).
+
+```json
+{
+  "name": "Ada"
+}
+```
+
+## 5. Unescaped characters in strings
+
+```json
+{"path": "C:\Users\ada", "note": "line one
+line two"}
+```
+
+Two separate problems hide here. A backslash starts an escape sequence, and `\U` is not one, so V8 reports `Bad escaped character`. A raw line break inside a string is also illegal and produces `Bad control character in string literal`. Double the backslash and write line breaks as `\n`.
+
+```json
+{"path": "C:\\Users\\ada", "note": "line one\nline two"}
+```
+
+## 6. Missing commas or brackets
+
+```json
+{
+  "name": "Ada"
+  "age": 36
+}
+```
+
+Without a comma between members, V8 says `Expected ',' or '}' after property value`. Unbalanced brackets, such as `{"items": [1, 2, 3}`, give a similar message that mentions `']'`. These are structural errors: the fix depends on what you meant, so no tool can safely guess it. Read the position in the error message, look at the line before it, and add the missing comma or bracket.
+
+```json
+{
+  "name": "Ada",
+  "age": 36
+}
+```
+
+## 7. A BOM or invisible characters at the start
+
+```text
+\uFEFF{"name": "Ada"}
+```
+
+Here `\uFEFF` stands for the invisible byte order mark (BOM) that some editors put at the start of a file. If the file starts with a BOM, `JSON.parse` fails with an `Unexpected token` message that quotes an apparently empty character. Editors on Windows sometimes save "UTF-8 with BOM". Re-save the file as plain UTF-8, or strip the first character in code before parsing. Non-breaking spaces copied from web pages cause the same puzzling error in the middle of a document.
+
+## Fixing errors automatically
+
+Our own checks of the [JSON Formatter](/tools/json/formatter) show which of these it repairs on paste, using its default settings:
+
+- **Repaired automatically:** trailing commas (1), single quotes (2), unquoted keys (3) and comments (4). Trailing commas and comments are classed as safe fixes. Single quotes and unquoted keys are also repaired automatically, but the formatter marks them as needing review, because converting quotes or wrapping a bare word can change what you meant. Either way it prints the cleaned, indented output.
+- **Reported, not repaired:** a raw line break inside a string (5) is flagged as a fatal error. An invalid escape such as `\U` is detected, but the formatter did not produce usable output for it in our test, so fix it by hand. Missing commas and brackets (6) are reported as fatal because the formatter will not guess your intent.
+- **Not repaired in our test:** a leading byte order mark (7) still left the formatter without output, so re-save the file without a BOM. A leading zero-width space was recovered.
+
+Removing a trailing comma or a comment does not change your data. Quote and key repairs usually do not either, but the formatter flags them for review, as it does riskier repairs such as closing truncated input or converting values like hex numbers, `Infinity` and `NaN`. Check anything it marks for review before you rely on the output.
+
+<Callout type="tip">
+Validate configuration files in CI or a pre-commit hook before shipping them. A trailing comma that survives to production can take down a service at startup, and a validator catches it in milliseconds.
+</Callout>
+
+<ToolLink id="json-formatter" />
+
+## Key takeaways
+
+- JSON allows double quotes only, no comments, no trailing commas and no unquoted keys.
+- Read the position in the parser error and look at the character just before it; the real mistake is usually there.
+- Backslashes and raw line breaks inside strings must be escaped.
+- Mechanical problems (commas, quotes, comments, bare keys) can be repaired automatically, with quote and key fixes flagged for review; structural problems need a human.
+- Check a file for hidden characters when the error points at a place that looks correct.

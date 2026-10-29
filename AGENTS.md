@@ -22,6 +22,9 @@ npm run compile      # build extension
 - `src/app/` — Next.js App Router, tool pages under `src/app/tools/`
 - `src/core/` — shared logic between web app and VS Code extension
 - `extension/` — VS Code extension, shares `src/core/` via path aliases
+- Shell: `src/app/components/shell/` (AppHeader, ToolSidebar, ToolSearch, ToolWorkspace, SettingsPanel, EditorPane)
+- Tool SEO copy: `src/content/tools/<toolId>.ts`, rendered by `ToolArticle`
+- Blog: MDX in `content/blog/*.mdx` (frontmatter: title, description, date, tags, relatedTools), loaded by `src/app/lib/blog.ts`
 - No API routes — all processing client-side
 - Web Worker (`src/workers/json-parse.worker.ts`) for JSON >100KB
 
@@ -40,11 +43,14 @@ Tests in `tests/`. Run single test: `npx jest tests/path/to/file.test.ts`.
 ## Styling
 
 Tailwind CSS v4 + CSS variables. Dark mode via `next-themes` with `class` strategy.
+Fonts: Inter (UI) + Geist Mono (code). Icons: `lucide-react` only.
 UI primitives: Radix UI + shadcn/ui pattern in `src/app/components/ui/`.
 
 ## State
 
-- React Context: `ModeContext` (json/code), `ConfigContext` (tool config)
+- Tool registry: `src/app/config/tool-registry.ts` (ids, paths, groups, icons). Add new tools here first.
+- Per-tool config: `ConfigContext` resolves the active tool from the pathname; `useConfig()` returns `{ toolId, config, setConfig, reset }`, persisted in localStorage `jph:config:<toolId>`. Defaults in `src/app/config/tool-defaults.ts`.
+- Settings UI: `src/app/components/settings/<Tool>Settings.tsx`, registered in `settings/index.ts`.
 - Zustand: alert store only (`src/app/lib/utils/alert-store.ts`)
 
 ## Notable

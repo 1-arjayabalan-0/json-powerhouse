@@ -2,20 +2,20 @@
 
 import { useState, useEffect } from "react";
 import { useConfig } from "@/app/context/ConfigContext";
-import { JSON5ConverterConfig, defaultJSON5Config } from "@/core/types/json5-converter-config";
+import { JSON5ConverterConfig } from "@/core/types/json5-converter-config";
 import JSON5 from "json5";
 import { toast } from "sonner";
 import CodeEditor from "@/app/components/CodeEditor";
-import BottomConfigurationPanel from "@/app/components/BottomConfigurationPanel";
 import { usePersistentState } from "@/app/hooks/usePersistentState";
 import { COMPLEX_JSON_SAMPLE } from "@/core/config/samples";
 import { useAutoRepair } from "@/app/hooks/useAutoRepair";
 import KeyboardShortcuts from "@/app/components/KeyboardShortcuts";
+import { ArrowLeftRight, Check, CircleAlert, ClipboardPaste, Copy, Sparkles, Trash2, Wrench } from "lucide-react";
 
 type ConversionDirection = 'json-to-json5' | 'json5-to-json';
 
 export default function JSON5ConverterClient() {
-    const { config, setConfig } = useConfig();
+    const { config } = useConfig();
     // Use persistent state for input, just like other tools
     const [input, setInput] = usePersistentState("json-powerhouse-input", "");
     const [output, setOutput] = useState("");
@@ -24,13 +24,6 @@ export default function JSON5ConverterClient() {
 
     // Auto-repair broken JSON before JSON5 conversion
     const { repaired, repairCount } = useAutoRepair(input, { allowComments: true });
-
-    // Initialize config
-    useEffect(() => {
-        if (!('useJSON5' in config)) {
-            setConfig(defaultJSON5Config);
-        }
-    }, []);
 
     const converterConfig = config as JSON5ConverterConfig;
 
@@ -247,7 +240,7 @@ export default function JSON5ConverterClient() {
     };
 
     return (
-        <main className="flex-1 flex overflow-hidden w-full">
+        <div className="flex h-full min-h-0 w-full overflow-hidden">
             <KeyboardShortcuts
                 onCopyOutput={handleCopy}
             />
@@ -260,13 +253,13 @@ export default function JSON5ConverterClient() {
                     <div className="ml-auto flex gap-2">
                         {error && (
                             <span className="text-[10px] bg-[color-mix(in_srgb,var(--destructive)_10%,transparent)] text-destructive px-2 py-0.5 rounded border border-[color-mix(in_srgb,var(--destructive)_20%,transparent)] flex items-center gap-1">
-                                <span className="material-symbols-outlined !text-[10px]">error</span>
+                                <CircleAlert className="size-3" />
                                 Invalid
                             </span>
                         )}
                         {!error && input.trim() && (
                             <span className="text-[10px] bg-[color-mix(in_srgb,var(--success)_10%,transparent)] text-success px-2 py-0.5 rounded border border-[color-mix(in_srgb,var(--success)_20%,transparent)] flex items-center gap-1">
-                                <span className="material-symbols-outlined !text-[10px]">check</span>
+                                <Check className="size-3" />
                                 Valid
                             </span>
                         )}
@@ -280,7 +273,7 @@ export default function JSON5ConverterClient() {
                                 border-[color-mix(in_srgb,var(--primary)_30%,transparent)] flex items-center gap-1 transition-colors"
                                 title="Load Sample JSON"
                             >
-                                <span className="material-symbols-outlined !text-[12px]">auto_fix_high</span>
+                                <Sparkles className="size-3.5" />
                                 <span>Sample</span>
                             </button>
                             <button
@@ -299,7 +292,7 @@ export default function JSON5ConverterClient() {
                                 border-border flex items-center gap-1 transition-colors"
                                 title="Paste from clipboard"
                             >
-                                <span className="material-symbols-outlined !text-[12px]">content_paste</span>
+                                <ClipboardPaste className="size-3.5" />
                                 <span>Paste</span>
                             </button>
                             <button
@@ -310,7 +303,7 @@ export default function JSON5ConverterClient() {
                                 flex items-center justify-center gap-1"
                                 title="Clear Input"
                             >
-                                <span className="material-symbols-outlined !text-[12px]">delete</span>
+                                <Trash2 className="size-3.5" />
                                 <span>Clear</span>
                             </button>
 
@@ -332,7 +325,7 @@ export default function JSON5ConverterClient() {
                         onClick={toggleDirection}
                         className="w-full py-2 px-3 bg-secondary hover:opacity-90 text-secondary-foreground rounded text-xs font-semibold transition-all flex items-center justify-center gap-2"
                     >
-                        <span className="material-symbols-outlined !text-sm">swap_horiz</span>
+                        <ArrowLeftRight className="size-4" />
                         Swap Direction ({direction === 'json-to-json5' ? 'JSON → JSON5' : 'JSON5 → JSON'})
                     </button>
                 </div>
@@ -346,7 +339,7 @@ export default function JSON5ConverterClient() {
                         <div className="flex items-center gap-2 sm:gap-3">
                             {repairCount > 0 && (
                                 <div className="hidden sm:flex items-center gap-1.5 bg-[color-mix(in_srgb,var(--warning)_10%,transparent)] px-2 py-0.5 rounded border border-[color-mix(in_srgb,var(--warning)_20%,transparent)]" title={`${repairCount} auto-repairs applied`}>
-                                    <span className="material-symbols-outlined !text-[12px] text-warning">build</span>
+                                    <Wrench className="size-3.5 text-warning" />
                                     <span className="text-[10px] text-warning font-medium">Repaired {repairCount}</span>
                                 </div>
                             )}
@@ -358,7 +351,7 @@ export default function JSON5ConverterClient() {
                                 onClick={handleCopy}
                                 className="flex items-center gap-1.5 px-3 py-1 text-[11px] sm:text-[12px] font-medium bg-primary hover:opacity-90 text-primary-foreground rounded transition-colors shadow-sm"
                             >
-                                <span className="material-symbols-outlined !text-[12px] sm:text-sm">content_copy</span>
+                                <Copy className="size-3.5" />
                                 <span>Copy</span>
                             </button>
                             <button
@@ -369,7 +362,7 @@ export default function JSON5ConverterClient() {
                                 flex items-center justify-center gap-1"
                                 title="Clear Output"
                             >
-                                <span className="material-symbols-outlined !text-[12px]">delete</span>
+                                <Trash2 className="size-3.5" />
                                 <span>Clear</span>
                             </button>
                         </div>
@@ -383,8 +376,7 @@ export default function JSON5ConverterClient() {
                         className="rounded-none border-none bg-transparent"
                     />
                 </div>
-                <BottomConfigurationPanel />
             </section>
-        </main>
+        </div>
     );
 }

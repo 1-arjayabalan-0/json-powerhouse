@@ -1,13 +1,13 @@
-import { Poppins, Geist_Mono } from "next/font/google";
+import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "./components/ThemeProvider";
 import AlertService from "./components/alert-service";
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
-const poppins = Poppins({
-  variable: "--font-poppins",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
 });
 
 const geistMono = Geist_Mono({
@@ -60,8 +60,7 @@ export const metadata = {
   },
 }
 
-import { Toaster } from "sonner";
-import { ModeProvider } from "@/app/context/ModeContext";
+import ThemedToaster from "./components/ThemedToaster";
 import JsonLd from "./components/JsonLd";
 
 export default function RootLayout({
@@ -73,10 +72,6 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="manifest" href="/site.webmanifest" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
-          rel="stylesheet"
-        />
         <JsonLd
           data={{
             "@context": "https://schema.org",
@@ -104,17 +99,16 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${poppins.variable} antialiased bg-background text-foreground`}>
+      <body className={`${inter.variable} ${geistMono.variable} antialiased bg-background text-foreground`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
-          <ModeProvider>
             <AlertService />
             {children}
-            <Toaster position="bottom-left" richColors theme="dark" />
+            <ThemedToaster />
 
             {/* Analytics - Only in Production */}
             {process.env.NODE_ENV === 'production' && (
@@ -122,7 +116,6 @@ export default function RootLayout({
                 <Analytics />
                 <SpeedInsights />
               </>)}
-          </ModeProvider>
         </ThemeProvider>
       </body>
     </html>

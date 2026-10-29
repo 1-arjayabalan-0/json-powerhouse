@@ -1,0 +1,127 @@
+---
+title: "Generating TypeScript Types from JSON: A Practical Guide"
+description: "Turn real API responses into accurate TypeScript interfaces — and when to add a Zod schema for runtime safety."
+date: 2026-10-20
+tags: [typescript, codegen, api]
+relatedTools: [json-to-typescript]
+---
+
+Every TypeScript project that talks to an API eventually faces the same chore: describing a large JSON response by hand. It is slow, easy to get wrong, and the types drift as soon as the backend changes. Generating types from a real response removes most of that work. This guide covers how to get good results, where generated types fall short, and when to add a runtime schema.
+
+## Why generate types instead of writing them
+
+Hand-written types are a second copy of knowledge that already exists in the response. A generator reads the actual payload, so the result matches what the server really sends, including nested objects and arrays you might skim past. It also gives you a repeatable step: when the API changes, paste the new response and compare the output with a diff instead of auditing fields one by one.
+
+Generated code is a starting point, not an oracle. It can only describe the data you showed it.
+
+## Start from a representative sample
+
+The quality of the output depends entirely on the input. Pick a response that has every field populated, and use a real one rather than a trimmed example. Here is a small customer payload:
+
+```json
+{
+  "id": 101,
+  "name": "Ada Lovelace",
+  "email": "ada@example.com",
+  "active": true,
+  "nickname": null,
+  "address": { "city": "London", "zip": "N1" },
+  "orders": [
+    { "id": 1, "total": 19.99, "coupon": "SAVE5" },
+    { "id": 2, "total": 5 }
+  ],
+  "tags": ["a", "b"]
+}
+```
+
+Pasting it into the generator with default settings produces these declarations:
+
+```ts
+export interface Root {
+    id:       number;
+    name:     string;
+    email:    string;
+    active:   boolean;
+    nickname: null;
+    address:  Address;
+    orders:   Order[];
+    tags:     string[];
+}
+
+export interface Address {
+    city: string;
+    zip:  string;
+}
+
+export interface Order {
+    id:      number;
+    total:   number;
+    coupon?: string;
+}
+```
+
+With the default Type kind of Interface, our check also showed the tool appending a small `Convert` helper class that parses a JSON string and asserts the result at runtime. The listing above shows only the type declarations. Rename `Root` to something meaningful, such as `Customer`, once you paste it into your code.
+
+## Interfaces vs type aliases
+
+For plain data shapes the two are interchangeable in practice. Interfaces can be extended and merged across declarations; type aliases can express unions and mapped types. The generator's Type kind setting offers both. When we switched it to Type alias, the output contained the type declarations only, without the `Convert` helper, which is handy when you just want to paste types into a file. Choose one style and stay consistent across the codebase.
+
+## Optional and nullable fields
+
+Look again at `Order`: the first order has a `coupon`, the second does not, so the generator marked it `coupon?: string`. That is the key behaviour to understand. A field missing from some objects in an array becomes optional.
+
+Nullability is different. The sample has `"nickname": null`, and the generator produced `nickname: null`, because the only value it saw was null. The real type is almost certainly `string | null`. Edit that by hand. Optional (the key may be absent) and nullable (the key is present with a null value) are separate concepts, so keep them separate in your types.
+
+<Callout type="warn">
+Types inferred from a single sample can miss optional fields and alternate types. If a field never appeared in your example, it will not exist in the output. Generate from several responses, or from the API documentation, and review the result before relying on it.
+</Callout>
+
+## Arrays of mixed objects
+
+Arrays are where inference does the most visible work. In the sample, the two order objects have slightly different keys, and the generator merged them into one `Order` type, with the differing key marked optional. Arrays that mix unrelated shapes, such as events with different payloads, are harder. A single merged type with many optional fields is technically valid but loses information. If you control the API, a discriminator field such as `"type": "refund"` lets you hand-write a proper union afterwards.
+
+## Adding runtime validation with Zod
+
+TypeScript types disappear at compile time. If the server sends a string where you expect a number, your code will not notice until something breaks. A schema library such as Zod checks the data when it arrives. Setting Runtime check to Zod schema in the tool produced this for the same sample:
+
+```ts
+import * as z from "zod";
+
+export const AddressSchema = z.object({
+    "city": z.string(),
+    "zip": z.string(),
+});
+export type Address = z.infer<typeof AddressSchema>;
+
+export const OrderSchema = z.object({
+    "id": z.number(),
+    "total": z.number(),
+    "coupon": z.string().optional(),
+});
+export type Order = z.infer<typeof OrderSchema>;
+
+export const RootSchema = z.object({
+    "id": z.number(),
+    "name": z.string(),
+    "email": z.string(),
+    "active": z.boolean(),
+    "nickname": z.null(),
+    "address": AddressSchema,
+    "orders": z.array(OrderSchema),
+    "tags": z.array(z.string()),
+});
+export type Root = z.infer<typeof RootSchema>;
+```
+
+You get the schema and the TypeScript type from one source. Call `RootSchema.parse(data)` on untrusted input and it throws a descriptive error when the shape is wrong. The same caveat applies: `nickname` is `z.null()` here, so loosen it to `z.string().nullable()` by hand.
+
+## A workflow that scales
+
+1. Capture a real response, ideally one with many optional fields filled in.
+2. Generate types and rename the root type.
+3. Fix nullable fields and add unions where the data allows it.
+4. Commit the result next to the API client code.
+5. Use a schema at the boundary where untrusted data enters, and plain interfaces inside your app.
+6. Regenerate when the API changes and review the diff.
+
+<ToolLink id="json-to-typescript" />

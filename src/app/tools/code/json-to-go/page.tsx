@@ -1,6 +1,7 @@
+import ToolWorkspace from "@/app/components/shell/ToolWorkspace";
 import { Metadata } from "next";
 import GoGeneratorClient from "./client";
-import SeoAccordion from "@/app/components/SeoAccordion";
+import ToolArticle from "@/app/components/ToolArticle";
 
 export const metadata: Metadata = {
     title: "JSON to Go Converter – Free Online Tool | JSON PowerHouse",
@@ -23,36 +24,10 @@ export const metadata: Metadata = {
 export default function GoGeneratorPage() {
     return (
         <>
-            <div className="lg:h-[calc(100vh-48px)] md:h-[calc(100vh-130px)] w-full relative flex flex-col">
+            <ToolWorkspace toolId="json-to-go">
                 <GoGeneratorClient />
-                <SeoAccordion
-                    toolName="JSON to Go"
-                    description="Generate Go structs from JSON data with proper json struct tags."
-                    features={[
-                        "Generate Go structs from JSON",
-                        "JSON struct tags with field mappings",
-                        "omitempty tag support",
-                        "Nested struct generation",
-                        "Pointer types for nullable fields",
-                        "Copy generated code to clipboard",
-                    ]}
-                    howToSteps={[
-                        { title: "Paste your JSON", description: "Enter a sample JSON object." },
-                        { title: "Generate Go structs", description: "Get Go structs with proper json tags." },
-                        { title: "Copy and use", description: "Paste the generated structs into your Go project." },
-                    ]}
-                    faq={[
-                        { question: "What Go features are generated?", answer: "Structs with json tags, omitempty, pointer types for nullable fields, and nested structs." },
-                        { question: "Can I use this with Go modules?", answer: "Yes. Works with encoding/json, gorilla/mux, gin-gonic, and any Go project." },
-                    ]}
-                    relatedTools={[
-                        { name: "JSON to Rust", path: "/tools/code/json-to-rust" },
-                        { name: "JSON to TypeScript", path: "/tools/code/json-to-typescript" },
-                        { name: "JSON to Java", path: "/tools/code/json-to-java" },
-                        { name: "JSON Formatter", path: "/tools/json/formatter" },
-                    ]}
-                />
-            </div>
+            </ToolWorkspace>
+                <ToolArticle toolId="json-to-go" />
         </>
     );
 }

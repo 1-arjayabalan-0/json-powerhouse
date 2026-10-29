@@ -23,6 +23,12 @@ export default function Footer() {
                     {/* Right side - Links */}
                     <div className="flex flex-wrap items-center justify-center gap-6 text-sm">
                         <Link
+                            href="/blog"
+                            className="text-muted-foreground hover:text-foreground transition-colors"
+                        >
+                            Blog
+                        </Link>
+                        <Link
                             href="/about"
                             className="text-muted-foreground hover:text-foreground transition-colors"
                         >

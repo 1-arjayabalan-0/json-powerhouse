@@ -4,10 +4,12 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import CodeEditor from './CodeEditor';
-import BottomConfigurationPanel from './BottomConfigurationPanel';
 import KeyboardShortcuts from './KeyboardShortcuts';
 import { COMPLEX_JSON_SAMPLE } from '@/core/config/samples';
 import { useAutoRepair } from '@/app/hooks/useAutoRepair';
+import EditorPane, { StatusBadge } from '@/app/components/shell/EditorPane';
+import PaneButton from '@/app/components/shell/PaneButton';
+import { CircleAlert, Check, Sparkles, ClipboardPaste, Trash2, Wrench, Copy, Download, ArrowLeft } from 'lucide-react';
 
 interface CodeGeneratorBaseProps {
     language: string;
@@ -86,141 +88,83 @@ export default function CodeGeneratorBase({
         }
     };
 
+    const handleDownload = () => {
+        if (!output) return;
+        const blob = new Blob([output], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `model.${fileExtension}`;
+        a.click();
+        URL.revokeObjectURL(url);
+    };
+
     return (
-        <main className="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden w-full">
+        <div className="flex h-full min-h-0 w-full flex-col md:flex-row">
             <KeyboardShortcuts
                 onCopyOutput={handleCopy}
             />
             {/* Left Section: Input Editor */}
-            <section className="flex-none lg:flex-1 flex flex-col border-b lg:border-b-0 lg:border-r border-border relative bg-background min-h-[300px] lg:min-h-0">
-                <div className="h-10 px-4 border-b border-border flex items-center bg-muted shrink-0 overflow-x-auto whitespace-nowrap scrollbar-none">
-                    <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest mr-4">Input Editor</span>
-                    <div className="ml-auto flex gap-1.5 sm:gap-2 items-center">
-                        {error && (
-                            <span className="text-[10px] bg-[color-mix(in_srgb,var(--destructive)_10%,transparent)] text-destructive px-2 py-0.5 rounded border border-[color-mix(in_srgb,var(--destructive)_20%,transparent)] flex items-center gap-1">
-                                <span className="material-symbols-outlined !text-[10px]">error</span>
-                                <span className="hidden sm:inline">{error}</span>
-                                <span className="sm:hidden">Error</span>
-                            </span>
-                        )}
-                        {!error && input.trim() && (
-                            <span className="text-[10px] bg-[color-mix(in_srgb,var(--success)_10%,transparent)] text-success px-2 py-0.5 rounded border border-[color-mix(in_srgb,var(--success)_20%,transparent)] flex items-center gap-1">
-                                <span className="material-symbols-outlined !text-[10px]">check</span>
-                                Valid
-                            </span>
-                        )}
-                        <div className="flex items-center gap-1.5 sm:gap-2">
-                            <button
-                                onClick={() => {
-                                    setInput(JSON.stringify(COMPLEX_JSON_SAMPLE, null, 2));
-                                    toast.success('Sample JSON loaded');
-                                }}
-                                className="px-2 py-1 text-[11px] sm:text-[12px] bg-primary hover:opacity-90 text-primary-foreground rounded border 
-                                border-[color-mix(in_srgb,var(--primary)_30%,transparent)] flex items-center gap-1 transition-colors"
-                                title="Load Sample JSON"
-                            >
-                                <span className="material-symbols-outlined !text-[12px]">auto_fix_high</span>
-                                <span>Sample</span>
-                            </button>
-                            <button
-                                onClick={async () => {
-                                    try {
-                                        const text = await navigator.clipboard.readText();
-                                        if (text) {
-                                            setInput(text);
-                                            toast.success('Pasted from clipboard');
-                                        }
-                                    } catch (err) {
-                                        toast.error('Failed to paste');
-                                    }
-                                }}
-                                className="px-2 py-1 text-[11px] sm:text-[12px] bg-secondary hover:opacity-90 text-secondary-foreground rounded border 
-                                border-border flex items-center gap-1 transition-colors"
-                                title="Paste from clipboard"
-                            >
-                                <span className="material-symbols-outlined !text-[12px]">content_paste</span>
-                                <span>Paste</span>
-                            </button>
-                            <button
-                                onClick={() => {
-                                    setInput("");
-                                }}
-                                className="px-2 py-1 text-[11px] sm:text-[12px] bg-[color-mix(in_srgb,var(--destructive)_10%,transparent)] hover:bg-[color-mix(in_srgb,var(--destructive)_20%,transparent)] text-destructive border border-[color-mix(in_srgb,var(--destructive)_20%,transparent)] rounded transition-all 
-                                flex items-center justify-center gap-1"
-                                title="Clear Input"
-                            >
-                                <span className="material-symbols-outlined !text-[12px]">delete</span>
-                                <span>Clear</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div className="flex-1 overflow-hidden relative">
-                    <CodeEditor
-                        value={input}
-                        onChange={(value) => setInput(value ?? '')}
-                        language="json"
-                        className="rounded-none border-none bg-transparent"
-                    />
-                </div>
-            </section>
+            <EditorPane
+                label="JSON input"
+                className="md:border-r border-border md:w-1/2 min-h-[45vh] md:min-h-0"
+                status={error
+                    ? <StatusBadge tone="error"><CircleAlert className="size-3" /><span className="hidden sm:inline max-w-[240px] truncate">{error}</span><span className="sm:hidden">Error</span></StatusBadge>
+                    : input.trim() ? <StatusBadge tone="ok"><Check className="size-3" />Valid</StatusBadge> : null}
+                actions={<>
+                    <PaneButton icon={Sparkles} label="Sample" onClick={() => {
+                        setInput(JSON.stringify(COMPLEX_JSON_SAMPLE, null, 2));
+                        toast.success('Sample JSON loaded');
+                    }} />
+                    <PaneButton icon={ClipboardPaste} label="Paste" onClick={async () => {
+                        try {
+                            const text = await navigator.clipboard.readText();
+                            if (text) {
+                                setInput(text);
+                                toast.success('Pasted from clipboard');
+                            }
+                        } catch (err) {
+                            toast.error('Failed to paste');
+                        }
+                    }} />
+                    <PaneButton icon={Trash2} label="Clear" variant="danger" onClick={() => {
+                        setInput("");
+                    }} />
+                </>}
+            >
+                <CodeEditor
+                    value={input}
+                    onChange={(value) => setInput(value ?? '')}
+                    language="json"
+                    className="rounded-none border-none bg-transparent"
+                />
+            </EditorPane>
 
             {/* Right Section: Output Workspace */}
-            <section className="flex-none lg:flex-1 flex flex-col bg-background w-full min-h-[400px] lg:min-h-0">
-                <div className="flex flex-col border-b border-border shrink-0">
-                    <div className="h-10 px-4 flex items-center justify-between bg-card border-b border-border overflow-x-auto whitespace-nowrap scrollbar-none">
-                        <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest mr-4">Workspace</span>
-                        <div className="flex items-center gap-2 sm:gap-3">
-                            {repairCount > 0 && (
-                                <div className="hidden sm:flex items-center gap-1.5 bg-[color-mix(in_srgb,var(--warning)_10%,transparent)] px-2 py-0.5 rounded border border-[color-mix(in_srgb,var(--warning)_20%,transparent)]" title={`${repairCount} auto-repairs applied`}>
-                                    <span className="material-symbols-outlined !text-[12px] text-warning">build</span>
-                                    <span className="text-[10px] text-warning font-medium">Repaired {repairCount}</span>
-                                </div>
-                            )}
-                            <div className="hidden xs:flex items-center gap-1.5 bg-[color-mix(in_srgb,var(--success)_5%,transparent)] px-2 py-0.5 rounded border border-[color-mix(in_srgb,var(--success)_10%,transparent)]">
-                                <span className={`w-1.5 h-1.5 rounded-full bg-success ${isGenerating ? 'animate-pulse' : ''}`}></span>
-                                <span className="text-[9px] text-success font-bold uppercase">Live</span>
-                            </div>
-                            <button
-                                onClick={() => router.push('/tools/json/formatter')}
-                                className="flex items-center gap-1.5 px-3 py-1 text-[11px] sm:text-[12px] font-medium bg-primary hover:opacity-90 text-primary-foreground rounded transition-colors shadow-sm"
-                                title="Back to JSON Editor"
-                            >
-                                <span className="material-symbols-outlined !text-[12px] sm:text-sm">arrow_back</span>
-                                <span className="hidden sm:inline">JSON Editor</span>
-                            </button>
-                            <button
-                                onClick={handleCopy}
-                                className="flex items-center gap-1.5 px-3 py-1 text-[11px] sm:text-[12px] font-medium bg-primary hover:opacity-90 text-primary-foreground rounded transition-colors shadow-sm"
-                            >
-                                <span className="material-symbols-outlined !text-[12px] sm:text-sm">content_copy</span>
-                                <span>Copy</span>
-                            </button>
-                            <button
-                                onClick={() => {
-                                    setOutput("");
-                                }}
-                                className="px-2 py-1 text-[11px] sm:text-[12px] bg-[color-mix(in_srgb,var(--destructive)_10%,transparent)] hover:bg-[color-mix(in_srgb,var(--destructive)_20%,transparent)] text-destructive border border-[color-mix(in_srgb,var(--destructive)_20%,transparent)] rounded transition-all 
-                                flex items-center justify-center gap-1"
-                                title="Clear Output"
-                            >
-                                <span className="material-symbols-outlined !text-[12px]">delete</span>
-                                <span className="hidden xs:inline">Clear</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div className="flex-1 overflow-hidden relative bg-background">
-                    <CodeEditor
-                        value={output}
-                        language={language}
-                        readOnly={true}
-                        placeholder={`// Generated ${languageDisplayName} code will appear here...`}
-                        className="rounded-none border-none"
-                    />
-                </div>
-                <BottomConfigurationPanel />
-            </section>
-        </main>
+            <EditorPane
+                label={`${languageDisplayName} output`}
+                className="md:w-1/2 min-h-[45vh] md:min-h-0"
+                status={<>
+                    {repairCount > 0 && <StatusBadge tone="warn"><Wrench className="size-3" />Repaired {repairCount}</StatusBadge>}
+                    <StatusBadge tone="ok"><span className={`size-1.5 rounded-full bg-success ${isGenerating ? 'animate-pulse' : ''}`}></span>Live</StatusBadge>
+                </>}
+                actions={<>
+                    <PaneButton icon={ArrowLeft} label="JSON Editor" onClick={() => router.push('/tools/json/formatter')} />
+                    <PaneButton icon={Copy} label="Copy" variant="primary" onClick={handleCopy} hideLabelOnMobile={false} />
+                    <PaneButton icon={Download} label="Download" onClick={handleDownload} />
+                    <PaneButton icon={Trash2} label="Clear" variant="danger" onClick={() => {
+                        setOutput("");
+                    }} />
+                </>}
+            >
+                <CodeEditor
+                    value={output}
+                    language={language}
+                    readOnly={true}
+                    placeholder={`// Generated ${languageDisplayName} code will appear here...`}
+                    className="rounded-none border-none"
+                />
+            </EditorPane>
+        </div>
     );
 }

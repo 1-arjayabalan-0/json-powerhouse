@@ -9,7 +9,7 @@ export async function generateGoCode(jsonString: string, config: GoConfig): Prom
         {
             "package": config.packageName,
             "omit-empty": config.useOmitEmpty ? "true" : "false",
-            "field-tags": config.fieldNaming,
+            "field-tags": "json",
         }
     );
 }
