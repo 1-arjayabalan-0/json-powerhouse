@@ -30,7 +30,7 @@ export const toolDefaults: Record<ToolId, object> = {
     'json-text-viewer': defaultTextViewerConfig,
     'json-json5': defaultJSON5Config,
     'json-diff': { ...defaultDiffConfig, diffStrategy: 'json-patch-6902' },
-    'json-transform': {},
+    'json-transform': { operations: [] },
     'json-to-typescript': defaultTypeScriptConfig,
     'json-to-java': defaultJavaConfig,
     'json-to-kotlin': defaultKotlinConfig,

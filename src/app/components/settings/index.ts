@@ -15,8 +15,9 @@ import CSharpSettings from "./CSharpSettings";
 import PythonSettings from "./PythonSettings";
 import RustSettings from "./RustSettings";
 import PhpSettings from "./PhpSettings";
+import TransformSettings from "./TransformSettings";
 
-// Diff and Transform currently expose no user settings.
+// Diff currently exposes no user settings.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const settingsByTool: Partial<Record<ToolId, ComponentType<SettingsProps<any>>>> = {
     'json-formatter': FormatterSettings,
@@ -26,6 +27,7 @@ export const settingsByTool: Partial<Record<ToolId, ComponentType<SettingsProps<
     'json-json5': Json5Settings,
     'json-viewer': ViewerSettings,
     'json-text-viewer': TextViewerSettings,
+    'json-transform': TransformSettings,
     'json-to-typescript': TypeScriptSettings,
     'json-to-java': JavaSettings,
     'json-to-kotlin': KotlinSettings,

@@ -1,5 +1,5 @@
 import ToolWorkspace from "@/app/components/shell/ToolWorkspace";
-import JSONToolPage from "@/app/components/JSONToolPage";
+import JSONTransformClient from "./client";
 import ToolArticle from "@/app/components/ToolArticle";
 import { Metadata } from "next";
 
@@ -25,9 +25,9 @@ export default function JSONTransformPage() {
     return (
         <>
             <ToolWorkspace toolId="json-transform">
-                <JSONToolPage toolId="json-transform" />
+                <JSONTransformClient />
             </ToolWorkspace>
-                <ToolArticle toolId="json-transform" />
+            <ToolArticle toolId="json-transform" />
         </>
     );
 }
