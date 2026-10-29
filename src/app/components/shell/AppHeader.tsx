@@ -26,7 +26,7 @@ export default function AppHeader({ showMenuButton = false }: { showMenuButton?:
                 </button>
             )}
             <Link href="/" className="flex shrink-0 items-center gap-2" aria-label="JSON PowerHouse home">
-                <Image src="/JSON-PowerHouse-Logo.png" alt="" width={128} height={128} className="size-9 rounded-md" preload />
+                <Image src="/json-powerhouse.png" alt="" width={128} height={128} className="size-9 rounded-md" preload />
             </Link>
             <div className="flex flex-1 justify-center px-2">
                 <ToolSearch />

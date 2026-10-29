@@ -41,7 +41,7 @@ export const tools = [
     { id: 'json-to-swift', name: 'JSON → Swift Codable', shortName: 'Swift', path: '/tools/code/json-to-swift', group: 'code', icon: Bird, tagline: 'Generate Swift Codable structs', keywords: ['swift', 'codable', 'ios'] },
     { id: 'json-to-go', name: 'JSON → Go Struct', shortName: 'Go', path: '/tools/code/json-to-go', group: 'code', icon: Boxes, tagline: 'Generate Go structs with JSON tags', keywords: ['go', 'golang', 'struct'] },
     { id: 'json-to-csharp', name: 'JSON → C# Class', shortName: 'C#', path: '/tools/code/json-to-csharp', group: 'code', icon: Hash, tagline: 'Generate C# classes, records or structs', keywords: ['c#', 'csharp', 'dotnet', 'record'] },
-    { id: 'json-to-python', name: 'JSON → Python Dataclass', shortName: 'Python', path: '/tools/code/json-to-python', group: 'code', icon: Code, tagline: 'Generate Python dataclasses or attrs', keywords: ['python', 'dataclass', 'pydantic'] },
+    { id: 'json-to-python', name: 'JSON → Python Dataclass', shortName: 'Python', path: '/tools/code/json-to-python', group: 'code', icon: Code, tagline: 'Generate Python dataclasses or pydantic models', keywords: ['python', 'dataclass', 'pydantic'] },
     { id: 'json-to-rust', name: 'JSON → Rust Struct', shortName: 'Rust', path: '/tools/code/json-to-rust', group: 'code', icon: Cog, tagline: 'Generate Rust structs with serde', keywords: ['rust', 'serde', 'struct'] },
     { id: 'json-to-php', name: 'JSON → PHP Class', shortName: 'PHP', path: '/tools/code/json-to-php', group: 'code', icon: Gem, tagline: 'Generate PHP classes from JSON', keywords: ['php', 'class'], hidden: true },
 ] as const satisfies readonly ToolDef[];

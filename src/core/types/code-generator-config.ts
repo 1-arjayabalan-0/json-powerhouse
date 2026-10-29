@@ -111,18 +111,14 @@ export const defaultSwiftConfig: SwiftConfig = {
 // ============================================================================
 // Go Configuration
 // ============================================================================
-export type GoFieldNaming = 'json' | 'original' | 'pascal' | 'camel';
-
 export interface GoConfig {
     packageName: string;
     useOmitEmpty: boolean;
-    fieldNaming: GoFieldNaming;
 }
 
 export const defaultGoConfig: GoConfig = {
     packageName: 'main',
     useOmitEmpty: true,
-    fieldNaming: 'pascal',
 };
 
 // ============================================================================
@@ -138,46 +134,35 @@ export type CSharpAccessLevel = 'public' | 'internal';
 export interface CSharpConfig {
     namespace: string;
     framework: CSharpFramework;
-    useProperties: boolean;
     recordType: CSharpRecordType;
     accessLevel: CSharpAccessLevel;
-    nullable: boolean;
-    systemTextJson: boolean;
     numberType: CSharpNumberType;
     arrayType: CSharpArrayType;
     density: CSharpDensity;
-    acronymStyle: AcronymStyle;
 }
 
 export const defaultCSharpConfig: CSharpConfig = {
     namespace: 'MyNamespace',
     framework: 'SystemTextJson',
-    useProperties: true,
     recordType: 'class',
     accessLevel: 'public',
-    nullable: true,
-    systemTextJson: true,
     numberType: 'double',
     arrayType: 'list',
     density: 'normal',
-    acronymStyle: 'pascal',
 };
 
 // ============================================================================
 // Python Configuration
 // ============================================================================
-export type PythonVersion = '3.6' | '3.7' | '3.8' | '3.9' | '3.10+';
-export type PythonClassType = 'dataclasses' | 'attrs' | 'plain';
+export type PythonClassType = 'dataclasses' | 'pydantic' | 'plain';
 
 export interface PythonConfig {
-    pythonVersion: PythonVersion;
     classType: PythonClassType;
     useTypeHints: boolean;
     nicePropertyNames: boolean;
 }
 
 export const defaultPythonConfig: PythonConfig = {
-    pythonVersion: '3.10+',
     classType: 'dataclasses',
     useTypeHints: true,
     nicePropertyNames: true,

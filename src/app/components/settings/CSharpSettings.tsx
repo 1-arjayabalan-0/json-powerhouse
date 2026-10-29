@@ -1,7 +1,7 @@
 "use client"
 
 import { CSharpConfig } from "@/core/types/code-generator-config";
-import { SettingsProps, SettingsSection, SelectField, SwitchField } from "./fields";
+import { SettingsProps, SettingsSection, SelectField } from "./fields";
 
 export default function CSharpSettings({ config, update }: SettingsProps<CSharpConfig>) {
     return (
@@ -13,11 +13,11 @@ export default function CSharpSettings({ config, update }: SettingsProps<CSharpC
                 <SelectField id="cs-access" label="Access level" value={config.accessLevel}
                     onChange={(v) => update('accessLevel', v as CSharpConfig['accessLevel'])}
                     options={[{ value: 'public', label: 'public' }, { value: 'internal', label: 'internal' }]} />
-                <SwitchField id="cs-nullable" label="Nullable reference types" checked={config.nullable} onChange={(v) => update('nullable', v)} />
             </SettingsSection>
             <SettingsSection title="Serializer">
-                <SwitchField id="cs-stj" label="System.Text.Json attributes" checked={config.systemTextJson}
-                    onChange={(v) => update('systemTextJson', v)} hint="Off = Newtonsoft.Json attributes." />
+                <SelectField id="cs-framework" label="Framework" value={config.framework}
+                    onChange={(v) => update('framework', v as CSharpConfig['framework'])}
+                    options={[{ value: 'SystemTextJson', label: 'System.Text.Json' }, { value: 'NewtonsoftJson', label: 'Newtonsoft.Json' }, { value: 'none', label: 'None (plain types)' }]} />
             </SettingsSection>
         </>
     );

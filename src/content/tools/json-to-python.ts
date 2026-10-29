@@ -2,11 +2,11 @@ import type { ToolContent } from './types';
 
 const content: ToolContent = {
     "intro": [
-        "Generate Python code from JSON data. Choose between plain dictionaries, TypedDict, or Python dataclasses with type hints.",
+        "Generate Python code from JSON data. Choose between dataclasses, pydantic models, or plain classes.",
         "Nested objects become their own classes with typed fields and from_dict / to_dict helpers. Output updates as you type, and everything runs in your browser."
     ],
     "features": [
-        "Generate Python dicts, TypedDict, or dataclasses",
+        "Generate dataclasses, pydantic models, or plain classes",
         "Type hint generation for Python 3.6+",
         "Handles nested structures and lists",
         "Optional field support with defaults",
@@ -20,7 +20,7 @@ const content: ToolContent = {
         },
         {
             "title": "Select format",
-            "description": "Choose between plain dict, TypedDict, or dataclass."
+            "description": "Choose dataclasses, pydantic models, or plain classes."
         },
         {
             "title": "Copy Python code",
@@ -32,14 +32,14 @@ const content: ToolContent = {
             "title": "Generating Python classes",
             "description": "A small user record with a nested address, generated with the default settings. Trimmed to the first 30 lines of the generated classes. The default output also includes from_dict/to_dict helpers and converter functions.",
             "input": "{\n  \"id\": 1,\n  \"name\": \"Ada Lovelace\",\n  \"email\": \"ada@example.com\",\n  \"active\": true,\n  \"tags\": [\"admin\", \"dev\"],\n  \"address\": { \"city\": \"London\", \"zip\": \"EC1A\" }\n}",
-            "output": "class Address:\n    city: str\n    zip: str\n\n    def __init__(self, city: str, zip: str) -> None:\n        self.city = city\n        self.zip = zip\n\n    @staticmethod\n    def from_dict(obj: Any) -> 'Address':\n        assert isinstance(obj, dict)\n        city = from_str(obj.get(\"city\"))\n        zip = from_str(obj.get(\"zip\"))\n        return Address(city, zip)\n\n    def to_dict(self) -> dict:\n        result: dict = {}\n        result[\"city\"] = from_str(self.city)\n        result[\"zip\"] = from_str(self.zip)\n        return result\n\n\nclass Root:\n    id: int\n    name: str\n    email: str\n    active: bool\n    tags: List[str]\n    address: Address\n\n    def __init__(self, id: int, name: str, email: str, active: bool, tags: List[str], address: Address) -> None:",
+            "output": "@dataclass\nclass Address:\n    city: str\n    zip: str\n\n    @staticmethod\n    def from_dict(obj: Any) -> 'Address':\n        assert isinstance(obj, dict)\n        city = from_str(obj.get(\"city\"))\n        zip = from_str(obj.get(\"zip\"))\n        return Address(city, zip)\n\n    def to_dict(self) -> dict:\n        result: dict = {}\n        result[\"city\"] = from_str(self.city)\n        result[\"zip\"] = from_str(self.zip)\n        return result\n\n\n@dataclass\nclass Root:\n    id: int\n    name: str\n    email: str\n    active: bool\n    tags: List[str]\n    address: Address\n\n    @staticmethod\n    def from_dict(obj: Any) -> 'Root':",
             "lang": "python"
         }
     ],
     "faq": [
         {
             "question": "What output formats are available?",
-            "answer": "Plain Python dictionaries, TypedDict (for static type checking), or Python dataclasses with type hints."
+            "answer": "Python dataclasses, pydantic BaseModel classes, or plain classes with or without type hints."
         },
         {
             "question": "Can I use this with Flask or Django?",

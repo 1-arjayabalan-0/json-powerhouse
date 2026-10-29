@@ -30,7 +30,7 @@ const content: ToolContent = {
     "examples": [
         {
             "title": "Generating Go structs",
-            "description": "A small user record with a nested address, generated with the default settings. Generated with the field-tags setting set to json.",
+            "description": "A small user record with a nested address, generated with the default settings.",
             "input": "{\n  \"id\": 1,\n  \"name\": \"Ada Lovelace\",\n  \"email\": \"ada@example.com\",\n  \"active\": true,\n  \"tags\": [\"admin\", \"dev\"],\n  \"address\": { \"city\": \"London\", \"zip\": \"EC1A\" }\n}",
             "output": "// Code generated from JSON Schema using quicktype. DO NOT EDIT.\n// To parse and unparse this JSON data, add this code to your project and do:\n//\n//    root, err := UnmarshalRoot(bytes)\n//    bytes, err = root.Marshal()\n\npackage main\n\nimport \"encoding/json\"\n\nfunc UnmarshalRoot(data []byte) (Root, error) {\n\tvar r Root\n\terr := json.Unmarshal(data, &r)\n\treturn r, err\n}\n\nfunc (r *Root) Marshal() ([]byte, error) {\n\treturn json.Marshal(r)\n}\n\ntype Root struct {\n\tID      int64    `json:\"id\"`\n\tName    string   `json:\"name\"`\n\tEmail   string   `json:\"email\"`\n\tActive  bool     `json:\"active\"`\n\tTags    []string `json:\"tags\"`\n\tAddress Address  `json:\"address\"`\n}\n\ntype Address struct {\n\tCity string `json:\"city\"`\n\tZip  string `json:\"zip\"`\n}",
             "lang": "go"

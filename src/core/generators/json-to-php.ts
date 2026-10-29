@@ -12,7 +12,7 @@ export async function generatePHPCode(jsonString: string, config: PHPConfig): Pr
     
     const acronymStyle = acronymMap[config.acronymStyle] || 'pascal';
 
-    return await generateCodeFromJSON(
+    const code = await generateCodeFromJSON(
         jsonString,
         "php",
         "Root",
@@ -22,4 +22,15 @@ export async function generatePHPCode(jsonString: string, config: PHPConfig): Pr
             "acronym-style": acronymStyle,
         }
     );
+    return addFileHeader(code, config);
+}
+
+// quicktype has no PHP namespace or strict_types options, so add them after the opening tag.
+function addFileHeader(code: string, config: PHPConfig): string {
+    const header: string[] = [];
+    if (config.strictTypes) header.push("declare(strict_types=1);");
+    const namespace = config.namespace.trim().replace(/^\\+|\\+$/g, '');
+    if (namespace) header.push(`namespace ${namespace};`);
+    if (header.length === 0) return code;
+    return code.replace(/^<\?php\n/, `<?php\n\n${header.join("\n\n")}\n`);
 }
