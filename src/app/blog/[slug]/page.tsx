@@ -9,8 +9,9 @@ import { getAllPosts, getPost } from "@/app/lib/blog";
 import { mdxComponents } from "@/app/components/mdx";
 import ToolLink from "@/app/components/mdx/ToolLink";
 import JsonLd from "@/app/components/JsonLd";
+import { SITE_URL } from "@/app/config/site";
 
-const BASE_URL = "https://json-powerhouse.codarivu.com";
+const BASE_URL = SITE_URL;
 const OG_IMAGE = "https://json-powerhouse.codarivu.com/JSON-PowerHouse-Logo.png";
 
 export const dynamicParams = false;
