@@ -19,6 +19,11 @@ import jsonToCsharp from './json-to-csharp';
 import jsonToPython from './json-to-python';
 import jsonToRust from './json-to-rust';
 import jsonToPhp from './json-to-php';
+import jsonToPostgresql from './json-to-postgresql';
+import jsonToMysql from './json-to-mysql';
+import jsonToSqlite from './json-to-sqlite';
+import jsonToPrisma from './json-to-prisma';
+import jsonToJsonSchema from './json-to-json-schema';
 
 export type { ToolContent };
 
@@ -42,4 +47,9 @@ export const toolContent: Record<ToolId, ToolContent> = {
     'json-to-python': jsonToPython,
     'json-to-rust': jsonToRust,
     'json-to-php': jsonToPhp,
+    'json-to-postgresql': jsonToPostgresql,
+    'json-to-mysql': jsonToMysql,
+    'json-to-sqlite': jsonToSqlite,
+    'json-to-prisma': jsonToPrisma,
+    'json-to-json-schema': jsonToJsonSchema,
 };

@@ -1,5 +1,6 @@
 import './register-paths';
 import * as vscode from 'vscode';
+import { registerTrackedCommand } from './telemetry';
 import { diagnoseJson } from '@/core/lib/diagnostics/engine';
 
 export class ValidateHandler {
@@ -18,11 +19,11 @@ export class ValidateHandler {
 
     register(context: vscode.ExtensionContext): void {
         context.subscriptions.push(
-            vscode.commands.registerCommand('json-powerhouse.validate', () => this.validateActiveEditor())
+            registerTrackedCommand('json-powerhouse.validate', () => this.validateActiveEditor())
         );
 
         context.subscriptions.push(
-            vscode.commands.registerCommand('json-powerhouse.applyFix', (uri: vscode.Uri, issueId: string) => {
+            registerTrackedCommand('json-powerhouse.applyFix', (uri: vscode.Uri, issueId: string) => {
                 this.applyFix(uri, issueId);
             })
         );

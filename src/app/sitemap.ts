@@ -1,53 +1,56 @@
 import { MetadataRoute } from 'next';
 import { getAllPosts } from '@/app/lib/blog';
+import { getVisibleTools } from '@/app/config/tool-registry';
+import { SITE_CONTENT_UPDATED, SITE_URL } from '@/app/config/site';
 
-const BASE_URL = 'https://json-powerhouse.codarivu.com';
+type ChangeFrequency = 'daily' | 'weekly' | 'monthly';
 
-type RouteConfig = {
-  path: string;
-  priority: number;
-  changeFrequency: 'daily' | 'weekly' | 'monthly';
-};
-
-const routes: RouteConfig[] = [
+const staticPages: { path: string; priority: number; changeFrequency: ChangeFrequency }[] = [
   { path: '', priority: 1.0, changeFrequency: 'weekly' },
-  { path: '/blog', priority: 0.7, changeFrequency: 'weekly' },
   { path: '/about', priority: 0.6, changeFrequency: 'monthly' },
   { path: '/terms', priority: 0.3, changeFrequency: 'monthly' },
   { path: '/privacy', priority: 0.3, changeFrequency: 'monthly' },
-  { path: '/tools/json/formatter', priority: 0.9, changeFrequency: 'weekly' },
-  { path: '/tools/json/validator', priority: 0.9, changeFrequency: 'weekly' },
-  { path: '/tools/json/minifier', priority: 0.8, changeFrequency: 'weekly' },
-  { path: '/tools/json/normalize', priority: 0.8, changeFrequency: 'weekly' },
-  { path: '/tools/json/viewer', priority: 0.8, changeFrequency: 'weekly' },
-  { path: '/tools/json/text-viewer', priority: 0.8, changeFrequency: 'weekly' },
-  { path: '/tools/json/transform', priority: 0.8, changeFrequency: 'weekly' },
-  { path: '/tools/json/diff', priority: 0.8, changeFrequency: 'weekly' },
-  { path: '/tools/json/json5', priority: 0.7, changeFrequency: 'monthly' },
-  { path: '/tools/code/json-to-typescript', priority: 0.9, changeFrequency: 'weekly' },
-  { path: '/tools/code/json-to-java', priority: 0.8, changeFrequency: 'weekly' },
-  { path: '/tools/code/json-to-kotlin', priority: 0.8, changeFrequency: 'weekly' },
-  { path: '/tools/code/json-to-python', priority: 0.8, changeFrequency: 'weekly' },
-  { path: '/tools/code/json-to-csharp', priority: 0.8, changeFrequency: 'weekly' },
-  { path: '/tools/code/json-to-swift', priority: 0.7, changeFrequency: 'weekly' },
-  { path: '/tools/code/json-to-go', priority: 0.7, changeFrequency: 'weekly' },
-  { path: '/tools/code/json-to-dart', priority: 0.7, changeFrequency: 'weekly' },
-  { path: '/tools/code/json-to-rust', priority: 0.7, changeFrequency: 'weekly' },
-  { path: '/tools/code/json-to-php', priority: 0.7, changeFrequency: 'weekly' },
 ];
 
+// Most-used tools rank a little higher; every other visible tool gets the default.
+const toolPriority: Record<string, number> = {
+  'json-formatter': 0.9,
+  'json-validator': 0.9,
+  'json-to-typescript': 0.9,
+};
+
 export default function sitemap(): MetadataRoute.Sitemap {
-  const pages = routes.map((route) => ({
-    url: `${BASE_URL}${route.path}`,
-    lastModified: new Date(),
-    changeFrequency: route.changeFrequency,
-    priority: route.priority,
+  const contentUpdated = new Date(SITE_CONTENT_UPDATED);
+  const posts = getAllPosts();
+
+  const pages = staticPages.map((page) => ({
+    url: `${SITE_URL}${page.path}`,
+    lastModified: contentUpdated,
+    changeFrequency: page.changeFrequency,
+    priority: page.priority,
   }));
-  const posts = getAllPosts().map((p) => ({
-    url: `${BASE_URL}/blog/${p.slug}`,
+
+  // Hidden tools (unfinished) and test pages are left out on purpose.
+  const tools = getVisibleTools().map((tool) => ({
+    url: `${SITE_URL}${tool.path}`,
+    lastModified: contentUpdated,
+    changeFrequency: 'weekly' as const,
+    priority: toolPriority[tool.id] ?? 0.8,
+  }));
+
+  const blogIndex = {
+    url: `${SITE_URL}/blog`,
+    lastModified: posts.length ? new Date(posts[0].updated ?? posts[0].date) : contentUpdated,
+    changeFrequency: 'weekly' as const,
+    priority: 0.7,
+  };
+
+  const postEntries = posts.map((p) => ({
+    url: `${SITE_URL}/blog/${p.slug}`,
     lastModified: new Date(p.updated ?? p.date),
     changeFrequency: 'monthly' as const,
     priority: 0.6,
   }));
-  return [...pages, ...posts];
+
+  return [...pages, ...tools, blogIndex, ...postEntries];
 }

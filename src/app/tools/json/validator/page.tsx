@@ -4,21 +4,24 @@ import JsonLd from "@/app/components/JsonLd";
 import ToolArticle from "@/app/components/ToolArticle";
 import { Metadata } from "next";
 
+const title = "JSON Validator Online – Check, Lint & Fix JSON Errors | JSON PowerHouse";
+const description = "Free online JSON validator. Check JSON syntax, see errors by line and column with clear explanations, and auto-fix trailing commas, quotes, comments and more. Runs in your browser.";
+
 export const metadata: Metadata = {
-    title: "JSON Validator Online – Lint & Debug JSON | JSON PowerHouse",
-    description: "Validate JSON syntax, find errors, and debug your data with detailed error messages. Free online JSON Validator.",
-    keywords: ["json validator", "validate json", "json linter", "json syntax checker", "json error finder", "json debug"],
+    title,
+    description,
+    keywords: ["json validator", "json validator online", "validate json", "json checker", "json linter", "json syntax checker", "fix invalid json", "json error finder"],
     alternates: { canonical: '/tools/json/validator' },
     openGraph: {
-        title: "JSON Validator Online – Lint & Debug JSON | JSON PowerHouse",
-        description: "Validate JSON syntax, find errors, and debug your data with detailed error messages.",
+        title,
+        description,
         url: "https://json-powerhouse.codarivu.com/tools/json/validator",
         type: "website",
     },
     twitter: {
         card: "summary_large_image",
-        title: "JSON Validator Online – Lint & Debug JSON | JSON PowerHouse",
-        description: "Validate JSON syntax, find errors, and debug your data.",
+        title,
+        description,
     },
 };
 
@@ -33,7 +36,7 @@ export default function JSONValidatorPage() {
                     operatingSystem: "Web",
                     applicationCategory: "DeveloperApplication",
                     url: "https://json-powerhouse.codarivu.com/tools/json/validator",
-                    description: "Validate JSON syntax, find errors, and debug your data.",
+                    description,
                     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
                 }}
             />

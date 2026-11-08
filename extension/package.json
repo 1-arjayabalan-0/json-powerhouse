@@ -13,8 +13,8 @@
         "type": "github"
     },
     "license": "MIT",
-    "displayName": "JSON Powerhouse - Fix Broken JSON & Generate TypeScript, C#, Go",
-    "description": "Fix broken JSON and generate TypeScript, C#, Go, Java, and Python models instantly — right inside your editor.",
+    "displayName": "JSON Powerhouse - Fix JSON, Generate TypeScript, C#, SQL & Prisma",
+    "description": "Fix broken JSON and generate TypeScript, C#, Go, Java and Python models, SQL CREATE TABLE scripts (PostgreSQL, MySQL, SQLite), Prisma schemas and JSON Schema — right inside your editor.",
     "keywords": [
         "json",
         "json formatter",
@@ -26,9 +26,14 @@
         "json minify",
         "json validate",
         "json tree view",
-        "json diff"
+        "json diff",
+        "json to sql",
+        "json to postgresql",
+        "json to mysql",
+        "json to prisma",
+        "json schema generator"
     ],
-    "version": "1.0.1",
+    "version": "2.0.0",
     "engines": {
         "vscode": "^1.80.0"
     },
@@ -45,89 +50,150 @@
         "commands": [
             {
                 "command": "json-powerhouse.format",
-                "title": "JSON PowerHouse: Format JSON"
+                "title": "Format JSON",
+                "category": "JSON PowerHouse"
             },
             {
                 "command": "json-powerhouse.minify",
-                "title": "JSON PowerHouse: Minify JSON"
+                "title": "Minify JSON",
+                "category": "JSON PowerHouse"
             },
             {
                 "command": "json-powerhouse.normalize",
-                "title": "JSON PowerHouse: Normalize JSON (Strip Comments)"
+                "title": "Normalize (Strip Comments)",
+                "category": "JSON PowerHouse"
             },
             {
                 "command": "json-powerhouse.toJson5",
-                "title": "JSON PowerHouse: Convert to JSON5"
+                "title": "Convert to JSON5",
+                "category": "JSON PowerHouse"
             },
             {
                 "command": "json-powerhouse.flatten",
-                "title": "JSON PowerHouse: Flatten JSON"
+                "title": "Flatten JSON",
+                "category": "JSON PowerHouse"
             },
             {
                 "command": "json-powerhouse.unflatten",
-                "title": "JSON PowerHouse: Unflatten JSON"
+                "title": "Unflatten JSON",
+                "category": "JSON PowerHouse"
             },
             {
                 "command": "json-powerhouse.validate",
-                "title": "JSON PowerHouse: Validate JSON"
+                "title": "Validate JSON",
+                "category": "JSON PowerHouse"
             },
             {
                 "command": "json-powerhouse.treeView",
-                "title": "JSON PowerHouse: Open Tree Viewer"
+                "title": "Open Tree Viewer",
+                "category": "JSON PowerHouse"
             },
             {
                 "command": "json-powerhouse.diff",
-                "title": "JSON PowerHouse: Compare JSON Files (Diff)"
+                "title": "Compare with Another File (Diff)",
+                "category": "JSON PowerHouse"
             },
             {
                 "command": "json-powerhouse.applyFix",
-                "title": "JSON PowerHouse: Apply Auto-Fix"
+                "title": "Apply Auto-Fix",
+                "category": "JSON PowerHouse"
             },
             {
                 "command": "json-powerhouse.generateCSharp",
-                "title": "JSON PowerHouse: Generate C# Classes"
+                "title": "JSON → C# Classes",
+                "category": "JSON PowerHouse"
             },
             {
                 "command": "json-powerhouse.generateDart",
-                "title": "JSON PowerHouse: Generate Dart Classes"
+                "title": "JSON → Dart Classes",
+                "category": "JSON PowerHouse"
             },
             {
                 "command": "json-powerhouse.generateGo",
-                "title": "JSON PowerHouse: Generate Go Structs"
+                "title": "JSON → Go Structs",
+                "category": "JSON PowerHouse"
             },
             {
                 "command": "json-powerhouse.generateJava",
-                "title": "JSON PowerHouse: Generate Java Classes"
+                "title": "JSON → Java Classes",
+                "category": "JSON PowerHouse"
             },
             {
                 "command": "json-powerhouse.generateKotlin",
-                "title": "JSON PowerHouse: Generate Kotlin Classes"
+                "title": "JSON → Kotlin Classes",
+                "category": "JSON PowerHouse"
             },
             {
                 "command": "json-powerhouse.generatePhp",
-                "title": "JSON PowerHouse: Generate PHP Classes"
+                "title": "JSON → PHP Classes",
+                "category": "JSON PowerHouse"
             },
             {
                 "command": "json-powerhouse.generatePython",
-                "title": "JSON PowerHouse: Generate Python Classes"
+                "title": "JSON → Python Classes",
+                "category": "JSON PowerHouse"
             },
             {
                 "command": "json-powerhouse.generateRust",
-                "title": "JSON PowerHouse: Generate Rust Structs"
+                "title": "JSON → Rust Structs",
+                "category": "JSON PowerHouse"
             },
             {
                 "command": "json-powerhouse.generateSwift",
-                "title": "JSON PowerHouse: Generate Swift Structs"
+                "title": "JSON → Swift Structs",
+                "category": "JSON PowerHouse"
             },
             {
                 "command": "json-powerhouse.generateTypeScript",
-                "title": "JSON PowerHouse: Generate TypeScript Interfaces"
+                "title": "JSON → TypeScript Interfaces",
+                "category": "JSON PowerHouse"
+            },
+            {
+                "command": "json-powerhouse.generatePostgreSql",
+                "title": "JSON → PostgreSQL Tables",
+                "category": "JSON PowerHouse"
+            },
+            {
+                "command": "json-powerhouse.generateMySql",
+                "title": "JSON → MySQL Tables",
+                "category": "JSON PowerHouse"
+            },
+            {
+                "command": "json-powerhouse.generateSqlite",
+                "title": "JSON → SQLite Tables",
+                "category": "JSON PowerHouse"
+            },
+            {
+                "command": "json-powerhouse.generatePrisma",
+                "title": "JSON → Prisma Schema",
+                "category": "JSON PowerHouse"
+            },
+            {
+                "command": "json-powerhouse.generateJsonSchema",
+                "title": "JSON → JSON Schema",
+                "category": "JSON PowerHouse"
+            },
+            {
+                "command": "json-powerhouse.generate",
+                "title": "All Generators… (C#, Java, Python, Go, SQLite, JSON Schema…)",
+                "category": "JSON PowerHouse",
+                "icon": "$(sparkle)"
+            },
+            {
+                "command": "json-powerhouse.generatorOptions",
+                "title": "Generator Options…",
+                "category": "JSON PowerHouse",
+                "icon": "$(settings-gear)"
             }
         ],
         "submenus": [
             {
                 "id": "jsonPowerhouse.menu",
                 "label": "JSON PowerHouse"
+            },
+            {
+                "id": "jsonPowerhouse.transform",
+                "label": "Transform"
             }
         ],
         "menus": {
@@ -141,172 +207,922 @@
             "jsonPowerhouse.menu": [
                 {
                     "command": "json-powerhouse.format",
-                    "group": "1_tools"
+                    "group": "1_common@1"
                 },
                 {
                     "command": "json-powerhouse.minify",
-                    "group": "1_tools"
-                },
-                {
-                    "command": "json-powerhouse.normalize",
-                    "group": "1_tools"
-                },
-                {
-                    "command": "json-powerhouse.toJson5",
-                    "group": "1_tools"
-                },
-                {
-                    "command": "json-powerhouse.flatten",
-                    "group": "1_tools"
-                },
-                {
-                    "command": "json-powerhouse.unflatten",
-                    "group": "1_tools"
+                    "group": "1_common@2"
                 },
                 {
                     "command": "json-powerhouse.validate",
-                    "group": "1_tools"
-                },
-                {
-                    "command": "json-powerhouse.treeView",
-                    "group": "2_views"
-                },
-                {
-                    "command": "json-powerhouse.diff",
-                    "group": "2_views"
-                },
-                {
-                    "command": "json-powerhouse.generateCSharp",
-                    "group": "3_generate"
-                },
-                {
-                    "command": "json-powerhouse.generateDart",
-                    "group": "3_generate"
-                },
-                {
-                    "command": "json-powerhouse.generateGo",
-                    "group": "3_generate"
-                },
-                {
-                    "command": "json-powerhouse.generateJava",
-                    "group": "3_generate"
-                },
-                {
-                    "command": "json-powerhouse.generateKotlin",
-                    "group": "3_generate"
-                },
-                {
-                    "command": "json-powerhouse.generatePhp",
-                    "group": "3_generate"
-                },
-                {
-                    "command": "json-powerhouse.generatePython",
-                    "group": "3_generate"
-                },
-                {
-                    "command": "json-powerhouse.generateRust",
-                    "group": "3_generate"
-                },
-                {
-                    "command": "json-powerhouse.generateSwift",
-                    "group": "3_generate"
+                    "group": "1_common@3"
                 },
                 {
                     "command": "json-powerhouse.generateTypeScript",
-                    "group": "3_generate"
+                    "group": "2_generate@1"
+                },
+                {
+                    "command": "json-powerhouse.generatePostgreSql",
+                    "group": "2_generate@2"
+                },
+                {
+                    "command": "json-powerhouse.generateMySql",
+                    "group": "2_generate@3"
+                },
+                {
+                    "command": "json-powerhouse.generatePrisma",
+                    "group": "2_generate@4"
+                },
+                {
+                    "command": "json-powerhouse.generate",
+                    "group": "2_generate@5"
+                },
+                {
+                    "command": "json-powerhouse.generatorOptions",
+                    "group": "2_generate@6"
+                },
+                {
+                    "submenu": "jsonPowerhouse.transform",
+                    "group": "3_more@1"
+                },
+                {
+                    "command": "json-powerhouse.treeView",
+                    "group": "3_more@2"
+                },
+                {
+                    "command": "json-powerhouse.diff",
+                    "group": "3_more@3"
+                }
+            ],
+            "jsonPowerhouse.transform": [
+                {
+                    "command": "json-powerhouse.normalize",
+                    "group": "1_transform@1"
+                },
+                {
+                    "command": "json-powerhouse.toJson5",
+                    "group": "1_transform@2"
+                },
+                {
+                    "command": "json-powerhouse.flatten",
+                    "group": "1_transform@3"
+                },
+                {
+                    "command": "json-powerhouse.unflatten",
+                    "group": "1_transform@4"
+                }
+            ],
+            "commandPalette": [
+                {
+                    "command": "json-powerhouse.applyFix",
+                    "when": "false"
+                }
+            ],
+            "editor/title": [
+                {
+                    "command": "json-powerhouse.generate",
+                    "when": "editorLangId == json || editorLangId == jsonc",
+                    "group": "navigation@1"
+                },
+                {
+                    "command": "json-powerhouse.generatorOptions",
+                    "when": "jsonPowerhouse.isGeneratedOutput",
+                    "group": "navigation@1"
                 }
             ]
         },
-        "configuration": {
-            "title": "JSON PowerHouse",
-            "properties": {
-                "json-powerhouse.formatting.indentation": {
-                    "type": "string",
-                    "default": "2",
-                    "enum": [
-                        "2",
-                        "4",
-                        "tab",
-                        "0"
-                    ],
-                    "description": "Default indentation for formatting"
-                },
-                "json-powerhouse.formatting.keySorting": {
-                    "type": "string",
-                    "default": "none",
-                    "enum": [
-                        "none",
-                        "asc",
-                        "desc"
-                    ],
-                    "description": "Sort object keys"
-                },
-                "json-powerhouse.formatting.quoteStyle": {
-                    "type": "string",
-                    "default": "double",
-                    "enum": [
-                        "double",
-                        "single"
-                    ],
-                    "description": "Quote style for keys"
-                },
-                "json-powerhouse.formatting.trailingCommas": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "Add trailing commas"
-                },
-                "json-powerhouse.formatting.stripComments": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Strip comments from JSON"
-                },
-                "json-powerhouse.diff.allowComments": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Allow comments in JSON for diff comparison"
-                },
-                "json-powerhouse.diff.arrayStrategy": {
-                    "type": "string",
-                    "default": "index",
-                    "enum": [
-                        "index",
-                        "key",
-                        "ignore-order"
-                    ],
-                    "description": "Array comparison strategy for diff"
-                },
-                "json-powerhouse.diff.arrayMatchKey": {
-                    "type": "string",
-                    "default": "id",
-                    "description": "Key to match array items when using key-based strategy"
-                },
-                "json-powerhouse.diff.showUnchanged": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "Show unchanged nodes in diff view"
-                },
-                "json-powerhouse.validateOnSave": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Automatically validate JSON on save"
-                },
-                "json-powerhouse.validateOnChange": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Automatically validate JSON on change (debounced)"
+        "configuration": [
+            {
+                "id": "json-powerhouse",
+                "title": "JSON PowerHouse",
+                "order": 0,
+                "properties": {
+                    "json-powerhouse.formatting.indentation": {
+                        "type": "string",
+                        "default": "2",
+                        "enum": [
+                            "2",
+                            "4",
+                            "tab",
+                            "0"
+                        ],
+                        "description": "Default indentation for formatting"
+                    },
+                    "json-powerhouse.formatting.keySorting": {
+                        "type": "string",
+                        "default": "none",
+                        "enum": [
+                            "none",
+                            "asc",
+                            "desc"
+                        ],
+                        "description": "Sort object keys"
+                    },
+                    "json-powerhouse.formatting.quoteStyle": {
+                        "type": "string",
+                        "default": "double",
+                        "enum": [
+                            "double",
+                            "single"
+                        ],
+                        "description": "Quote style for keys"
+                    },
+                    "json-powerhouse.formatting.trailingCommas": {
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Add trailing commas"
+                    },
+                    "json-powerhouse.formatting.stripComments": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Strip comments from JSON"
+                    },
+                    "json-powerhouse.diff.allowComments": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Allow comments in JSON for diff comparison"
+                    },
+                    "json-powerhouse.diff.arrayStrategy": {
+                        "type": "string",
+                        "default": "index",
+                        "enum": [
+                            "index",
+                            "key",
+                            "ignore-order"
+                        ],
+                        "description": "Array comparison strategy for diff"
+                    },
+                    "json-powerhouse.diff.arrayMatchKey": {
+                        "type": "string",
+                        "default": "id",
+                        "description": "Key to match array items when using key-based strategy"
+                    },
+                    "json-powerhouse.diff.showUnchanged": {
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Show unchanged nodes in diff view"
+                    },
+                    "json-powerhouse.validateOnSave": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Automatically validate JSON on save"
+                    },
+                    "json-powerhouse.validateOnChange": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Automatically validate JSON on change (debounced)"
+                    },
+                    "json-powerhouse.telemetry.enabled": {
+                        "type": "boolean",
+                        "default": true,
+                        "tags": [
+                            "usesOnlineServices",
+                            "telemetry"
+                        ],
+                        "markdownDescription": "Send anonymous usage statistics (which commands are used; never your JSON). Always off when VS Code telemetry (`#telemetry.telemetryLevel#`) is off. See the Telemetry section of the README."
+                    }
+                }
+            },
+            {
+                "id": "json-powerhouse.typescript",
+                "title": "TypeScript",
+                "order": 10,
+                "properties": {
+                    "json-powerhouse.typescript.typeKind": {
+                        "type": "string",
+                        "default": "interface",
+                        "description": "Plain interfaces only, or interfaces plus Convert helpers that parse and check JSON at runtime.",
+                        "order": 0,
+                        "enum": [
+                            "type",
+                            "interface"
+                        ],
+                        "enumItemLabels": [
+                            "Interfaces only",
+                            "Interfaces + Convert helpers"
+                        ]
+                    },
+                    "json-powerhouse.typescript.runtimeTypecheck": {
+                        "type": "string",
+                        "default": "none",
+                        "description": "Also generate a runtime validation schema.",
+                        "order": 1,
+                        "enum": [
+                            "none",
+                            "zod"
+                        ],
+                        "enumItemLabels": [
+                            "None",
+                            "Zod schema"
+                        ]
+                    },
+                    "json-powerhouse.typescript.readonlyProperties": {
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Mark every property as readonly.",
+                        "order": 2
+                    },
+                    "json-powerhouse.typescript.explicitAny": {
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Use \"any\" instead of \"unknown\" for values whose type cannot be inferred.",
+                        "order": 3
+                    },
+                    "json-powerhouse.typescript.nicePropertyNames": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Convert JSON keys into idiomatic property names.",
+                        "order": 4
+                    },
+                    "json-powerhouse.typescript.acronymStyle": {
+                        "type": "string",
+                        "default": "camel",
+                        "description": "How acronyms such as \"URL\" or \"ID\" are cased in generated names.",
+                        "order": 5,
+                        "enum": [
+                            "camel",
+                            "pascal",
+                            "lowerCase",
+                            "upperCase",
+                            "original"
+                        ],
+                        "enumItemLabels": [
+                            "Camel (Url, Id)",
+                            "Pascal (URL, ID)",
+                            "Lower case (url, id)",
+                            "Upper case (URL, ID)",
+                            "Keep original"
+                        ]
+                    }
+                }
+            },
+            {
+                "id": "json-powerhouse.csharp",
+                "title": "C#",
+                "order": 11,
+                "properties": {
+                    "json-powerhouse.csharp.namespace": {
+                        "type": "string",
+                        "default": "MyNamespace",
+                        "description": "Namespace for the generated types.",
+                        "order": 0
+                    },
+                    "json-powerhouse.csharp.framework": {
+                        "type": "string",
+                        "default": "SystemTextJson",
+                        "description": "Serialization attributes to emit.",
+                        "order": 1,
+                        "enum": [
+                            "SystemTextJson",
+                            "NewtonsoftJson",
+                            "none"
+                        ],
+                        "enumItemLabels": [
+                            "System.Text.Json",
+                            "Newtonsoft.Json",
+                            "None (plain types)"
+                        ]
+                    },
+                    "json-powerhouse.csharp.recordType": {
+                        "type": "string",
+                        "default": "class",
+                        "description": "Generate classes, records or structs.",
+                        "order": 2,
+                        "enum": [
+                            "class",
+                            "record",
+                            "struct"
+                        ],
+                        "enumItemLabels": [
+                            "Class",
+                            "Record",
+                            "Struct"
+                        ]
+                    },
+                    "json-powerhouse.csharp.accessLevel": {
+                        "type": "string",
+                        "default": "public",
+                        "description": "Access modifier of the generated types.",
+                        "order": 3,
+                        "enum": [
+                            "public",
+                            "internal"
+                        ],
+                        "enumItemLabels": [
+                            "public",
+                            "internal"
+                        ]
+                    },
+                    "json-powerhouse.csharp.numberType": {
+                        "type": "string",
+                        "default": "double",
+                        "description": "C# type used for non-integer numbers.",
+                        "order": 4,
+                        "enum": [
+                            "double",
+                            "decimal"
+                        ],
+                        "enumItemLabels": [
+                            "double",
+                            "decimal"
+                        ]
+                    },
+                    "json-powerhouse.csharp.arrayType": {
+                        "type": "string",
+                        "default": "list",
+                        "description": "C# type used for JSON arrays.",
+                        "order": 5,
+                        "enum": [
+                            "list",
+                            "array"
+                        ],
+                        "enumItemLabels": [
+                            "List<T>",
+                            "T[]"
+                        ]
+                    },
+                    "json-powerhouse.csharp.density": {
+                        "type": "string",
+                        "default": "normal",
+                        "description": "Normal or dense (more compact) output.",
+                        "order": 6,
+                        "enum": [
+                            "normal",
+                            "dense"
+                        ],
+                        "enumItemLabels": [
+                            "Normal",
+                            "Dense"
+                        ]
+                    }
+                }
+            },
+            {
+                "id": "json-powerhouse.java",
+                "title": "Java",
+                "order": 12,
+                "properties": {
+                    "json-powerhouse.java.packageName": {
+                        "type": "string",
+                        "default": "com.example",
+                        "description": "Package declaration for the generated classes.",
+                        "order": 0
+                    },
+                    "json-powerhouse.java.useGettersSetters": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Generate private fields with getters and setters.",
+                        "order": 1
+                    },
+                    "json-powerhouse.java.useOptional": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Use Optional<T> for fields that can be missing or null.",
+                        "order": 2
+                    },
+                    "json-powerhouse.java.useBigDecimal": {
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Use BigDecimal for decimal numbers.",
+                        "order": 3
+                    },
+                    "json-powerhouse.java.arrayType": {
+                        "type": "string",
+                        "default": "list",
+                        "description": "Java type used for JSON arrays.",
+                        "order": 4,
+                        "enum": [
+                            "list",
+                            "array"
+                        ],
+                        "enumItemLabels": [
+                            "List<T>",
+                            "T[]"
+                        ]
+                    },
+                    "json-powerhouse.java.acronymStyle": {
+                        "type": "string",
+                        "default": "pascal",
+                        "description": "How acronyms such as \"URL\" or \"ID\" are cased in generated names.",
+                        "order": 5,
+                        "enum": [
+                            "camel",
+                            "pascal",
+                            "lowerCase",
+                            "upperCase",
+                            "original"
+                        ],
+                        "enumItemLabels": [
+                            "Camel (Url, Id)",
+                            "Pascal (URL, ID)",
+                            "Lower case (url, id)",
+                            "Upper case (URL, ID)",
+                            "Keep original"
+                        ]
+                    }
+                }
+            },
+            {
+                "id": "json-powerhouse.python",
+                "title": "Python",
+                "order": 13,
+                "properties": {
+                    "json-powerhouse.python.classType": {
+                        "type": "string",
+                        "default": "dataclasses",
+                        "description": "Generate dataclasses, Pydantic models or plain classes.",
+                        "order": 0,
+                        "enum": [
+                            "dataclasses",
+                            "pydantic",
+                            "plain"
+                        ],
+                        "enumItemLabels": [
+                            "Dataclasses",
+                            "Pydantic models",
+                            "Plain classes"
+                        ]
+                    },
+                    "json-powerhouse.python.useTypeHints": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Annotate fields with type hints.",
+                        "order": 1
+                    },
+                    "json-powerhouse.python.nicePropertyNames": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Convert JSON keys into snake_case attribute names.",
+                        "order": 2
+                    }
+                }
+            },
+            {
+                "id": "json-powerhouse.go",
+                "title": "Go",
+                "order": 14,
+                "properties": {
+                    "json-powerhouse.go.packageName": {
+                        "type": "string",
+                        "default": "main",
+                        "description": "Package clause for the generated file.",
+                        "order": 0
+                    },
+                    "json-powerhouse.go.useOmitEmpty": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Add \",omitempty\" to JSON struct tags of optional fields.",
+                        "order": 1
+                    }
+                }
+            },
+            {
+                "id": "json-powerhouse.kotlin",
+                "title": "Kotlin",
+                "order": 15,
+                "properties": {
+                    "json-powerhouse.kotlin.packageName": {
+                        "type": "string",
+                        "default": "com.example",
+                        "description": "Package declaration for the generated classes.",
+                        "order": 0
+                    },
+                    "json-powerhouse.kotlin.framework": {
+                        "type": "string",
+                        "default": "kotlinx",
+                        "description": "Serialization annotations to emit.",
+                        "order": 1,
+                        "enum": [
+                            "kotlinx",
+                            "jackson",
+                            "none"
+                        ],
+                        "enumItemLabels": [
+                            "kotlinx.serialization",
+                            "Jackson",
+                            "None"
+                        ]
+                    },
+                    "json-powerhouse.kotlin.useDataClasses": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Generate data classes.",
+                        "order": 2
+                    },
+                    "json-powerhouse.kotlin.useArrays": {
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Use Array<T> instead of List<T>.",
+                        "order": 3
+                    },
+                    "json-powerhouse.kotlin.acronymStyle": {
+                        "type": "string",
+                        "default": "pascal",
+                        "description": "How acronyms such as \"URL\" or \"ID\" are cased in generated names.",
+                        "order": 4,
+                        "enum": [
+                            "camel",
+                            "pascal",
+                            "lowerCase",
+                            "upperCase",
+                            "original"
+                        ],
+                        "enumItemLabels": [
+                            "Camel (Url, Id)",
+                            "Pascal (URL, ID)",
+                            "Lower case (url, id)",
+                            "Upper case (URL, ID)",
+                            "Keep original"
+                        ]
+                    }
+                }
+            },
+            {
+                "id": "json-powerhouse.swift",
+                "title": "Swift",
+                "order": 16,
+                "properties": {
+                    "json-powerhouse.swift.typeKind": {
+                        "type": "string",
+                        "default": "struct",
+                        "description": "Generate structs or classes.",
+                        "order": 0,
+                        "enum": [
+                            "struct",
+                            "class"
+                        ],
+                        "enumItemLabels": [
+                            "Struct",
+                            "Class"
+                        ]
+                    },
+                    "json-powerhouse.swift.useCodable": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Conform the generated types to Codable.",
+                        "order": 1
+                    },
+                    "json-powerhouse.swift.accessLevel": {
+                        "type": "string",
+                        "default": "public",
+                        "description": "Access level of the generated types.",
+                        "order": 2,
+                        "enum": [
+                            "public",
+                            "internal",
+                            "private",
+                            "open"
+                        ],
+                        "enumItemLabels": [
+                            "public",
+                            "internal",
+                            "private",
+                            "open"
+                        ]
+                    },
+                    "json-powerhouse.swift.useClassesForMutable": {
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Use \"var\" instead of \"let\" for properties.",
+                        "order": 3
+                    },
+                    "json-powerhouse.swift.acronymStyle": {
+                        "type": "string",
+                        "default": "camel",
+                        "description": "How acronyms such as \"URL\" or \"ID\" are cased in generated names.",
+                        "order": 4,
+                        "enum": [
+                            "camel",
+                            "pascal",
+                            "lowerCase",
+                            "upperCase",
+                            "original"
+                        ],
+                        "enumItemLabels": [
+                            "Camel (Url, Id)",
+                            "Pascal (URL, ID)",
+                            "Lower case (url, id)",
+                            "Upper case (URL, ID)",
+                            "Keep original"
+                        ]
+                    }
+                }
+            },
+            {
+                "id": "json-powerhouse.dart",
+                "title": "Dart",
+                "order": 17,
+                "properties": {
+                    "json-powerhouse.dart.useFreezed": {
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Generate immutable classes with the freezed package.",
+                        "order": 0
+                    },
+                    "json-powerhouse.dart.useJsonSerializable": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Add json_serializable annotations.",
+                        "order": 1
+                    },
+                    "json-powerhouse.dart.nullSafety": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Generate null-safe code.",
+                        "order": 2
+                    },
+                    "json-powerhouse.dart.useNum": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Use num instead of double for decimal numbers.",
+                        "order": 3
+                    },
+                    "json-powerhouse.dart.acronymStyle": {
+                        "type": "string",
+                        "default": "camel",
+                        "description": "How acronyms such as \"URL\" or \"ID\" are cased in generated names.",
+                        "order": 4,
+                        "enum": [
+                            "camel",
+                            "pascal",
+                            "lowerCase",
+                            "upperCase",
+                            "original"
+                        ],
+                        "enumItemLabels": [
+                            "Camel (Url, Id)",
+                            "Pascal (URL, ID)",
+                            "Lower case (url, id)",
+                            "Upper case (URL, ID)",
+                            "Keep original"
+                        ]
+                    }
+                }
+            },
+            {
+                "id": "json-powerhouse.rust",
+                "title": "Rust",
+                "order": 18,
+                "properties": {
+                    "json-powerhouse.rust.deriveDebug": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Add #[derive(Debug)].",
+                        "order": 0
+                    },
+                    "json-powerhouse.rust.deriveClone": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Add #[derive(Clone)].",
+                        "order": 1
+                    },
+                    "json-powerhouse.rust.visibility": {
+                        "type": "string",
+                        "default": "public",
+                        "description": "Visibility of the generated structs and fields.",
+                        "order": 2,
+                        "enum": [
+                            "public",
+                            "crate",
+                            "private"
+                        ],
+                        "enumItemLabels": [
+                            "pub",
+                            "pub(crate)",
+                            "private"
+                        ]
+                    },
+                    "json-powerhouse.rust.density": {
+                        "type": "string",
+                        "default": "normal",
+                        "description": "Normal or dense (more compact) output.",
+                        "order": 3,
+                        "enum": [
+                            "normal",
+                            "dense"
+                        ],
+                        "enumItemLabels": [
+                            "Normal",
+                            "Dense"
+                        ]
+                    }
+                }
+            },
+            {
+                "id": "json-powerhouse.php",
+                "title": "PHP",
+                "order": 19,
+                "properties": {
+                    "json-powerhouse.php.namespace": {
+                        "type": "string",
+                        "default": "App",
+                        "description": "Namespace for the generated classes.",
+                        "order": 0
+                    },
+                    "json-powerhouse.php.strictTypes": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Add declare(strict_types=1).",
+                        "order": 1
+                    },
+                    "json-powerhouse.php.useGettersSetters": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Generate getters and setters.",
+                        "order": 2
+                    },
+                    "json-powerhouse.php.fastMode": {
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Skip validation code in the generated classes.",
+                        "order": 3
+                    },
+                    "json-powerhouse.php.acronymStyle": {
+                        "type": "string",
+                        "default": "pascal",
+                        "description": "How acronyms such as \"URL\" or \"ID\" are cased in generated names.",
+                        "order": 4,
+                        "enum": [
+                            "camel",
+                            "pascal",
+                            "lowerCase",
+                            "upperCase",
+                            "original"
+                        ],
+                        "enumItemLabels": [
+                            "Camel (Url, Id)",
+                            "Pascal (URL, ID)",
+                            "Lower case (url, id)",
+                            "Upper case (URL, ID)",
+                            "Keep original"
+                        ]
+                    }
+                }
+            },
+            {
+                "id": "json-powerhouse.sql",
+                "title": "SQL (PostgreSQL, MySQL, SQLite)",
+                "order": 20,
+                "properties": {
+                    "json-powerhouse.sql.tableName": {
+                        "type": "string",
+                        "default": "items",
+                        "description": "Name of the table created for the top-level JSON.",
+                        "order": 0
+                    },
+                    "json-powerhouse.sql.nested": {
+                        "type": "string",
+                        "default": "tables",
+                        "description": "How nested JSON objects and arrays of objects are mapped in the generated SQL schema.",
+                        "order": 1,
+                        "enum": [
+                            "tables",
+                            "json"
+                        ],
+                        "enumItemLabels": [
+                            "Related tables with foreign keys",
+                            "JSON columns"
+                        ]
+                    },
+                    "json-powerhouse.sql.includeInserts": {
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Also generate INSERT statements for the JSON data, with generated ids linking child tables.",
+                        "order": 2
+                    },
+                    "json-powerhouse.sql.ifNotExists": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Use CREATE TABLE IF NOT EXISTS.",
+                        "order": 3
+                    }
+                }
+            },
+            {
+                "id": "json-powerhouse.prisma",
+                "title": "Prisma",
+                "order": 21,
+                "properties": {
+                    "json-powerhouse.prisma.modelName": {
+                        "type": "string",
+                        "default": "Item",
+                        "description": "Name of the model created for the top-level JSON.",
+                        "order": 0
+                    },
+                    "json-powerhouse.prisma.provider": {
+                        "type": "string",
+                        "default": "postgresql",
+                        "description": "Datasource provider; controls native types such as @db.Uuid.",
+                        "order": 1,
+                        "enum": [
+                            "postgresql",
+                            "mysql",
+                            "sqlite"
+                        ],
+                        "enumItemLabels": [
+                            "PostgreSQL",
+                            "MySQL",
+                            "SQLite"
+                        ]
+                    },
+                    "json-powerhouse.prisma.nested": {
+                        "type": "string",
+                        "default": "tables",
+                        "description": "How nested JSON objects and arrays of objects are mapped in the generated Prisma models.",
+                        "order": 2,
+                        "enum": [
+                            "tables",
+                            "json"
+                        ],
+                        "enumItemLabels": [
+                            "Related tables with foreign keys",
+                            "JSON columns"
+                        ]
+                    },
+                    "json-powerhouse.prisma.mapNames": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Add @map/@@map so the database uses snake_case column and table names.",
+                        "order": 3
+                    },
+                    "json-powerhouse.prisma.includeHeader": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Include the generator and datasource blocks.",
+                        "order": 4
+                    }
+                }
+            },
+            {
+                "id": "json-powerhouse.jsonSchema",
+                "title": "JSON Schema",
+                "order": 22,
+                "properties": {
+                    "json-powerhouse.jsonSchema.draft": {
+                        "type": "string",
+                        "default": "2020-12",
+                        "description": "JSON Schema draft version.",
+                        "order": 0,
+                        "enum": [
+                            "2020-12",
+                            "07"
+                        ],
+                        "enumItemLabels": [
+                            "Draft 2020-12",
+                            "Draft-07"
+                        ]
+                    },
+                    "json-powerhouse.jsonSchema.title": {
+                        "type": "string",
+                        "default": "",
+                        "description": "Optional schema title.",
+                        "order": 1
+                    },
+                    "json-powerhouse.jsonSchema.required": {
+                        "type": "string",
+                        "default": "present",
+                        "description": "How required properties are inferred.",
+                        "order": 2,
+                        "enum": [
+                            "present",
+                            "none"
+                        ],
+                        "enumItemLabels": [
+                            "Keys present in every sample",
+                            "None"
+                        ]
+                    },
+                    "json-powerhouse.jsonSchema.additionalProperties": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Allow properties not seen in the sample.",
+                        "order": 3
+                    },
+                    "json-powerhouse.jsonSchema.detectFormats": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Detect formats such as date-time, email, uri and uuid.",
+                        "order": 4
+                    },
+                    "json-powerhouse.jsonSchema.mergeRootArray": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Treat a top-level array as samples of one object.",
+                        "order": 5
+                    }
                 }
             }
-        }
+        ]
     },
     "scripts": {
-        "compile": "npm run check-types && node esbuild.js",
+        "compile": "npm run sync-settings && npm run check-types && node esbuild.js",
         "check-types": "tsc --noEmit",
         "watch": "npm-run-all -p watch:*",
         "watch:esbuild": "node esbuild.js --watch",
         "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
         "vscode:prepublish": "npm run package",
-        "package": "npm run check-types && node esbuild.js --production"
-
+        "package": "npm run sync-settings && npm run check-types && node esbuild.js --production",
+        "sync-settings": "node scripts/sync-settings.cjs"
     },
     "devDependencies": {
         "@types/glob": "^8.1.0",

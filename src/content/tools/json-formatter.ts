@@ -32,7 +32,7 @@ const content: ToolContent = {
         { question: "Is my data safe?", answer: "Yes. All formatting happens in your browser. Your JSON data is never sent to any server." },
         { question: "Can I format JSON with comments?", answer: "Yes. JSON PowerHouse supports JSONC (JSON with comments). You can strip or preserve comments during formatting." },
     ],
-    related: ['json-validator', 'json-minifier', 'json-viewer', 'json-diff', 'json-to-typescript'],
+    related: ['json-validator', 'json-minifier', 'json-viewer', 'json-diff', 'json-json5', 'json-normalize'],
 };
 
 export default content;

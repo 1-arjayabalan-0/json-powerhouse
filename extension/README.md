@@ -7,7 +7,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![VS Code](https://img.shields.io/badge/VS%20Code-1.80%2B-007ACC?logo=visual-studio-code)](https://code.visualstudio.com/)
 
-Paste messy, broken, or invalid JSON → get clean JSON and ready-to-use types in one command. No copy-pasting to online tools. No manual cleanup. No scripts. Everything runs offline inside your editor.
+Paste messy, broken, or invalid JSON → get clean JSON and ready-to-use types in one command. No copy-pasting to online tools. No manual cleanup. No scripts. All processing runs locally inside your editor — your JSON never leaves your machine.
 
 ---
 
@@ -27,9 +27,11 @@ Paste messy, broken, or invalid JSON → get clean JSON and ready-to-use types i
 
 - **Auto-fix broken JSON** — handles missing quotes, trailing commas, single quotes, unquoted keys, and more
 - **Format & prettify** — clean, consistent output every time
-- **Generate types instantly** — TypeScript, C#, Go, Java, Python, and more
+- **Generate types instantly** — TypeScript, C#, Java, Python, Go, Kotlin, Swift, Dart, Rust and PHP
+- **Generate database schemas** — PostgreSQL, MySQL and SQLite `CREATE TABLE` scripts (with optional `INSERT`s), Prisma models and JSON Schema
+- **Options right where you generate** — click ⚙ to change a generator's options; open output updates instantly
 - **Real-time validation** — catch errors as you type
-- **100% offline** — nothing leaves your machine
+- **Private by design** — all processing is local; your JSON never leaves your machine
 
 ---
 
@@ -52,7 +54,7 @@ Paste this broken JSON into any `.json` file:
 {'user_id': 1, name: "John",}
 ```
 
-Run `JSON Powerhouse: Fix & Format JSON` — you get:
+Run `JSON PowerHouse: Format JSON` — you get:
 
 ```json
 {
@@ -61,7 +63,7 @@ Run `JSON Powerhouse: Fix & Format JSON` — you get:
 }
 ```
 
-Then run `JSON Powerhouse: Generate TypeScript` — you get:
+Then run `JSON PowerHouse: JSON → TypeScript Interfaces` — you get:
 
 ```ts
 interface RootObject {
@@ -76,17 +78,21 @@ Done. Two commands. Zero cleanup.
 
 ## ⌨️ Commands
 
-Open the Command Palette (`Ctrl+Shift+P` / `Cmd+Shift+P`) and type **JSON Powerhouse**:
+Right-click in a JSON file and open **JSON PowerHouse**, click ✨ in the editor title bar, or open the Command Palette (`Ctrl+Shift+P` / `Cmd+Shift+P`) and type **JSON PowerHouse**:
 
 | Command | Description |
 |---|---|
-| `JSON Powerhouse: Fix & Format JSON` | Auto-fix and prettify invalid JSON |
-| `JSON Powerhouse: Validate JSON` | Check JSON for errors in real time |
-| `JSON Powerhouse: Generate TypeScript` | Generate a TypeScript interface |
-| `JSON Powerhouse: Generate C#` | Generate a C# class |
-| `JSON Powerhouse: Generate Go` | Generate a Go struct |
-| `JSON Powerhouse: Generate Java` | Generate a Java class |
-| `JSON Powerhouse: Generate Python` | Generate a Python dataclass |
+| `Format JSON` / `Minify JSON` | Fix and prettify, or compact, the JSON |
+| `Validate JSON` | Check JSON for errors, with one-click fixes |
+| `Transform` › Normalize, JSON5, Flatten, Unflatten | Strip comments, convert to JSON5, flatten or unflatten keys |
+| `Open Tree Viewer` / `Compare with Another File (Diff)` | Explore or compare JSON |
+| `JSON → TypeScript / C# / Java / Python / Go / Kotlin / Swift / Dart / Rust / PHP` | Generate types and classes |
+| `JSON → PostgreSQL / MySQL / SQLite Tables` | `CREATE TABLE` scripts, with child tables and foreign keys for nested data |
+| `JSON → Prisma Schema` / `JSON → JSON Schema` | Prisma models with relations, or a JSON Schema |
+| `All Generators…` | Searchable list of every generator, with ⚙ options on each row |
+| `Generator Options…` | Change a generator's options; open output updates instantly |
+
+Generators work on the selection, or on the whole file when nothing is selected. JSONC and JSON5 input (comments, trailing commas) is accepted.
 
 > Keyboard shortcuts can be customised in **File → Preferences → Keyboard Shortcuts**.
 
@@ -94,15 +100,16 @@ Open the Command Palette (`Ctrl+Shift+P` / `Cmd+Shift+P`) and type **JSON Powerh
 
 ## ⚙️ Configuration
 
-Open **Settings** (`Ctrl+,`) and search for `jsonPowerhouse`:
+Open **Settings** (`Ctrl+,`) and search for `json-powerhouse`. Every generator has its own section (TypeScript, C#, SQL, Prisma, …), and its most useful options are also one click away via ⚙.
 
-| Setting | Options | Default |
+| Setting | Description | Default |
 |---|---|---|
-| `jsonPowerhouse.indentation` | `2`, `4`, `tab` | `2` |
-| `jsonPowerhouse.sortKeys` | `none`, `asc`, `desc` | `none` |
-| `jsonPowerhouse.quoteStyle` | `double`, `single` | `double` |
-| `jsonPowerhouse.trailingCommas` | `true`, `false` | `false` |
-| `jsonPowerhouse.validateOnSave` | `true`, `false` | `true` |
+| `json-powerhouse.formatting.indentation` | `2`, `4`, `tab` or `0` | `2` |
+| `json-powerhouse.formatting.keySorting` | `none`, `asc` or `desc` | `none` |
+| `json-powerhouse.validateOnSave` / `validateOnChange` | Validate automatically | `true` |
+| `json-powerhouse.typescript.*`, `.csharp.*`, `.java.*`, … | Code generator options | |
+| `json-powerhouse.sql.*`, `.prisma.*`, `.jsonSchema.*` | Schema generator options | |
+| `json-powerhouse.telemetry.enabled` | Anonymous usage statistics (see [Telemetry](#-telemetry)) | `true` |
 
 ---
 
@@ -118,6 +125,21 @@ JSON Powerhouse is designed for the messy, inconsistent payloads that show up in
 - Debugging a broken API response in production
 - Working with legacy data that nobody cleaned up
 - Switching between languages and needing type stubs quickly
+
+---
+
+## 📊 Telemetry
+
+To learn which features are used and what to improve, JSON PowerHouse sends **anonymous** usage statistics:
+
+- which command was run (for example "Format JSON" or "JSON → Prisma Schema") and whether it was started from the menu, the generator list or the ⚙ options
+- whether a generation failed, as a category only (for example "invalid JSON")
+- which generator option was changed via ⚙ — the option's name, never its value
+- a once-a-day "active" ping, plus the extension version, editor name and version, OS and display language
+
+Events are identified by VS Code's anonymous machine ID. **Your JSON, file names, paths, setting values and error messages are never sent.** Data is sent to [PostHog](https://posthog.com).
+
+Nothing is sent when VS Code telemetry is turned off (`telemetry.telemetryLevel`). To turn off only this extension's telemetry, set `json-powerhouse.telemetry.enabled` to `false`.
 
 ---
 
