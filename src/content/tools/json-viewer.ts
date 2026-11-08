@@ -50,6 +50,7 @@ const content: ToolContent = {
         "json-formatter",
         "json-validator",
         "json-diff",
+        "json-json5",
         "json-to-typescript"
     ]
 };

@@ -34,6 +34,7 @@ describe('tool registry', () => {
         expect(getVisibleTools('json').every(t => t.group === 'json')).toBe(true);
         expect(getVisibleTools('code')).toHaveLength(9);
         expect(getVisibleTools('json')).toHaveLength(8);
+        expect(getVisibleTools('schema').map(t => t.id)).toEqual(['json-to-postgresql', 'json-to-mysql', 'json-to-sqlite', 'json-to-prisma', 'json-to-json-schema']);
     });
 });
 

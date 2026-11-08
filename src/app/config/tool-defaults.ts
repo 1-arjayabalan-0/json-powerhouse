@@ -7,6 +7,7 @@ import {
     defaultTypeScriptConfig, defaultJavaConfig, defaultKotlinConfig, defaultDartConfig, defaultSwiftConfig,
     defaultGoConfig, defaultCSharpConfig, defaultPythonConfig, defaultRustConfig, defaultPHPConfig,
 } from '@/core/types/code-generator-config';
+import { defaultSqlSchemaConfig, defaultPrismaSchemaConfig, defaultJsonSchemaConfig } from '@/core/types/schema-generator-config';
 import type { ToolId } from './tool-registry';
 
 const formatterPresets: Record<'json-formatter' | 'json-minifier' | 'json-validator' | 'json-normalize', Partial<JSONFormatterConfig>> = {
@@ -41,6 +42,11 @@ export const toolDefaults: Record<ToolId, object> = {
     'json-to-python': defaultPythonConfig,
     'json-to-rust': defaultRustConfig,
     'json-to-php': defaultPHPConfig,
+    'json-to-postgresql': defaultSqlSchemaConfig,
+    'json-to-mysql': defaultSqlSchemaConfig,
+    'json-to-sqlite': defaultSqlSchemaConfig,
+    'json-to-prisma': defaultPrismaSchemaConfig,
+    'json-to-json-schema': defaultJsonSchemaConfig,
 };
 
 export function getToolDefaults(toolId: string | null | undefined): object {

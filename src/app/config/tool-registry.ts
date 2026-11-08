@@ -2,10 +2,10 @@ import type { LucideIcon } from 'lucide-react';
 import {
     TextAlignStart, Minimize2, CircleCheck, ListTree, TextWrap, ArrowLeftRight,
     GitCompare, Shuffle, Eraser, FileCode, Coffee, Puzzle, Feather, Bird, Boxes,
-    Hash, Code, Cog, Gem,
+    Hash, Code, Cog, Gem, Database, DatabaseZap, HardDrive, Triangle, Braces,
 } from 'lucide-react';
 
-export type ToolGroupId = 'json' | 'code';
+export type ToolGroupId = 'json' | 'code' | 'schema';
 
 export interface ToolDef {
     id: string;
@@ -22,6 +22,7 @@ export interface ToolDef {
 export const toolGroups: readonly { id: ToolGroupId; name: string }[] = [
     { id: 'json', name: 'JSON Tools' },
     { id: 'code', name: 'Code Generators' },
+    { id: 'schema', name: 'Database & Schema' },
 ];
 
 export const tools = [
@@ -44,6 +45,11 @@ export const tools = [
     { id: 'json-to-python', name: 'JSON → Python Dataclass', shortName: 'Python', path: '/tools/code/json-to-python', group: 'code', icon: Code, tagline: 'Generate Python dataclasses or pydantic models', keywords: ['python', 'dataclass', 'pydantic'] },
     { id: 'json-to-rust', name: 'JSON → Rust Struct', shortName: 'Rust', path: '/tools/code/json-to-rust', group: 'code', icon: Cog, tagline: 'Generate Rust structs with serde', keywords: ['rust', 'serde', 'struct'] },
     { id: 'json-to-php', name: 'JSON → PHP Class', shortName: 'PHP', path: '/tools/code/json-to-php', group: 'code', icon: Gem, tagline: 'Generate PHP classes from JSON', keywords: ['php', 'class'], hidden: true },
+    { id: 'json-to-postgresql', name: 'JSON → PostgreSQL', shortName: 'PostgreSQL', path: '/tools/schema/json-to-postgresql', group: 'schema', icon: Database, tagline: 'Generate PostgreSQL CREATE TABLE and INSERT statements', keywords: ['postgres', 'postgresql', 'sql', 'create table', 'insert', 'ddl'] },
+    { id: 'json-to-mysql', name: 'JSON → MySQL', shortName: 'MySQL', path: '/tools/schema/json-to-mysql', group: 'schema', icon: DatabaseZap, tagline: 'Generate MySQL CREATE TABLE and INSERT statements', keywords: ['mysql', 'mariadb', 'sql', 'create table', 'insert', 'ddl'] },
+    { id: 'json-to-sqlite', name: 'JSON → SQLite', shortName: 'SQLite', path: '/tools/schema/json-to-sqlite', group: 'schema', icon: HardDrive, tagline: 'Generate SQLite CREATE TABLE and INSERT statements', keywords: ['sqlite', 'sql', 'create table', 'insert', 'ddl'] },
+    { id: 'json-to-prisma', name: 'JSON → Prisma Schema', shortName: 'Prisma', path: '/tools/schema/json-to-prisma', group: 'schema', icon: Triangle, tagline: 'Generate Prisma models with relations from JSON', keywords: ['prisma', 'orm', 'model', 'schema.prisma'] },
+    { id: 'json-to-json-schema', name: 'JSON → JSON Schema', shortName: 'JSON Schema', path: '/tools/schema/json-to-json-schema', group: 'schema', icon: Braces, tagline: 'Generate a JSON Schema (2020-12 or draft-07) from sample JSON', keywords: ['json schema', 'schema', 'validation', 'draft 7', '2020-12'] },
 ] as const satisfies readonly ToolDef[];
 
 export type ToolId = (typeof tools)[number]['id'];

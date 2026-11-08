@@ -12,5 +12,6 @@ README.md
 ../README.md
 webpack.config.js
 esbuild.js
+scripts/**
 **/*.map
 **/*.ts

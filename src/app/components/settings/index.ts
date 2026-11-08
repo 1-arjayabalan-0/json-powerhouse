@@ -16,6 +16,9 @@ import PythonSettings from "./PythonSettings";
 import RustSettings from "./RustSettings";
 import PhpSettings from "./PhpSettings";
 import TransformSettings from "./TransformSettings";
+import SqlSchemaSettings from "./SqlSchemaSettings";
+import PrismaSchemaSettings from "./PrismaSchemaSettings";
+import JsonSchemaSettings from "./JsonSchemaSettings";
 
 // Diff currently exposes no user settings.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -38,4 +41,9 @@ export const settingsByTool: Partial<Record<ToolId, ComponentType<SettingsProps<
     'json-to-python': PythonSettings,
     'json-to-rust': RustSettings,
     'json-to-php': PhpSettings,
+    'json-to-postgresql': SqlSchemaSettings,
+    'json-to-mysql': SqlSchemaSettings,
+    'json-to-sqlite': SqlSchemaSettings,
+    'json-to-prisma': PrismaSchemaSettings,
+    'json-to-json-schema': JsonSchemaSettings,
 };

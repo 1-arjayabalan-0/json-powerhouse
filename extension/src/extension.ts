@@ -3,30 +3,8 @@ import * as vscode from 'vscode';
 import { defaultConfig as defaultJSONConfig } from '@/core/types/json-formatter-config';
 import { prettifyJson } from '@/core/lib/converters/prettifyJson';
 
-import { generateCSharpCode } from '@/core/generators/json-to-csharp';
-import { generateDartCode } from '@/core/generators/json-to-dart';
-import { generateGoCode } from '@/core/generators/json-to-go';
-import { generateJavaCode } from '@/core/generators/json-to-java';
-import { generateKotlinCode } from '@/core/generators/json-to-kotlin';
-import { generatePHPCode } from '@/core/generators/json-to-php';
-import { generatePythonCode } from '@/core/generators/json-to-python';
-import { generateRustCode } from '@/core/generators/json-to-rust';
-import { generateSwiftCode } from '@/core/generators/json-to-swift';
-import { generateTypeScriptCode } from '@/core/generators/json-to-typescript';
-
-import {
-    defaultCSharpConfig,
-    defaultDartConfig,
-    defaultGoConfig,
-    defaultJavaConfig,
-    defaultKotlinConfig,
-    defaultPHPConfig,
-    defaultPythonConfig,
-    defaultRustConfig,
-    defaultSwiftConfig,
-    defaultTypeScriptConfig
-} from '@/core/types/code-generator-config';
-
+import { registerGenerators } from './generators';
+import { initTelemetry, registerTrackedCommand, shutdownTelemetry } from './telemetry';
 import { ValidateHandler } from './validate';
 import { TreeViewPanel } from './tree-view';
 import { DiffViewPanel } from './diff-view';
@@ -93,41 +71,8 @@ async function handleJsonTransform(transformName: string, configOverrides: any) 
     }
 }
 
-async function handleCodeGeneration(generatorConfig: any, generatorFunc: any, languageId: string) {
-    log(`Executing code generation for ${languageId}`);
-    const editor = vscode.window.activeTextEditor;
-    if (!editor) {
-        log('No active editor found', 'ERROR');
-        vscode.window.showErrorMessage('No active editor found');
-        return;
-    }
-
-    const selection = editor.selection;
-    const text = selection.isEmpty ? editor.document.getText() : editor.document.getText(selection);
-
-    if (!text.trim()) {
-        log('No text selected and document is empty', 'ERROR');
-        vscode.window.showErrorMessage('Please select some JSON text or open a JSON file');
-        return;
-    }
-
-    try {
-        const generatedCode = await generatorFunc(text, generatorConfig);
-
-        const doc = await vscode.workspace.openTextDocument({
-            content: generatedCode,
-            language: languageId
-        });
-        await vscode.window.showTextDocument(doc, { preview: false, viewColumn: vscode.ViewColumn.Beside });
-        log(`Successfully generated code for ${languageId}`);
-
-    } catch (error: any) {
-        log(`Error generating code: ${error.message}`, 'ERROR');
-        vscode.window.showErrorMessage(`Error generating code: ${error.message}`);
-    }
-}
-
 export function activate(context: vscode.ExtensionContext) {
+    initTelemetry(context);
     outputChannel = vscode.window.createOutputChannel('JSON PowerHouse');
     diagnosticCollection = vscode.languages.createDiagnosticCollection('json-powerhouse');
 
@@ -141,21 +86,21 @@ export function activate(context: vscode.ExtensionContext) {
     validateHandler.register(context);
 
     // JSON Formatters
-    context.subscriptions.push(vscode.commands.registerCommand('json-powerhouse.format', () => {
+    context.subscriptions.push(registerTrackedCommand('json-powerhouse.format', () => {
         handleJsonTransform('format', { pretty: true, indentation: '2' });
     }));
-    context.subscriptions.push(vscode.commands.registerCommand('json-powerhouse.minify', () => {
+    context.subscriptions.push(registerTrackedCommand('json-powerhouse.minify', () => {
         handleJsonTransform('minify', { pretty: false, indentation: '0', normalizeSpaces: true, normalizeLineBreaks: true });
     }));
-    context.subscriptions.push(vscode.commands.registerCommand('json-powerhouse.normalize', () => {
+    context.subscriptions.push(registerTrackedCommand('json-powerhouse.normalize', () => {
         handleJsonTransform('normalize', { pretty: true, indentation: '2', stripComments: true, normalizeSpaces: true, normalizeLineBreaks: true });
     }));
-    context.subscriptions.push(vscode.commands.registerCommand('json-powerhouse.toJson5', () => {
+    context.subscriptions.push(registerTrackedCommand('json-powerhouse.toJson5', () => {
         handleJsonTransform('convert to JSON5', { pretty: true, indentation: '2', useJSON5: true, quoteStyle: 'single', trailingCommas: true, stripComments: false });
     }));
 
     // JSON Transformations
-    context.subscriptions.push(vscode.commands.registerCommand('json-powerhouse.flatten', () => {
+    context.subscriptions.push(registerTrackedCommand('json-powerhouse.flatten', () => {
         log('Executing transform: flatten');
         const editor = vscode.window.activeTextEditor;
         if (!editor) { vscode.window.showErrorMessage('No active editor found'); return; }
@@ -169,7 +114,7 @@ export function activate(context: vscode.ExtensionContext) {
         } catch (e: any) { vscode.window.showErrorMessage(`Flatten failed: ${e.message}`); }
     }));
 
-    context.subscriptions.push(vscode.commands.registerCommand('json-powerhouse.unflatten', () => {
+    context.subscriptions.push(registerTrackedCommand('json-powerhouse.unflatten', () => {
         log('Executing transform: unflatten');
         const editor = vscode.window.activeTextEditor;
         if (!editor) { vscode.window.showErrorMessage('No active editor found'); return; }
@@ -184,7 +129,7 @@ export function activate(context: vscode.ExtensionContext) {
     }));
 
     // JSON Tree Viewer
-    context.subscriptions.push(vscode.commands.registerCommand('json-powerhouse.treeView', () => {
+    context.subscriptions.push(registerTrackedCommand('json-powerhouse.treeView', () => {
         log('Opening JSON Tree Viewer');
         const editor = vscode.window.activeTextEditor;
         if (!editor) {
@@ -210,7 +155,7 @@ export function activate(context: vscode.ExtensionContext) {
     }));
 
     // JSON Diff Viewer
-    context.subscriptions.push(vscode.commands.registerCommand('json-powerhouse.diff', async () => {
+    context.subscriptions.push(registerTrackedCommand('json-powerhouse.diff', async () => {
         log('Opening JSON Diff Viewer');
 
         const leftUri = await vscode.window.showOpenDialog({
@@ -251,39 +196,11 @@ export function activate(context: vscode.ExtensionContext) {
         }
     }));
 
-    // Code Generators
-    context.subscriptions.push(vscode.commands.registerCommand('json-powerhouse.generateCSharp', () => {
-        handleCodeGeneration(defaultCSharpConfig, generateCSharpCode, 'csharp');
-    }));
-    context.subscriptions.push(vscode.commands.registerCommand('json-powerhouse.generateDart', () => {
-        handleCodeGeneration(defaultDartConfig, generateDartCode, 'dart');
-    }));
-    context.subscriptions.push(vscode.commands.registerCommand('json-powerhouse.generateGo', () => {
-        handleCodeGeneration(defaultGoConfig, generateGoCode, 'go');
-    }));
-    context.subscriptions.push(vscode.commands.registerCommand('json-powerhouse.generateJava', () => {
-        handleCodeGeneration(defaultJavaConfig, generateJavaCode, 'java');
-    }));
-    context.subscriptions.push(vscode.commands.registerCommand('json-powerhouse.generateKotlin', () => {
-        handleCodeGeneration(defaultKotlinConfig, generateKotlinCode, 'kotlin');
-    }));
-    context.subscriptions.push(vscode.commands.registerCommand('json-powerhouse.generatePhp', () => {
-        handleCodeGeneration(defaultPHPConfig, generatePHPCode, 'php');
-    }));
-    context.subscriptions.push(vscode.commands.registerCommand('json-powerhouse.generatePython', () => {
-        handleCodeGeneration(defaultPythonConfig, generatePythonCode, 'python');
-    }));
-    context.subscriptions.push(vscode.commands.registerCommand('json-powerhouse.generateRust', () => {
-        handleCodeGeneration(defaultRustConfig, generateRustCode, 'rust');
-    }));
-    context.subscriptions.push(vscode.commands.registerCommand('json-powerhouse.generateSwift', () => {
-        handleCodeGeneration(defaultSwiftConfig, generateSwiftCode, 'swift');
-    }));
-    context.subscriptions.push(vscode.commands.registerCommand('json-powerhouse.generateTypeScript', () => {
-        handleCodeGeneration(defaultTypeScriptConfig, generateTypeScriptCode, 'typescript');
-    }));
+    // Code & schema generators, the "All Generators…" picker and quick options
+    registerGenerators(context, log);
 }
 
 export function deactivate() {
     diagnosticCollection?.clear();
+    return shutdownTelemetry();
 }

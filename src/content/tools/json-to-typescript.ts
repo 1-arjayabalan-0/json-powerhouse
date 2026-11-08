@@ -9,7 +9,7 @@ const content: ToolContent = {
         "Generate TypeScript interfaces from JSON",
         "Automatic nested type generation",
         "Handles arrays, unions, and optional properties",
-        "Support for type aliases and enums",
+        "Interfaces only, or with Convert helpers that check JSON at runtime",
         "Copy generated types to clipboard",
         "Client-side processing — your data stays private"
     ],
@@ -30,7 +30,7 @@ const content: ToolContent = {
     "examples": [
         {
             "title": "Generating TypeScript interfaces",
-            "description": "A small user record with a nested address, generated with the default settings. Trimmed to the generated types. The default output also includes a Convert class and runtime type-checking helpers (about 180 more lines).",
+            "description": "A small user record with a nested address, generated with the default settings. Trimmed to the generated types. The default output also includes a Convert class and runtime type-checking helpers (about 180 more lines); choose 'Interfaces only' in Settings to leave them out.",
             "input": "{\n  \"id\": 1,\n  \"name\": \"Ada Lovelace\",\n  \"email\": \"ada@example.com\",\n  \"active\": true,\n  \"tags\": [\"admin\", \"dev\"],\n  \"address\": { \"city\": \"London\", \"zip\": \"EC1A\" }\n}",
             "output": "export interface Root {\n    id:      number;\n    name:    string;\n    email:   string;\n    active:  boolean;\n    tags:    string[];\n    address: Address;\n}\n\nexport interface Address {\n    city: string;",
             "lang": "ts"
@@ -50,7 +50,8 @@ const content: ToolContent = {
         "json-to-java",
         "json-to-python",
         "json-to-csharp",
-        "json-formatter"
+        "json-to-json-schema",
+        "json-to-prisma"
     ]
 };
 
