@@ -3,7 +3,7 @@
  *
  * What is sent: which command ran, whether a generation failed (with a coarse error category),
  * which quick option was changed (its name, never its value), a once-a-day "active" ping, and
- * environment info (extension/editor version, editor name, OS). Events are keyed by VS Code's
+ * environment info (extension/editor version, editor name, extension store, OS). Events are keyed by VS Code's
  * anonymous machine id.
  *
  * What is never sent: JSON content, file names or paths, setting values, error messages.
@@ -15,6 +15,8 @@
  */
 import * as vscode from 'vscode';
 import * as https from 'https';
+import * as fs from 'fs';
+import * as path from 'path';
 
 /**
  * PostHog project API key (starts with "phc_"). This key can only write events, so it is
@@ -40,6 +42,28 @@ let logger: vscode.TelemetryLogger | undefined;
 let queue: QueuedEvent[] = [];
 let baseProperties: Record<string, unknown> = {};
 let distinctId = '';
+
+/**
+ * Which extension store the editor installs from, read from its product.json:
+ * 'vs-marketplace' (VS Code), 'open-vsx' (VSCodium, Windsurf, …), 'cursor' (Cursor's own
+ * store, which mirrors Open VSX), 'other' (e.g. a private company gallery; its address is not
+ * sent) or 'unknown'. Manually installed .vsix files cannot be told apart.
+ */
+function detectGallery(): string {
+    try {
+        const productPath = path.join(vscode.env.appRoot, 'product.json');
+        const product = JSON.parse(fs.readFileSync(productPath, 'utf8'));
+        const url: unknown = product?.extensionsGallery?.serviceUrl;
+        if (typeof url !== 'string' || !url) return 'unknown';
+        const host = new URL(url).hostname;
+        if (host === 'marketplace.visualstudio.com') return 'vs-marketplace';
+        if (host.includes('open-vsx')) return 'open-vsx';
+        if (host.endsWith('cursorapi.com')) return 'cursor';
+        return 'other';
+    } catch {
+        return 'unknown';
+    }
+}
 
 function settingEnabled(): boolean {
     return vscode.workspace.getConfiguration().get<boolean>(SETTING, true);
@@ -100,6 +124,7 @@ export function initTelemetry(context: vscode.ExtensionContext) {
         $lib: 'json-powerhouse-vscode',
         extension_version: context.extension.packageJSON.version,
         editor: vscode.env.appName,
+        gallery: detectGallery(),
         editor_version: vscode.version,
         os: process.platform,
         ui_kind: vscode.env.uiKind === vscode.UIKind.Web ? 'web' : 'desktop',

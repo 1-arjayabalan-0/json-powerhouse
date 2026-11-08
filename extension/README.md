@@ -135,7 +135,7 @@ To learn which features are used and what to improve, JSON PowerHouse sends **an
 - which command was run (for example "Format JSON" or "JSON → Prisma Schema") and whether it was started from the menu, the generator list or the ⚙ options
 - whether a generation failed, as a category only (for example "invalid JSON")
 - which generator option was changed via ⚙ — the option's name, never its value
-- a once-a-day "active" ping, plus the extension version, editor name and version, OS and display language
+- a once-a-day "active" ping, plus the extension version, editor name and version, which extension store the editor uses (VS Marketplace or Open VSX — a private gallery is reported only as "other"), OS and display language
 
 Events are identified by VS Code's anonymous machine ID. **Your JSON, file names, paths, setting values and error messages are never sent.** Data is sent to [PostHog](https://posthog.com).
 
