@@ -69,7 +69,8 @@ export default function ToolWorkspace({ toolId, children }: { toolId: ToolId; ch
                     </button>
                 )}
             </div>
-            <div className="flex min-h-0 flex-1">
+            {/* The tool body shows the user's JSON: hide it from Microsoft Clarity session recordings. */}
+            <div className="flex min-h-0 flex-1" data-clarity-mask="True">
                 <div className="flex min-h-0 min-w-0 flex-1 flex-col">{children}</div>
                 {hasSettings && <SettingsPanel open={open} onClose={() => writeOpen(toolId, false)} />}
             </div>

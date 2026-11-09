@@ -2,6 +2,7 @@ import { MetadataRoute } from 'next';
 import { getAllPosts } from '@/app/lib/blog';
 import { getVisibleTools } from '@/app/config/tool-registry';
 import { SITE_CONTENT_UPDATED, SITE_URL } from '@/app/config/site';
+import { toolContent, type ToolContent } from '@/content/tools';
 
 type ChangeFrequency = 'daily' | 'weekly' | 'monthly';
 
@@ -19,6 +20,13 @@ const toolPriority: Record<string, number> = {
   'json-to-typescript': 0.9,
 };
 
+const contentById: Partial<Record<string, ToolContent>> = toolContent;
+
+function toolUpdated(id: string): Date | undefined {
+  const updated = contentById[id]?.updated;
+  return updated ? new Date(updated) : undefined;
+}
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const contentUpdated = new Date(SITE_CONTENT_UPDATED);
   const posts = getAllPosts();
@@ -31,9 +39,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   // Hidden tools (unfinished) and test pages are left out on purpose.
+  // Each tool reports its own content date, so Google can tell which pages actually changed.
   const tools = getVisibleTools().map((tool) => ({
     url: `${SITE_URL}${tool.path}`,
-    lastModified: contentUpdated,
+    lastModified: toolUpdated(tool.id) ?? contentUpdated,
     changeFrequency: 'weekly' as const,
     priority: toolPriority[tool.id] ?? 0.8,
   }));

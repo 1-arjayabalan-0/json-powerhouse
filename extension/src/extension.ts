@@ -2,6 +2,7 @@ import './register-paths';
 import * as vscode from 'vscode';
 import { defaultConfig as defaultJSONConfig } from '@/core/types/json-formatter-config';
 import { prettifyJson } from '@/core/lib/converters/prettifyJson';
+import { diagnoseJson } from '@/core/lib/diagnostics/engine';
 
 import { registerGenerators } from './generators';
 import { initTelemetry, registerTrackedCommand, shutdownTelemetry } from './telemetry';
@@ -29,6 +30,34 @@ function getFormattingConfig(): Record<string, any> {
     };
 }
 
+interface RepairResult {
+    /** Repaired, strictly valid JSON, or null when it could not be repaired safely. */
+    json: string | null;
+    /** One plain-language line per kind of problem that was fixed. */
+    fixes: string[];
+    /** True when the input was truncated and closing brackets were added. */
+    partial: boolean;
+    /** Explanation of the first problem, for the error message when repair fails. */
+    firstProblem?: string;
+}
+
+/**
+ * Repairs common mistakes with the shared diagnostics engine (the same one the website's
+ * formatter uses). It only makes mechanical fixes: quotes, commas, comments, BOM, log noise,
+ * stringified JSON and missing closing brackets. Values and keys are never changed.
+ */
+function repairJson(text: string): RepairResult {
+    const report = diagnoseJson(text);
+    const fixes = [...new Set(report.issues.map(i => i.message))];
+    return {
+        json: report.status === 'invalid' ? null : report.fixedJson,
+        fixes,
+        // The engine reports truncation repairs with this message (it has no issue codes).
+        partial: report.issues.some(i => i.message.includes('partial/truncated')),
+        firstProblem: report.issues[0]?.message,
+    };
+}
+
 async function handleJsonTransform(transformName: string, configOverrides: any) {
     log(`Executing transform: ${transformName}`);
     const editor = vscode.window.activeTextEditor;
@@ -50,11 +79,20 @@ async function handleJsonTransform(transformName: string, configOverrides: any) 
     try {
         const userConfig = getFormattingConfig();
         const config = { ...defaultJSONConfig, ...userConfig, ...configOverrides };
-        const result = prettifyJson(text, config as any);
+        let result = prettifyJson(text, config as any);
+        let repair: RepairResult | undefined;
+
+        // Broken JSON (single quotes, unquoted keys, trailing commas, log noise, truncation…):
+        // repair it with the same engine the website uses, then format the repaired JSON.
+        if (!result) {
+            repair = repairJson(text);
+            if (repair.json) result = prettifyJson(repair.json, config as any);
+        }
 
         if (!result) {
-            log(`Failed to ${transformName} JSON. prettifyJson returned null.`, 'ERROR');
-            vscode.window.showErrorMessage(`Failed to ${transformName} JSON. Check for syntax errors.`);
+            const reason = repair?.firstProblem ? ` ${repair.firstProblem}` : ' Check for syntax errors.';
+            log(`Failed to ${transformName} JSON: could not repair the input.`, 'ERROR');
+            vscode.window.showErrorMessage(`Couldn't ${transformName} this JSON.${reason}`);
             return;
         }
 
@@ -64,6 +102,15 @@ async function handleJsonTransform(transformName: string, configOverrides: any) 
         });
         await vscode.window.showTextDocument(doc, { preview: false, viewColumn: vscode.ViewColumn.Beside });
         log(`Successfully completed transform: ${transformName}`);
+
+        if (repair?.json) {
+            log(`Repaired before ${transformName}: ${repair.fixes.join('; ')}`);
+            if (repair.partial) {
+                vscode.window.showWarningMessage('The JSON was cut off, so the missing closing brackets were added. Check the end of the result.');
+            } else {
+                vscode.window.showInformationMessage(`Fixed the JSON before running ${transformName}. Problems found: ${repair.fixes.join(' ')}`);
+            }
+        }
 
     } catch (error: any) {
         log(`Error transforming JSON: ${error.message}`, 'ERROR');
@@ -87,16 +134,16 @@ export function activate(context: vscode.ExtensionContext) {
 
     // JSON Formatters
     context.subscriptions.push(registerTrackedCommand('json-powerhouse.format', () => {
-        handleJsonTransform('format', { pretty: true, indentation: '2' });
+        return handleJsonTransform('format', { pretty: true, indentation: '2' });
     }));
     context.subscriptions.push(registerTrackedCommand('json-powerhouse.minify', () => {
-        handleJsonTransform('minify', { pretty: false, indentation: '0', normalizeSpaces: true, normalizeLineBreaks: true });
+        return handleJsonTransform('minify', { pretty: false, indentation: '0', normalizeSpaces: true, normalizeLineBreaks: true });
     }));
     context.subscriptions.push(registerTrackedCommand('json-powerhouse.normalize', () => {
-        handleJsonTransform('normalize', { pretty: true, indentation: '2', stripComments: true, normalizeSpaces: true, normalizeLineBreaks: true });
+        return handleJsonTransform('normalize', { pretty: true, indentation: '2', stripComments: true, normalizeSpaces: true, normalizeLineBreaks: true });
     }));
     context.subscriptions.push(registerTrackedCommand('json-powerhouse.toJson5', () => {
-        handleJsonTransform('convert to JSON5', { pretty: true, indentation: '2', useJSON5: true, quoteStyle: 'single', trailingCommas: true, stripComments: false });
+        return handleJsonTransform('convert to JSON5', { pretty: true, indentation: '2', useJSON5: true, quoteStyle: 'single', trailingCommas: true, stripComments: false });
     }));
 
     // JSON Transformations

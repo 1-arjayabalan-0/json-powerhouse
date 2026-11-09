@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 export default function DiagnosticsTestPage() {
     return (
-        <div className="w-full relative flex flex-col">
+        <div className="w-full relative flex flex-col" data-clarity-mask="True">
             <DiagnosticsTestClient />
         </div>
     );

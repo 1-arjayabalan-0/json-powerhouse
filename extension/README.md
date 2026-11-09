@@ -1,60 +1,55 @@
-# JSON Powerhouse
+# JSON PowerHouse
 
-> **Fix broken JSON and generate production-ready types — instantly, inside VS Code.**
+Check, clean up and convert JSON without leaving VS Code. Turn a JSON sample into TypeScript, C#, Java, Python, Go and other types, into `CREATE TABLE` scripts for PostgreSQL, MySQL or SQLite, or into a Prisma schema or a JSON Schema.
 
-[![Version](https://img.shields.io/visual-studio-marketplace/v/1-arjayabalan-0.json-powerhouse?color=blue&label=VS%20Marketplace)](https://marketplace.visualstudio.com/items?itemName=arjayabalan.json-powerhouse-vscode)
-[![Installs](https://img.shields.io/visual-studio-marketplace/i/1-arjayabalan-0.json-powerhouse)](https://marketplace.visualstudio.com/items?itemName=arjayabalan.json-powerhouse-vscode)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![VS Code](https://img.shields.io/badge/VS%20Code-1.80%2B-007ACC?logo=visual-studio-code)](https://code.visualstudio.com/)
+Everything runs inside the editor. Your JSON is never uploaded anywhere.
 
-Paste messy, broken, or invalid JSON → get clean JSON and ready-to-use types in one command. No copy-pasting to online tools. No manual cleanup. No scripts. All processing runs locally inside your editor — your JSON never leaves your machine.
+![Formatting JSON](https://raw.githubusercontent.com/1-arjayabalan-0/json-powerhouse/refs/heads/main/extension/assets/JSONFormat.gif)
 
----
+## What it does
 
-## 📸 Demo
+**Fix and clean up JSON**
 
-![JSON Formatting](https://raw.githubusercontent.com/1-arjayabalan-0/json-powerhouse/refs/heads/main/extension/assets/JSONFormat-Gif.gif)
+- **Format JSON** repairs broken JSON before formatting it: single quotes, unquoted keys, trailing commas and comments, JSON copied out of a log line, and JSON that was cut off part-way. It only fixes syntax and never changes your keys or values. A short message tells you what was fixed.
+- Problems are underlined as you type, each with a short explanation of what's wrong.
+- Minify a file, strip comments, convert to JSON5, or flatten nested objects into `a.b.c` keys and back.
+- Browse a large file as a tree, or compare two JSON files.
 
-![JSON Flatten](https://raw.githubusercontent.com/1-arjayabalan-0/json-powerhouse/refs/heads/main/extension/assets/JSONFLAT-Gif.gif)
+**Generate code from JSON**
 
-![JSON to Csharp](https://raw.githubusercontent.com/1-arjayabalan-0/json-powerhouse/refs/heads/main/extension/assets/JSONCsharp-Gif.gif)
+TypeScript, C#, Java, Python, Go, Kotlin, Swift, Dart, Rust and PHP. Nested objects become their own types. Each language has its own options, such as namespace or package, serialization library (System.Text.Json, Newtonsoft, Pydantic, kotlinx, Jackson, Codable…) and access modifiers.
 
-![JSON to Python](https://raw.githubusercontent.com/1-arjayabalan-0/json-powerhouse/refs/heads/main/extension/assets/JSONPython-Gif.gif)
+![JSON to C#](https://raw.githubusercontent.com/1-arjayabalan-0/json-powerhouse/refs/heads/main/extension/assets/JSON_PG.gif)
 
----
+**Generate database tables and schemas**
 
-## ✨ Features
+- **PostgreSQL, MySQL and SQLite:** `CREATE TABLE` scripts with sensible column types. Nested objects and arrays become child tables linked by foreign keys, or JSON columns if you prefer. It can also write `INSERT` statements for your data.
+- **Prisma:** models with relations, and `@map` so the database keeps snake_case names.
+- **JSON Schema:** draft 2020-12 or draft-07, with required fields and formats such as `date-time`, `email` and `uuid` detected for you.
 
-- **Auto-fix broken JSON** — handles missing quotes, trailing commas, single quotes, unquoted keys, and more
-- **Format & prettify** — clean, consistent output every time
-- **Generate types instantly** — TypeScript, C#, Java, Python, Go, Kotlin, Swift, Dart, Rust and PHP
-- **Generate database schemas** — PostgreSQL, MySQL and SQLite `CREATE TABLE` scripts (with optional `INSERT`s), Prisma models and JSON Schema
-- **Options right where you generate** — click ⚙ to change a generator's options; open output updates instantly
-- **Real-time validation** — catch errors as you type
-- **Private by design** — all processing is local; your JSON never leaves your machine
+If your file is an array of records, all of them are taken into account, so a field that's missing from some records becomes optional.
 
----
+## Getting started
 
-## 🚀 Installation
+Search for **JSON PowerHouse** in the Extensions view. It's on the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=arjayabalan.json-powerhouse-vscode) and on [Open VSX](https://open-vsx.org/extension/arjayabalan/json-powerhouse-vscode), so it also installs in Cursor, Windsurf and VSCodium.
 
-1. Open VS Code
-2. Go to the **Extensions** panel (`Ctrl+Shift+X` / `Cmd+Shift+X`)
-3. Search for **JSON Powerhouse**
-4. Click **Install**
+1. Open a `.json` file, or select part of one.
+2. Right-click and choose **JSON PowerHouse**, or click the ✨ button at the top right of the editor.
+3. Pick a command. Generated code opens in a new tab next to your file.
 
-Or install directly from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=arjayabalan.json-powerhouse-vscode).
+Generators use the selection if there is one, and the whole file otherwise. Files with comments or trailing commas (JSONC, JSON5) are accepted as input.
 
----
+## Examples
 
-## ⚡ Quick Start
+### Fixing broken JSON
 
-Paste this broken JSON into any `.json` file:
+Run **Format JSON** on this:
 
-```json
+```
 {'user_id': 1, name: "John",}
 ```
 
-Run `JSON PowerHouse: Format JSON` — you get:
+and you get:
 
 ```json
 {
@@ -63,101 +58,134 @@ Run `JSON PowerHouse: Format JSON` — you get:
 }
 ```
 
-Then run `JSON PowerHouse: JSON → TypeScript Interfaces` — you get:
+### Generating tables, models and types
 
-```ts
-interface RootObject {
-  userId: number;
-  name: string;
+Starting from this JSON:
+
+```json
+{ "id": 42, "name": "Ada", "email": "ada@example.com", "createdAt": "2026-01-15T09:30:00Z",
+  "orders": [{ "sku": "A-100", "qty": 2 }] }
+```
+
+**JSON → PostgreSQL Tables** (root table name set to `users`):
+
+```sql
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    email TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS orders (
+    id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    sku TEXT NOT NULL,
+    qty INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+);
+CREATE INDEX IF NOT EXISTS idx_orders_user_id ON orders (user_id);
+```
+
+**JSON → Prisma Schema** (root model name set to `User`):
+
+```prisma
+model User {
+  id        Int      @id
+  name      String
+  email     String
+  createdAt DateTime @db.Timestamptz(3) @map("created_at")
+  orders    Order[]
+
+  @@map("user")
+}
+
+model Order {
+  id     Int    @id @default(autoincrement())
+  userId Int    @map("user_id")
+  sku    String
+  qty    Int
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("orders")
 }
 ```
 
-Done. Two commands. Zero cleanup.
+**JSON → TypeScript Interfaces** (Output set to *Interfaces only*):
 
----
+```ts
+export interface Root {
+    id:        number;
+    name:      string;
+    email:     string;
+    createdAt: Date;
+    orders:    Order[];
+}
 
-## ⌨️ Commands
+export interface Order {
+    sku: string;
+    qty: number;
+}
+```
 
-Right-click in a JSON file and open **JSON PowerHouse**, click ✨ in the editor title bar, or open the Command Palette (`Ctrl+Shift+P` / `Cmd+Shift+P`) and type **JSON PowerHouse**:
+By default the TypeScript output also includes `Convert` helpers that parse JSON and check it against these types at runtime. Switch **Output** to *Interfaces only* if you just want the types.
 
-| Command | Description |
+## Changing options
+
+Click ⚙ next to a generator in **All Generators…**, or the ⚙ button above a generated tab. You'll get that generator's most useful options. Change one and the open output updates straight away, so you can try settings and compare results.
+
+Every option is also in VS Code's Settings (`Ctrl+,`, then search for `json-powerhouse`), with a section for each generator. Because they are ordinary settings, you can put them in your project's `.vscode/settings.json` and everyone on the team gets the same output.
+
+| Setting | What it controls |
 |---|---|
-| `Format JSON` / `Minify JSON` | Fix and prettify, or compact, the JSON |
-| `Validate JSON` | Check JSON for errors, with one-click fixes |
-| `Transform` › Normalize, JSON5, Flatten, Unflatten | Strip comments, convert to JSON5, flatten or unflatten keys |
-| `Open Tree Viewer` / `Compare with Another File (Diff)` | Explore or compare JSON |
-| `JSON → TypeScript / C# / Java / Python / Go / Kotlin / Swift / Dart / Rust / PHP` | Generate types and classes |
-| `JSON → PostgreSQL / MySQL / SQLite Tables` | `CREATE TABLE` scripts, with child tables and foreign keys for nested data |
-| `JSON → Prisma Schema` / `JSON → JSON Schema` | Prisma models with relations, or a JSON Schema |
-| `All Generators…` | Searchable list of every generator, with ⚙ options on each row |
-| `Generator Options…` | Change a generator's options; open output updates instantly |
+| `json-powerhouse.formatting.*` | Indentation, key sorting, quote style, comments |
+| `json-powerhouse.validateOnSave` / `validateOnChange` | Whether files are checked automatically (both on by default) |
+| `json-powerhouse.typescript.*`, `.csharp.*`, `.java.*` and the other languages | Options for each code generator |
+| `json-powerhouse.sql.*` | Table name, child tables or JSON columns, `INSERT` statements, `IF NOT EXISTS` |
+| `json-powerhouse.prisma.*` | Model name, database provider, `@map` names |
+| `json-powerhouse.jsonSchema.*` | Draft version, required fields, formats |
+| `json-powerhouse.telemetry.enabled` | Anonymous usage statistics (see below) |
 
-Generators work on the selection, or on the whole file when nothing is selected. JSONC and JSON5 input (comments, trailing commas) is accepted.
+## Commands
 
-> Keyboard shortcuts can be customised in **File → Preferences → Keyboard Shortcuts**.
+All commands are in the right-click menu under **JSON PowerHouse**, and in the Command Palette (`Ctrl+Shift+P`) when you type "JSON PowerHouse".
 
----
+| Command | |
+|---|---|
+| Format JSON, Minify JSON | Repair if needed, then reformat the file or selection |
+| Validate JSON | Check the file and list the problems |
+| Transform › Normalize, Convert to JSON5, Flatten, Unflatten | Strip comments, convert, or flatten nested keys |
+| Open Tree Viewer | Browse the JSON as a tree |
+| Compare with Another File (Diff) | Compare two JSON files |
+| JSON → TypeScript, PostgreSQL, MySQL, Prisma | The most-used generators, directly in the menu |
+| All Generators… | Every generator in one searchable list, with your recent ones at the top |
+| Generator Options… | Change the options of a generator |
 
-## ⚙️ Configuration
+## Usage statistics
 
-Open **Settings** (`Ctrl+,`) and search for `json-powerhouse`. Every generator has its own section (TypeScript, C#, SQL, Prisma, …), and its most useful options are also one click away via ⚙.
+To see which features people use and where things go wrong, the extension sends a small amount of anonymous data to [PostHog](https://posthog.com):
 
-| Setting | Description | Default |
-|---|---|---|
-| `json-powerhouse.formatting.indentation` | `2`, `4`, `tab` or `0` | `2` |
-| `json-powerhouse.formatting.keySorting` | `none`, `asc` or `desc` | `none` |
-| `json-powerhouse.validateOnSave` / `validateOnChange` | Validate automatically | `true` |
-| `json-powerhouse.typescript.*`, `.csharp.*`, `.java.*`, … | Code generator options | |
-| `json-powerhouse.sql.*`, `.prisma.*`, `.jsonSchema.*` | Schema generator options | |
-| `json-powerhouse.telemetry.enabled` | Anonymous usage statistics (see [Telemetry](#-telemetry)) | `true` |
+- the name of each command you run, and whether it came from the menu, the generator list or the options
+- when a generation fails, the kind of failure (for example "invalid JSON"), not the error message
+- the name of an option you change through ⚙, not the value you set
+- once a day: the extension version, your editor and its version, the extension store it uses (VS Code Marketplace or Open VSX), your operating system and display language
 
----
+Data is linked to VS Code's anonymous machine ID. **Your JSON, file names, folder paths, setting values and error messages are never sent.**
 
-## 🧠 Built for real-world JSON
+If you have turned off telemetry in VS Code (`telemetry.telemetryLevel`), nothing is sent. To turn it off for this extension only, set `json-powerhouse.telemetry.enabled` to `false`.
 
-Most JSON tools assume your data is valid. Real API responses rarely are.
+## Also on the web
 
-JSON Powerhouse is designed for the messy, inconsistent payloads that show up in actual development — broken logs, partial responses, copy-pasted output from terminals, third-party APIs with inconsistent formatting. It fixes what it finds and generates types from what remains.
+Every tool is also available at [json-powerhouse.codarivu.com](https://json-powerhouse.codarivu.com) for when you're not in your editor. It works the same way: everything runs in your browser.
 
-**Common scenarios where it helps:**
+## Requirements
 
-- Integrating a new backend and need types fast
-- Debugging a broken API response in production
-- Working with legacy data that nobody cleaned up
-- Switching between languages and needing type stubs quickly
+VS Code 1.80 or later, or an editor based on it such as Cursor, Windsurf or VSCodium.
 
----
+## Feedback
 
-## 📊 Telemetry
+Something not working, or JSON that doesn't convert the way you expected? [Open an issue on GitHub](https://github.com/1-arjayabalan-0/json-powerhouse/issues) and include a small sample if you can.
 
-To learn which features are used and what to improve, JSON PowerHouse sends **anonymous** usage statistics:
+## License
 
-- which command was run (for example "Format JSON" or "JSON → Prisma Schema") and whether it was started from the menu, the generator list or the ⚙ options
-- whether a generation failed, as a category only (for example "invalid JSON")
-- which generator option was changed via ⚙ — the option's name, never its value
-- a once-a-day "active" ping, plus the extension version, editor name and version, which extension store the editor uses (VS Marketplace or Open VSX — a private gallery is reported only as "other"), OS and display language
-
-Events are identified by VS Code's anonymous machine ID. **Your JSON, file names, paths, setting values and error messages are never sent.** Data is sent to [PostHog](https://posthog.com).
-
-Nothing is sent when VS Code telemetry is turned off (`telemetry.telemetryLevel`). To turn off only this extension's telemetry, set `json-powerhouse.telemetry.enabled` to `false`.
-
----
-
-## 📋 Requirements
-
-- Visual Studio Code **1.80 or later**
-
----
-
-## 🤝 Contributing & Support
-
-Found a bug or have a feature request?
-Open an issue on [GitHub](https://github.com/1-arjayabalan-0/json-powerhouse).
-
-Pull requests are welcome.
-
----
-
-## 📝 License
-
-[MIT](LICENSE) © 2024 Arjayabalan
+Copyright © 2024–2026 Arjayabalan. Released under the [MIT License](LICENSE).

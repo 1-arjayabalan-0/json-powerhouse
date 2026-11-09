@@ -1,6 +1,7 @@
 import type { ToolContent } from './types';
 
 const content: ToolContent = {
+    "updated": "2026-11-08",
     "intro": [
         "Convert JSON to SQLite tables in one step. Paste a JSON object or an array of objects and get ready-to-run CREATE TABLE statements, with column types inferred from your data, NOT NULL where every record has a value, and a primary key.",
         "Nested objects and arrays of objects become child tables linked with foreign keys (one-to-one or one-to-many), so the schema is properly normalized. If you prefer to keep nested data together, switch the setting to store it in JSON columns instead.",

@@ -1,6 +1,7 @@
 import type { ToolContent } from './types';
 
 const content: ToolContent = {
+    "updated": "2026-11-08",
     "intro": [
         "Check whether your JSON is valid and find exactly what is wrong when it is not. Paste a JSON string, an API response or a config file, and the validator checks it as you type. It flags syntax errors such as missing or trailing commas, unquoted keys, single quotes, comments and unmatched brackets.",
         "Each problem is marked in the editor at its line and column with a plain-language message, for example \"Trailing commas are not allowed in standard JSON\", instead of the bare \"Unexpected token\" you get from JSON.parse.",

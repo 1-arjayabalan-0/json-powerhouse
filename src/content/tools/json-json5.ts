@@ -1,6 +1,7 @@
 import type { ToolContent } from './types';
 
 const content: ToolContent = {
+    "updated": "2026-11-08",
     "intro": [
         "Edit, check and convert JSON5 online. Paste standard JSON or JSON5 into the editor and convert it in either direction with one click: strict JSON to readable JSON5, or JSON5 back to strict JSON that any parser accepts.",
         "JSON5 is a superset of JSON designed for files people write by hand. It allows comments, trailing commas, unquoted keys, single-quoted strings, multi-line strings, hexadecimal numbers, and values such as Infinity and NaN. That makes it popular for configuration files that people read and edit by hand.",
