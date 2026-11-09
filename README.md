@@ -120,4 +120,4 @@ Found a bug, or JSON that doesn't come out right? [Open an issue](https://github
 
 ## License
 
-The VS Code extension is released under the [MIT License](extension/LICENSE).
+Copyright © 2024–2026 Arjayabalan. The VS Code extension is released under the [MIT License](extension/LICENSE).

@@ -4,7 +4,7 @@ Check, clean up and convert JSON without leaving VS Code. Turn a JSON sample int
 
 Everything runs inside the editor. Your JSON is never uploaded anywhere.
 
-![Formatting JSON](https://raw.githubusercontent.com/1-arjayabalan-0/json-powerhouse/refs/heads/main/extension/assets/JSONFormat-Gif.gif)
+![Formatting JSON](https://raw.githubusercontent.com/1-arjayabalan-0/json-powerhouse/refs/heads/main/extension/assets/JSONFormat.gif)
 
 ## What it does
 
@@ -19,7 +19,7 @@ Everything runs inside the editor. Your JSON is never uploaded anywhere.
 
 TypeScript, C#, Java, Python, Go, Kotlin, Swift, Dart, Rust and PHP. Nested objects become their own types. Each language has its own options, such as namespace or package, serialization library (System.Text.Json, Newtonsoft, Pydantic, kotlinx, Jackson, Codable…) and access modifiers.
 
-![JSON to C#](https://raw.githubusercontent.com/1-arjayabalan-0/json-powerhouse/refs/heads/main/extension/assets/JSONCsharp-Gif.gif)
+![JSON to C#](https://raw.githubusercontent.com/1-arjayabalan-0/json-powerhouse/refs/heads/main/extension/assets/JSON_PG.gif)
 
 **Generate database tables and schemas**
 
@@ -188,4 +188,4 @@ Something not working, or JSON that doesn't convert the way you expected? [Open 
 
 ## License
 
-[MIT](LICENSE)
+Copyright © 2024–2026 Arjayabalan. Released under the [MIT License](LICENSE).
