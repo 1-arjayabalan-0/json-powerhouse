@@ -1,6 +1,7 @@
 import type { ToolContent } from './types';
 
 const content: ToolContent = {
+    "updated": "2026-11-08",
     "intro": [
         "Generate a JSON Schema from example JSON. Paste a sample document, or an array of samples, and get a schema that describes its types, required properties, nullable fields and nested objects and arrays.",
         "String formats are detected automatically when every sample matches: date-time, date, email, uuid and uri. Values that can be null get a type list such as [\"string\", \"null\"], and arrays with mixed item types use anyOf.",

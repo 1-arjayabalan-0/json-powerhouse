@@ -1,6 +1,7 @@
 import type { ToolContent } from './types';
 
 const content: ToolContent = {
+    "updated": "2026-11-08",
     "intro": [
         "Remove comments from JSON and normalize it into clean, consistent, strict JSON. Paste JSONC, a commented config file, or messy JSON, and get output that any JSON parser accepts, formatted the same way every time.",
         "Line comments (//) and block comments (/* */) are stripped before parsing, so files such as tsconfig.json, VS Code settings.json, or hand-edited configs become valid JSON. Whitespace and line endings are normalized, and the result uses 2-space indentation by default.",

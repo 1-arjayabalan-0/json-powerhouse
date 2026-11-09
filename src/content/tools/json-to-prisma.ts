@@ -1,6 +1,7 @@
 import type { ToolContent } from './types';
 
 const content: ToolContent = {
+    "updated": "2026-11-08",
     "intro": [
         "Generate a Prisma schema from JSON. Paste a JSON object or an array of objects and get Prisma models with field types, optional fields, an @id, and relations, ready to drop into schema.prisma.",
         "Nested objects become one-to-one relations and arrays of objects become one-to-many relations, each with a foreign key field, @relation and onDelete: Cascade. Prefer to keep nested data together? Switch the setting to Json fields instead.",

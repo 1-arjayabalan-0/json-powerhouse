@@ -1,6 +1,7 @@
 import type { ToolContent } from './types';
 
 const content: ToolContent = {
+    "updated": "2026-11-08",
     "intro": [
         "Automatically generate TypeScript interfaces from your JSON data. Paste any JSON object and get properly typed TypeScript definitions.",
         "Nested objects become their own interfaces, with each field typed from the sample value. Output updates as you type, and everything runs in your browser."
