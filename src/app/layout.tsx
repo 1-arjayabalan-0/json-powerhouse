@@ -63,6 +63,8 @@ export const metadata = {
 import ThemedToaster from "./components/ThemedToaster";
 import JsonLd from "./components/JsonLd";
 
+const GTM_ID = "GTM-P8VP5TBH";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -86,6 +88,22 @@ export default function RootLayout({
             },
           }}
         />
+        {/* Google Tag Manager - only in production */}
+        {process.env.NODE_ENV === 'production' && (
+          <>
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+                  dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+                `
+              }}
+            />
+            <script async src={`https://www.googletagmanager.com/gtm.js?id=${GTM_ID}`} />
+          </>
+        )}
         {/* Clarity Analytics */}
         <script
           dangerouslySetInnerHTML={{
@@ -100,6 +118,11 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.variable} ${geistMono.variable} antialiased bg-background text-foreground`}>
+        {process.env.NODE_ENV === 'production' && (
+          <noscript>
+            <iframe src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`} height="0" width="0" style={{ display: 'none', visibility: 'hidden' }} />
+          </noscript>
+        )}
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
